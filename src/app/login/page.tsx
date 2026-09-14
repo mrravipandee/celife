@@ -65,23 +65,29 @@ export default function LoginPage() {
   };
 
   const handleFillDemo = () => {
-    setEmail("admin@thedco.in");
-    setPassword("admin@432");
+    setEmail("admin@celife.in");
+    setPassword("admin@321");
     setErrorMessage(null);
     setErrorField(null);
   };
 
-
   return (
-    <div className="min-h-screen bg-[#000000] text-white flex flex-col justify-between selection:bg-primary selection:text-black">
+    <div className="min-h-screen bg-[#070F0B] text-white flex flex-col justify-between selection:bg-[#123C2D] selection:text-white">
       {/* Top Brand Header */}
       <header className="border-b border-white/5 py-6 px-6 md:px-12 flex items-center justify-between">
-        <Link href="/" className="flex flex-col text-lg font-serif tracking-widest text-white group">
-          <span>THE DCO</span>
-          <span className="block h-[1px] w-0 bg-primary transition-all duration-500 group-hover:w-full" />
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#ED1C24]" />
+            <span className="text-base font-serif font-bold tracking-wider text-white">
+              CELIFE
+            </span>
+          </div>
+          <span className="hidden sm:inline text-xs text-white/40 font-sans tracking-widest uppercase">
+            Health Solutions
+          </span>
         </Link>
-        <span className="text-xs uppercase tracking-[0.2em] text-white/60 font-mono font-medium">
-          Executive Portal
+        <span className="text-xs uppercase tracking-[0.2em] text-[#81998D] font-mono font-medium">
+          CMS Portal
         </span>
       </header>
 
@@ -91,21 +97,21 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: prefersReduced ? 0 : 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: prefersReduced ? 0.05 : 0.6, ease: [0.16, 1, 0.3, 1] as const }}
-          className="w-full max-w-md bg-[#050505] border border-white/10 p-8 md:p-10 rounded-xs shadow-2xl relative space-y-8"
+          className="w-full max-w-md bg-[#0C1712] border border-white/10 p-8 md:p-10 rounded-xs shadow-2xl relative space-y-8"
         >
-          {/* Subtle gold line accent */}
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
+          {/* Subtle green line accent */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#81998D]/60 to-transparent" />
 
           {/* Heading */}
           <div className="space-y-2 text-center">
-            <span className="text-xs uppercase tracking-[0.25em] text-primary block font-semibold">
+            <span className="text-xs uppercase tracking-[0.25em] text-[#81998D] block font-semibold">
               Management Access
             </span>
             <h1 className="text-2xl md:text-3xl font-serif text-white tracking-tight">
               Sign In to Dashboard
             </h1>
             <p className="text-sm text-white/70 font-sans">
-              Enter your administrative credentials to manage portfolio and advisory practices.
+              Enter your administrative credentials to manage products, page content, and enquiries.
             </p>
           </div>
 
@@ -146,7 +152,7 @@ export default function LoginPage() {
                       setErrorMessage(null);
                     }
                   }}
-                  placeholder="admin@example.com"
+                  placeholder="admin@celife.in"
                   className={`w-full bg-[#0a0a0a] border pl-10 pr-4 py-3 text-sm text-white placeholder-white/30 rounded-xs outline-none transition-colors font-sans ${
                     errorField === "email"
                       ? "border-red-500/60 focus:border-red-400"
@@ -235,7 +241,7 @@ export default function LoginPage() {
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-4 px-6 text-center text-xs uppercase tracking-widest text-white/50 font-mono">
-        © {new Date().getFullYear()} THE DCO Hospitality Advisory. All rights reserved.
+        © {new Date().getFullYear()} Celife Health Solutions. All rights reserved.
       </footer>
     </div>
   );
