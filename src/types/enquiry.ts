@@ -2,6 +2,10 @@ export const ENQUIRY_STATUSES = ["new", "contacted", "in-progress", "closed"] as
 export type EnquiryStatus = (typeof ENQUIRY_STATUSES)[number];
 
 export const PROJECT_TYPES = [
+  "Product Enquiry",
+  "Healthcare & Wellness",
+  "Nutraceutical Formulation",
+  "Distribution / Partnership",
   "Hotel",
   "Restaurant",
   "Resort",
@@ -38,6 +42,7 @@ export interface Inquiry {
   name: string;
   email: string;
   phone: string;
+  product?: string;
   company?: string;
   projectType: ProjectType;
   type?: string;

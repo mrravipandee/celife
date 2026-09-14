@@ -8,7 +8,8 @@ import { navItems } from "@/data/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Send, X } from "lucide-react";
+import { CelifeLogo } from "@/components/ui/CelifeLogo";
 
 export function MobileMenu() {
   const { isMenuOpen, closeMenu } = useUiStore();
@@ -16,15 +17,15 @@ export function MobileMenu() {
   const preferReduced = useReducedMotion();
   const menuRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const [isServicesExpanded, setIsServicesExpanded] = useState(
-    pathname.startsWith("/services")
+  const [isProductsExpanded, setIsProductsExpanded] = useState(
+    pathname.startsWith("/products")
   );
 
   const [prevPathname, setPrevPathname] = useState(pathname);
   if (pathname !== prevPathname) {
     setPrevPathname(pathname);
-    if (pathname.startsWith("/services")) {
-      setIsServicesExpanded(true);
+    if (pathname.startsWith("/products")) {
+      setIsProductsExpanded(true);
     }
   }
 
@@ -66,7 +67,6 @@ export function MobileMenu() {
       window.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
 
-      // Focus first link on opening
       const timer = setTimeout(() => {
         const firstLink = menuRef.current?.querySelector<HTMLElement>("a[href]");
         firstLink?.focus();
@@ -88,7 +88,6 @@ export function MobileMenu() {
 
   const isSubActive = (href: string) => pathname === href;
 
-  // Circular clip-path expanding from the trigger button position
   const menuVariants = {
     initial: {
       clipPath: preferReduced
@@ -101,34 +100,34 @@ export function MobileMenu() {
         ? "inset(0% 0% 0% 0%)"
         : "circle(150% at calc(100% - 44px) 44px)",
       opacity: 1,
-      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] as const },
+      transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const },
     },
     exit: {
       clipPath: preferReduced
         ? "inset(0% 0% 0% 0%)"
         : "circle(0px at calc(100% - 44px) 44px)",
       opacity: preferReduced ? 0 : 1,
-      transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
+      transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const },
     },
   };
 
   const linkVariants = {
-    initial: { opacity: 0, y: preferReduced ? 0 : 25 },
+    initial: { opacity: 0, y: preferReduced ? 0 : 20 },
     animate: (i: number) => ({
       opacity: 1,
       y: 0,
       transition: {
-        delay: preferReduced ? 0 : 0.15 + i * 0.05,
-        duration: 0.45,
+        delay: preferReduced ? 0 : 0.1 + i * 0.05,
+        duration: 0.4,
         ease: [0.16, 1, 0.3, 1] as const,
       },
     }),
     exit: (i: number) => ({
       opacity: 0,
-      y: preferReduced ? 0 : 15,
+      y: preferReduced ? 0 : 10,
       transition: {
-        delay: preferReduced ? 0 : (navItems.length - 1 - i) * 0.03,
-        duration: 0.2,
+        delay: preferReduced ? 0 : (navItems.length - 1 - i) * 0.02,
+        duration: 0.15,
         ease: "easeIn" as const,
       },
     }),
@@ -144,13 +143,13 @@ export function MobileMenu() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-[44] bg-black/70 backdrop-blur-sm"
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-[44] bg-[#123C2D]/40 backdrop-blur-xs"
             onClick={closeMenu}
             aria-hidden="true"
           />
 
-          {/* Menu panel with Circular Clip-Path & Focus Trap */}
+          {/* Menu panel */}
           <motion.div
             ref={menuRef}
             id="mobile-menu"
@@ -161,23 +160,29 @@ export function MobileMenu() {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="fixed inset-0 z-[45] bg-[#050505] flex flex-col justify-between px-6 pb-6 pt-24 sm:px-8 sm:pb-8 sm:pt-28 md:p-16 border-l border-white/5 overflow-y-auto"
+            className="fixed inset-0 z-[45] bg-[#F8FAF6] text-[#171B18] flex flex-col justify-between px-6 pb-6 pt-24 sm:px-8 sm:pb-8 sm:pt-28 border-l border-[#123C2D]/10 overflow-y-auto"
           >
-            {/* Header label */}
-            <div>
-              <span className="text-xs uppercase tracking-[0.3em] text-primary font-medium block">
-                THE DCO // ADVISORY
-              </span>
+            {/* Header branding */}
+            <div className="flex items-center justify-between pb-6 border-b border-[#123C2D]/10">
+              <CelifeLogo variant="dark" />
+              <button
+                type="button"
+                onClick={closeMenu}
+                aria-label="Close mobile menu"
+                className="p-2 text-[#123C2D] hover:bg-[#123C2D]/5 rounded-xs cursor-pointer"
+              >
+                <X size={22} />
+              </button>
             </div>
 
-            {/* Nav links */}
+            {/* Navigation links */}
             <nav aria-label="Mobile navigation links" className="my-auto py-6">
               <ul className="flex flex-col space-y-4">
                 {navItems.map((item, idx) => {
                   const active =
                     isActive(item.href) ||
                     Boolean(item.items?.some((sub) => isActive(sub.href)));
-                  const isServices = Boolean(item.items && item.items.length > 0);
+                  const isProducts = Boolean(item.items && item.items.length > 0);
 
                   return (
                     <motion.li
@@ -187,58 +192,56 @@ export function MobileMenu() {
                       initial="initial"
                       animate="animate"
                       exit="exit"
-                      className="border-b border-white/5 pb-3 last:border-b-0"
+                      className="border-b border-[#123C2D]/8 pb-3 last:border-b-0"
                     >
                       <div className="flex items-center justify-between">
                         <Link
                           href={item.href}
                           onClick={() => {
-                            if (!isServices) closeMenu();
+                            if (!isProducts) closeMenu();
                           }}
                           className={cn(
-                            "inline-block text-2xl sm:text-3xl md:text-4xl font-serif transition-all duration-300 leading-tight select-none",
-                            active
-                              ? "text-primary font-medium"
-                              : "text-white/85 hover:text-primary"
+                            "inline-block text-2xl sm:text-3xl font-serif font-semibold transition-colors duration-200 leading-tight",
+                            active ? "text-[#123C2D]" : "text-[#171B18] hover:text-[#123C2D]"
                           )}
                         >
                           {item.label}
-                          {active && !isServices && (
-                            <span className="inline-block ml-3 w-1.5 h-1.5 rounded-full bg-primary align-middle translate-y-[-2px]" />
+                          {active && !isProducts && (
+                            <span className="inline-block ml-3 w-2 h-2 rounded-full bg-[#ED1C24] align-middle translate-y-[-2px]" />
                           )}
                         </Link>
 
-                        {isServices && (
+                        {isProducts && (
                           <button
                             type="button"
-                            onClick={() => setIsServicesExpanded((prev) => !prev)}
-                            aria-expanded={isServicesExpanded}
-                            aria-label={isServicesExpanded ? "Collapse Services menu" : "Expand Services menu"}
-                            className="p-2 text-primary/80 hover:text-primary cursor-pointer flex items-center justify-center"
+                            onClick={() => setIsProductsExpanded((prev) => !prev)}
+                            aria-expanded={isProductsExpanded}
+                            aria-label={isProductsExpanded ? "Collapse Products menu" : "Expand Products menu"}
+                            className="p-2 text-[#123C2D] cursor-pointer flex items-center justify-center"
                           >
                             <ChevronDown
-                              size={18}
+                              size={20}
                               className={cn(
                                 "transition-transform duration-300",
-                                isServicesExpanded ? "rotate-180 text-primary" : "text-white/60"
+                                isProductsExpanded ? "rotate-180 text-[#123C2D]" : "text-[#52635A]"
                               )}
                             />
                           </button>
                         )}
                       </div>
 
-                      {/* Expandable Services Sub-Menu — Only Hospitality Audit Services */}
-                      {isServices && item.items && (
+                      {/* Expandable Category Sub-Menu */}
+                      {isProducts && item.items && (
                         <AnimatePresence initial={false}>
-                          {isServicesExpanded && (
+                          {isProductsExpanded && (
                             <motion.div
                               initial={{ height: 0, opacity: 0 }}
                               animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                               className="overflow-hidden"
                             >
-                              <div className="pl-4 border-l border-primary/40 mt-3 mb-1 space-y-1">
+                              <div className="pl-4 border-l-2 border-[#123C2D]/30 mt-3 mb-1 space-y-1">
                                 {item.items.map((sub) => {
                                   const subActive = isSubActive(sub.href);
                                   return (
@@ -247,24 +250,17 @@ export function MobileMenu() {
                                       href={sub.href}
                                       onClick={closeMenu}
                                       className={cn(
-                                        "block py-2.5 transition-colors duration-200",
+                                        "block py-2 transition-colors duration-150",
                                         subActive
-                                          ? "text-primary"
-                                          : "text-white hover:text-primary"
+                                          ? "text-[#123C2D] font-medium"
+                                          : "text-[#52635A] hover:text-[#123C2D]"
                                       )}
                                     >
-                                      <span
-                                        className={cn(
-                                          "block text-base font-sans font-medium tracking-wide leading-snug",
-                                          subActive
-                                            ? "text-primary"
-                                            : "text-white/95"
-                                        )}
-                                      >
+                                      <span className="block text-sm font-sans font-semibold">
                                         {sub.label}
                                       </span>
                                       {sub.tagline && (
-                                        <span className="block text-xs font-sans text-white/70 mt-1 font-normal leading-relaxed">
+                                        <span className="block text-xs font-sans text-[#52635A]/80 mt-0.5">
                                           {sub.tagline}
                                         </span>
                                       )}
@@ -280,16 +276,25 @@ export function MobileMenu() {
                   );
                 })}
               </ul>
+
+              {/* Prominent Mobile "Enquire Now" CTA */}
+              <div className="pt-6">
+                <Link
+                  href="/enquire"
+                  onClick={closeMenu}
+                  className="w-full py-3.5 bg-[#123C2D] text-white text-xs uppercase tracking-[0.2em] font-semibold rounded-xs shadow-md flex items-center justify-center gap-2"
+                >
+                  <span>Enquire Now</span>
+                  <Send size={13} />
+                </Link>
+              </div>
             </nav>
 
             {/* Footer coordinates */}
-            <div className="border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between text-xs text-white/50 uppercase tracking-[0.2em] space-y-2 sm:space-y-0 font-mono">
-              <span>Based in Maharashtra, India</span>
-              <a
-                href="mailto:hello@thedco.in"
-                className="text-primary hover:underline"
-              >
-                hello@thedco.in
+            <div className="border-t border-[#123C2D]/10 pt-5 flex flex-col sm:flex-row justify-between text-xs text-[#52635A] space-y-1 sm:space-y-0 font-sans">
+              <span>Mumbai, Maharashtra, India</span>
+              <a href="mailto:enquiry@celifehealth.com" className="text-[#123C2D] font-medium hover:underline">
+                enquiry@celifehealth.com
               </a>
             </div>
           </motion.div>

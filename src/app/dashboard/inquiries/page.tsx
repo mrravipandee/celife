@@ -48,6 +48,7 @@ interface BackendInquiry {
   name: string;
   email: string;
   phone: string;
+  product?: string;
   company?: string;
   projectType: string;
   message: string;
@@ -119,6 +120,7 @@ export default function InquiriesDashboardPage() {
           name: inq.name,
           email: inq.email,
           phone: inq.phone,
+          product: inq.product,
           company: inq.company || "—",
           projectType: inq.projectType as ProjectType,
           type: inq.projectType || "—",

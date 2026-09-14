@@ -1,25 +1,30 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Colors */
-  --color-primary: #c9a24a;
-  --color-gold: #c9a24a;
-  --color-black: #000000;
+  /* Celife Healthcare & Wellness Brand Palette */
+  --color-primary: #123c2d;
+  --color-forest: #123c2d;
+  --color-olive: #294f3d;
+  --color-sage: #81998d;
+  --color-eucalyptus: #6f8f80;
+  --color-ivory: #f4f5ef;
+  --color-pale-sage: #c4d5c7;
+  --color-soft-white: #f8faf6;
+  --color-primary-text: #171b18;
+  --color-muted-text: #52635a;
+  --color-copper: #a87560;
+  --color-celife-red: #ed1c24;
+
+  /* Subtle accent variants */
+  --color-forest-50: rgba(18, 60, 45, 0.05);
+  --color-forest-100: rgba(18, 60, 45, 0.1);
+  --color-forest-200: rgba(18, 60, 45, 0.2);
+  --color-forest-500: rgba(18, 60, 45, 0.5);
+  --color-forest-800: rgba(18, 60, 45, 0.8);
+  
+  --color-gold: #a87560;
+  --color-black: #171b18;
   --color-white: #ffffff;
-  
-  /* Accent variants */
-  --color-gold-50: rgba(201, 162, 74, 0.05);
-  --color-gold-100: rgba(201, 162, 74, 0.1);
-  --color-gold-200: rgba(201, 162, 74, 0.2);
-  --color-gold-300: rgba(201, 162, 74, 0.3);
-  --color-gold-400: rgba(201, 162, 74, 0.4);
-  --color-gold-500: rgba(201, 162, 74, 0.5);
-  --color-gold-800: rgba(201, 162, 74, 0.8);
-  
-  --color-black-90: rgba(0, 0, 0, 0.9);
-  --color-black-80: rgba(0, 0, 0, 0.8);
-  --color-black-50: rgba(0, 0, 0, 0.5);
-  --color-black-20: rgba(0, 0, 0, 0.2);
   
   /* Brand Typography */
   --font-serif: var(--font-cormorant), Cormorant Garamond, Georgia, serif;
@@ -93,8 +98,8 @@
 }
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
+  --background: #f8faf6;
+  --foreground: #171b18;
 }
 
 /* Base resets & behavior */
@@ -203,8 +208,8 @@ body {
 
 /* Selection highlight styling */
 ::selection {
-  background-color: #c9a24a;
-  color: #000000;
+  background-color: #123c2d;
+  color: #ffffff;
 }
 
 /* Editorial styling details */
@@ -216,44 +221,44 @@ body {
   font-family: var(--font-sans);
 }
 
-.gold-gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #c9a24a 100%);
+.forest-gradient-text {
+  background: linear-gradient(135deg, #123c2d 0%, #294f3d 60%, #6f8f80 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Hero h1 — sweeping gold shimmer */
+/* Hero h1 — sweeping subtle botanical shimmer */
 .hero-shine-text {
   background: linear-gradient(
     90deg,
-    #c9a24a 0%,
-    #fffbe6 25%,
-    #ffd97a 40%,
-    #ffffff 50%,
-    #ffd97a 60%,
-    #fffbe6 75%,
-    #c9a24a 100%
+    #123c2d 0%,
+    #294f3d 25%,
+    #81998d 40%,
+    #123c2d 50%,
+    #81998d 60%,
+    #294f3d 75%,
+    #123c2d 100%
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: text-shine 4s linear infinite;
+  animation: text-shine 6s linear infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-shine-text {
-    -webkit-text-fill-color: #c9a24a;
+    -webkit-text-fill-color: #123c2d;
     background: none;
-    color: #c9a24a;
+    color: #123c2d;
     animation: none;
   }
 }
 
 /* Smooth transitions for links/buttons */
 a, button {
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 
 /* Scrollbar styling */
@@ -262,14 +267,14 @@ a, button {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #000000;
+  background: #f4f5ef;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9a24a;
+  background: #81998d;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #e5bd5f;
+  background: #294f3d;
 }
 
 /* Hide scrollbar utility */

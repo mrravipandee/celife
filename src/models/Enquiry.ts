@@ -14,6 +14,7 @@ export interface IEnquiry extends Document {
   name: string;
   email: string;
   phone: string;
+  product?: string;
   company?: string;
   projectType: ProjectType;
   location?: string;
@@ -45,6 +46,12 @@ const EnquirySchema: Schema = new Schema(
       required: true,
       trim: true,
     },
+    product: {
+      type: String,
+      required: false,
+      trim: true,
+      maxlength: 200,
+    },
     company: {
       type: String,
       required: false,
@@ -55,6 +62,7 @@ const EnquirySchema: Schema = new Schema(
       type: String,
       required: true,
       enum: PROJECT_TYPES,
+      default: "Product Enquiry",
       trim: true,
     },
     location: {

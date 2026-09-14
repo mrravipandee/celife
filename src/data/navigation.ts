@@ -10,28 +10,36 @@ export interface NavItem {
   items?: NavSubItem[];
 }
 
-export const serviceNavItems: NavSubItem[] = [
+export const productCategoryNavItems: NavSubItem[] = [
   {
-    label: "Hospitality Audit Services",
-    href: "/services/hospitality-audit",
-    tagline: "Audit. Identify. Improve. Perform.",
+    label: "Neurological Wellness",
+    href: "/products?category=Neurological+Wellness",
+    tagline: "Cellular & neural vitality formulations",
   },
   {
-    label: "Consulting Services",
-    href: "/services/consulting-services",
-    tagline: "Strategy. Operations. Turnaround. Growth.",
+    label: "Joint & Mobility",
+    href: "/products?category=Joint+%26+Mobility",
+    tagline: "Cartilage & musculoskeletal support",
+  },
+  {
+    label: "Hepatic & Digestive",
+    href: "/products?category=Hepatic+%26+Digestive",
+    tagline: "Metabolic detoxification & gut comfort",
+  },
+  {
+    label: "Immunity & Resilience",
+    href: "/products?category=Immunity+%26+Resilience",
+    tagline: "Antioxidant & daily defense matrix",
   },
 ];
 
 export const navItems: NavItem[] = [
-  { label: "About", href: "/about" },
-  { label: "Founder", href: "/founder" },
+  { label: "Home", href: "/" },
   {
-    label: "Services",
-    href: "/services/consulting-services",
-    items: serviceNavItems,
+    label: "Products",
+    href: "/products",
+    items: productCategoryNavItems,
   },
-  { label: "Projects", href: "/projects" },
-  { label: "Blog", href: "/blog" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];

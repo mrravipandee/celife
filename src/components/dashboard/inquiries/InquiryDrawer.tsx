@@ -204,6 +204,18 @@ export function InquiryDrawer({
                 </p>
               </div>
 
+              {/* Product Enquired */}
+              {inquiry.product && (
+                <div className="space-y-2 pt-5">
+                  <span className="text-[9px] uppercase tracking-[0.18em] text-emerald-400 font-sans block font-semibold">
+                    PRODUCT ENQUIRED
+                  </span>
+                  <p className="text-xs font-sans text-white font-medium bg-emerald-950/40 border border-emerald-800/40 px-3 py-2 rounded-xs">
+                    {inquiry.product}
+                  </p>
+                </div>
+              )}
+
               {/* Inquiry Type */}
               <div className="space-y-2 pt-5">
                 <span className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans block font-semibold">

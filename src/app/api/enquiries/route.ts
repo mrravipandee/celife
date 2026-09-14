@@ -18,6 +18,7 @@ interface LeanEnquiry {
   name: string;
   email: string;
   phone: string;
+  product?: string;
   company?: string;
   projectType: string;
   location?: string;
@@ -74,8 +75,9 @@ export async function POST(req: Request) {
       name: parsed.name,
       email: parsed.email,
       phone: parsed.phone,
+      product: parsed.product,
       company: parsed.company,
-      projectType: parsed.projectType,
+      projectType: parsed.projectType || "Product Enquiry",
       location: parsed.location,
       projectStage: parsed.projectStage,
       businessStatus: parsed.businessStatus,
@@ -172,6 +174,7 @@ export async function GET(req: Request) {
         name: enquiry.name,
         email: enquiry.email,
         phone: enquiry.phone,
+        product: enquiry.product,
         company: enquiry.company,
         projectType: enquiry.projectType,
         location: enquiry.location,

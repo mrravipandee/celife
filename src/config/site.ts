@@ -1,18 +1,18 @@
 export const siteConfig = {
-  name: "THE DCO",
-  shortName: "DCO",
-  title: "THE DCO | Hospitality Advisory",
-  description: "Cinematic, sophisticated, and bespoke hospitality advisory services for global luxury brands, hotels, and resorts.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://thedco.com",
-  ogImage: "/images/general/og-image.jpg",
+  name: "Celife Health Solutions",
+  shortName: "Celife",
+  title: "Celife Health Solutions | Premium Wellness & Healthcare Formulations",
+  description: "Celife Health Solutions is a dedicated healthcare, nutraceutical, and herbal wellness brand creating evidence-guided botanical and nutritional formulations.",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://celifehealth.com",
+  ogImage: "/images/hero/celife-wellness-hero.jpg",
   contact: {
-    email: "advisory@thedco.com",
-    phone: "+44 20 7946 0958",
-    address: "Mayfair, London, UK",
+    email: "enquiry@celifehealth.com",
+    phone: "+91 98200 12345",
+    address: "Mumbai, Maharashtra, India",
   },
   socials: {
-    linkedin: "https://linkedin.com/company/thedco",
-    instagram: "https://instagram.com/thedco",
+    linkedin: "https://linkedin.com/company/celifehealth",
+    instagram: "https://instagram.com/celifehealth",
   },
 };
 
