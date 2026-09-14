@@ -10,35 +10,38 @@ import { CelifeFeaturedProducts } from "@/components/home/CelifeFeaturedProducts
 import { CelifeQualityTrust } from "@/components/home/CelifeQualityTrust";
 import { CelifePhilosophy } from "@/components/home/CelifePhilosophy";
 import { CelifeCTA } from "@/components/home/CelifeCTA";
+import { getPageContent } from "@/lib/services/page-content";
 
-// ─── Page-level SEO metadata ──────────────────────────────────────────────────
+// Dynamic revalidation: Next.js revalidates on-demand when edited in CMS
+export const revalidate = 0;
 
-export const metadata: Metadata = {
-  title: "Celife Health Solutions | Targeted Wellness & Healthcare Formulations",
-  description:
-    "Celife Health Solutions is a dedicated healthcare and nutraceutical brand formulating evidence-guided botanical solutions, including Nervify Forte for neuro-vitality.",
-  keywords: [
-    "Celife Health Solutions",
-    "Nervify Forte",
-    "nutraceutical formulations",
-    "herbal healthcare India",
-    "neuro-cellular wellness",
-    "joint mobility supplements",
-    "botanical healthcare",
-  ],
-  openGraph: {
-    title: "Celife Health Solutions | Targeted Healthcare & Wellness",
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getPageContent("homepage");
+  const seo = content.seo || {};
+
+  return {
+    title:
+      seo.metaTitle ||
+      "Celife Health Solutions | Targeted Wellness & Healthcare Formulations",
     description:
-      "Evidence-informed nutraceutical and botanical formulations designed for human vitality and targeted wellness.",
-    type: "website",
-    siteName: "Celife Health Solutions",
-  },
-  alternates: {
-    canonical: "https://celifehealth.com",
-  },
-};
-
-// ─── JSON-LD structured data ──────────────────────────────────────────────────
+      seo.metaDescription ||
+      "Celife Health Solutions is a dedicated healthcare and nutraceutical brand formulating evidence-guided botanical solutions, including Nervify Forte for neuro-vitality.",
+    openGraph: {
+      title:
+        seo.ogTitle ||
+        seo.metaTitle ||
+        "Celife Health Solutions | Targeted Healthcare & Wellness",
+      description:
+        seo.ogDescription ||
+        seo.metaDescription ||
+        "Evidence-informed nutraceutical and botanical formulations designed for human vitality and targeted wellness.",
+      images: seo.ogImage ? [{ url: seo.ogImage }] : undefined,
+    },
+    alternates: {
+      canonical: seo.canonicalUrl || "https://celifehealth.com",
+    },
+  };
+}
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -68,12 +71,12 @@ const jsonLd = {
   ],
 };
 
-// ─── Page component ───────────────────────────────────────────────────────────
+export default async function Home() {
+  const pageData = await getPageContent("homepage");
+  const sections = pageData.sections || {};
 
-export default function Home() {
   return (
     <>
-      {/* Structured data for Search Engines */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -85,22 +88,24 @@ export default function Home() {
 
         <main className="bg-[#F8FAF6] text-[#171B18] relative min-h-screen">
           {/* Section 1: Hero */}
-          <CelifeHero />
+          <CelifeHero content={sections.hero} />
 
           {/* Section 2: Trust Pillars */}
           <CelifeTrustStatement />
 
           {/* Section 3: Therapeutic Categories */}
-          <CelifeQualityTrust />
+          {sections.qualityTrust?.enabled !== false && <CelifeQualityTrust />}
 
           {/* Section 4: Featured Products */}
-          <CelifeFeaturedProducts />
+          {sections.featuredProducts?.enabled !== false && (
+            <CelifeFeaturedProducts />
+          )}
 
           {/* Section 5: Brand Philosophy */}
-          <CelifePhilosophy />
+          {sections.philosophy?.enabled !== false && <CelifePhilosophy />}
 
           {/* Section 6: Product Enquiry CTA */}
-          <CelifeCTA />
+          {sections.cta?.enabled !== false && <CelifeCTA />}
         </main>
 
         <Footer />

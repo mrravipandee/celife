@@ -5,10 +5,12 @@ import { Navbar } from "@/components/layout/Navbar";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
-import { productsData } from "@/data/products";
+import { getProducts, getProductCategories } from "@/lib/services/products";
 import { ProductCard } from "@/components/products/ProductCard";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
+
+export const revalidate = 0;
 
 export const metadata: Metadata = constructMetadata({
   title: "Product Catalogue | Celife Health Solutions",
@@ -24,20 +26,15 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const params = await searchParams;
   const currentCategory = params?.category || "all";
 
+  const [productsList, categoryNames] = await Promise.all([
+    getProducts(currentCategory),
+    getProductCategories(),
+  ]);
+
   const categories = [
     { label: "All Formulations", value: "all" },
-    { label: "Neurological Wellness", value: "Neurological Wellness" },
-    { label: "Joint & Mobility", value: "Joint & Mobility" },
-    { label: "Hepatic & Digestive", value: "Hepatic & Digestive" },
-    { label: "Immunity & Resilience", value: "Immunity & Resilience" },
+    ...categoryNames.map((name) => ({ label: name, value: name })),
   ];
-
-  const filteredProducts =
-    currentCategory === "all"
-      ? productsData
-      : productsData.filter(
-          (p) => p.category.toLowerCase() === currentCategory.toLowerCase()
-        );
 
   return (
     <SmoothScroll>
@@ -91,21 +88,21 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         {/* Product Cards Grid */}
         <section className="max-w-7xl mx-auto px-6 md:px-12 pb-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {filteredProducts.map((product) => (
+            {productsList.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
-          {filteredProducts.length === 0 && (
+          {productsList.length === 0 && (
             <div className="py-20 text-center bg-white border border-[#123C2D]/10 rounded-xs p-12 space-y-4">
               <p className="text-base text-[#52635A]">
-                No products found in this category.
+                No formulations currently published in this category.
               </p>
               <Link
                 href="/products"
                 className="inline-block text-xs uppercase tracking-wider text-[#123C2D] font-semibold underline underline-offset-4"
               >
-                View all products
+                View all formulations
               </Link>
             </div>
           )}

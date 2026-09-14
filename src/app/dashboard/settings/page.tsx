@@ -1,25 +1,23 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   User,
-  Settings as SettingsIcon,
+  Building2,
   Phone,
   Share2,
   Bell,
-  Lock,
+  KeyRound,
   ShieldCheck,
   CheckCircle2,
-  KeyRound,
   Loader2,
-  Eye,
-  EyeOff,
   AlertCircle,
+  FileText,
+  Search,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { siteConfig } from "@/config/site";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorState } from "@/components/ui/ErrorState";
 
@@ -32,11 +30,21 @@ interface SessionUser {
   role: string;
 }
 
+interface BrandSettings {
+  companyName: string;
+  logo: string;
+  favicon: string;
+  tagline: string;
+}
+
 interface ContactSettings {
   email: string;
   phone: string;
   address: string;
   website: string;
+  whatsapp?: string;
+  businessHours?: string;
+  googleMaps?: string;
 }
 
 interface SocialSettings {
@@ -46,6 +54,18 @@ interface SocialSettings {
   facebook: string;
 }
 
+interface FooterSettings {
+  description: string;
+  copyright: string;
+  disclaimer: string;
+}
+
+interface SEOSettings {
+  defaultTitle: string;
+  defaultDescription: string;
+  defaultOgImage: string;
+}
+
 interface NotificationSettings {
   newInquiryEmail: boolean;
   weeklyDigest: boolean;
@@ -53,19 +73,31 @@ interface NotificationSettings {
 }
 
 interface SiteSettings {
-  contact: ContactSettings;
-  social: SocialSettings;
-  notifications: NotificationSettings;
+  brand?: BrandSettings;
+  contact?: ContactSettings;
+  social?: SocialSettings;
+  footer?: FooterSettings;
+  seo?: SEOSettings;
+  notifications?: NotificationSettings;
 }
 
-type TabType = "account" | "general" | "contact" | "social" | "notifications" | "security";
+type TabType =
+  | "brand"
+  | "contact"
+  | "social"
+  | "footer"
+  | "seo"
+  | "notifications"
+  | "security"
+  | "account";
+
 type SaveState = "idle" | "saving" | "success" | "error";
 
-// ─── Reusable field components ────────────────────────────────────────────────
+// ─── Field Components ─────────────────────────────────────────────────────────
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-xs uppercase tracking-wide text-white/70 font-sans font-medium block">
+    <span className="text-xs uppercase tracking-wider text-white/70 font-sans font-medium block mb-1">
       {children}
     </span>
   );
@@ -95,7 +127,7 @@ function FieldInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className="w-full bg-black border border-white/5 text-sm text-white/90 px-4 py-3 rounded-xs outline-none font-sans placeholder:text-white/50 focus:border-primary/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-[#0A1410] border border-white/10 text-xs text-white px-4 py-2.5 rounded-xs outline-none font-sans placeholder:text-white/40 focus:border-[#81998D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       />
     </div>
   );
@@ -111,24 +143,24 @@ function SaveBar({
   onSave: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between pt-4 border-t border-white/5">
-      <div className="text-sm font-sans">
+    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+      <div className="text-xs font-sans">
         {state === "saving" && (
           <span className="flex items-center gap-2 text-white/50">
             <Loader2 size={12} className="animate-spin" />
-            Saving…
+            Saving changes…
           </span>
         )}
         {state === "success" && (
-          <span className="flex items-center gap-2 text-emerald-400/80">
+          <span className="flex items-center gap-2 text-emerald-400">
             <CheckCircle2 size={12} />
-            Changes saved.
+            Settings saved and revalidated.
           </span>
         )}
         {state === "error" && (
-          <span className="flex items-center gap-2 text-red-400/80">
+          <span className="flex items-center gap-2 text-red-400">
             <AlertCircle size={12} />
-            {errorMessage || "Unable to save changes. Please try again."}
+            {errorMessage || "Unable to save changes. Please check input fields."}
           </span>
         )}
       </div>
@@ -136,11 +168,11 @@ function SaveBar({
         type="button"
         onClick={onSave}
         disabled={state === "saving"}
-        className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary text-sm uppercase tracking-wide font-sans font-semibold px-5 py-2.5 rounded-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        className="flex items-center gap-2 bg-[#123C2D] hover:bg-[#294F3D] border border-white/10 text-white text-xs uppercase tracking-wider font-sans font-semibold px-5 py-2.5 rounded-xs transition-all disabled:opacity-50 cursor-pointer shadow-xs"
       >
         {state === "saving" ? (
           <>
-            <Loader2 size={11} className="animate-spin" />
+            <Loader2 size={12} className="animate-spin" />
             Saving…
           </>
         ) : (
@@ -151,61 +183,71 @@ function SaveBar({
   );
 }
 
-function Toggle({
-  checked,
-  onChange,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 transition-colors duration-200 outline-none ${
-        checked ? "border-primary/60 bg-primary/20" : "border-white/10 bg-black"
-      }`}
-    >
-      <span
-        className={`pointer-events-none inline-block h-3 w-3 rounded-full shadow transform transition-transform duration-200 mt-px ${
-          checked ? "translate-x-4 bg-primary" : "translate-x-px bg-white/30"
-        }`}
-      />
-    </button>
-  );
-}
-
-// ─── Main page component ──────────────────────────────────────────────────────
-
 export default function SettingsDashboardPage() {
   const router = useRouter();
   const prefersReduced = useReducedMotion();
 
-  const [activeTab, setActiveTab] = useState<TabType>("account");
+  const [activeTab, setActiveTab] = useState<TabType>("brand");
 
   // ── Session ──
   const [user, setUser] = useState<SessionUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [retryTrigger, setRetryTrigger] = useState(0);
 
   // ── Settings data ──
-  const [settings, setSettings] = useState<SiteSettings | null>(null);
-  const [settingsLoading, setSettingsLoading] = useState(false);
 
-  // ── Contact form ──
-  const [contact, setContact] = useState<ContactSettings>({ email: "", phone: "", address: "", website: "" });
+  // Brand
+  const [brand, setBrand] = useState<BrandSettings>({
+    companyName: "Celife Health Solutions",
+    logo: "",
+    favicon: "",
+    tagline: "Targeted Botanical & Nutritional Wellness Formulations",
+  });
+  const [brandSave, setBrandSave] = useState<SaveState>("idle");
+  const [brandError, setBrandError] = useState<string | undefined>();
+
+  // Contact
+  const [contact, setContact] = useState<ContactSettings>({
+    email: "enquiry@celifehealth.com",
+    phone: "+91 98200 12345",
+    address: "Mumbai, Maharashtra, India",
+    website: "https://celifehealth.com",
+    whatsapp: "+91 98200 12345",
+    businessHours: "Mon – Fri: 9:00 AM – 6:00 PM IST",
+    googleMaps: "",
+  });
   const [contactSave, setContactSave] = useState<SaveState>("idle");
   const [contactError, setContactError] = useState<string | undefined>();
 
-  // ── Social form ──
-  const [social, setSocial] = useState<SocialSettings>({ linkedin: "", instagram: "", youtube: "", facebook: "" });
+  // Social
+  const [social, setSocial] = useState<SocialSettings>({
+    linkedin: "",
+    instagram: "",
+    youtube: "",
+    facebook: "",
+  });
   const [socialSave, setSocialSave] = useState<SaveState>("idle");
   const [socialError, setSocialError] = useState<string | undefined>();
 
-  // ── Notifications ──
+  // Footer
+  const [footer, setFooter] = useState<FooterSettings>({
+    description: "Celife Health Solutions is a dedicated healthcare, nutraceutical, and herbal wellness brand creating evidence-guided botanical and nutritional formulations.",
+    copyright: "© 2026 Celife Health Solutions. All rights reserved.",
+    disclaimer: "Information on this website is for educational and trade purposes and is not a substitute for professional medical advice.",
+  });
+  const [footerSave, setFooterSave] = useState<SaveState>("idle");
+  const [footerError, setFooterError] = useState<string | undefined>();
+
+  // SEO
+  const [seo, setSeo] = useState<SEOSettings>({
+    defaultTitle: "Celife Health Solutions | Premium Wellness & Healthcare Formulations",
+    defaultDescription: "Celife Health Solutions crafts high-potency nutritional and herbal healthcare formulations developed with pure extracts and strict quality benchmarks.",
+    defaultOgImage: "/images/hero/celife-wellness-hero.jpg",
+  });
+  const [seoSave, setSeoSave] = useState<SaveState>("idle");
+  const [seoError, setSeoError] = useState<string | undefined>();
+
+  // Notifications
   const [notifications, setNotifications] = useState<NotificationSettings>({
     newInquiryEmail: true,
     weeklyDigest: false,
@@ -214,91 +256,49 @@ export default function SettingsDashboardPage() {
   const [notifSave, setNotifSave] = useState<SaveState>("idle");
   const [notifError, setNotifError] = useState<string | undefined>();
 
-  // ── Password ──
+  // Password
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [passwordSave, setPasswordSave] = useState<SaveState>("idle");
   const [passwordMessage, setPasswordMessage] = useState<string | undefined>();
-  const [passwordFieldError, setPasswordFieldError] = useState<Record<string, string>>({});
 
-  // ── Fetch session ──
+  // Fetch session & settings
   useEffect(() => {
-    let active = true;
-    const fetchSession = async () => {
+    async function init() {
       try {
-        const res = await fetch("/api/auth/session");
-        if (!res.ok) throw new Error(`Failed to fetch session. Status: ${res.status}`);
-        const body = await res.json();
-        if (!body.success || !body.data?.authenticated) throw new Error("User session is unauthenticated.");
-        if (active) setUser(body.data.user);
+        const [sessRes, setRes] = await Promise.all([
+          fetch("/api/auth/session"),
+          fetch("/api/settings"),
+        ]);
+
+        const sessBody = await sessRes.json();
+        if (sessBody.success && sessBody.data?.authenticated) {
+          setUser(sessBody.data.user);
+        } else {
+          setError("User session is unauthenticated.");
+        }
+
+        const setBody = await setRes.json();
+        if (setBody.success && setBody.data?.settings) {
+          const s = setBody.data.settings;
+          if (s.brand) setBrand(s.brand);
+          if (s.contact) setContact(s.contact);
+          if (s.social) setSocial(s.social);
+          if (s.footer) setFooter(s.footer);
+          if (s.seo) setSeo(s.seo);
+          if (s.notifications) setNotifications(s.notifications);
+        }
       } catch (err: unknown) {
         console.error(err);
-        if (active) setError("Unable to load settings session.");
+        setError("Unable to load settings data.");
       } finally {
-        if (active) setIsLoading(false);
+        setIsLoading(false);
       }
-    };
-    fetchSession();
-    return () => { active = false; };
-  }, [retryTrigger]);
-
-  // ── Fetch settings ──
-  const fetchSettings = useCallback(async () => {
-    try {
-      setSettingsLoading(true);
-      const res = await fetch("/api/settings");
-      if (!res.ok) throw new Error("Failed to load settings.");
-      const body = await res.json();
-      if (body.success && body.data?.settings) {
-        const s: SiteSettings = body.data.settings;
-        setSettings(s);
-        setContact(s.contact);
-        setSocial(s.social);
-        setNotifications(s.notifications);
-      }
-    } catch (err) {
-      console.error("Settings fetch error:", err);
-    } finally {
-      setSettingsLoading(false);
     }
+    init();
   }, []);
 
-  useEffect(() => {
-    let active = true;
-    if (user) {
-      void (async () => {
-        try {
-          const res = await fetch("/api/settings");
-          if (!res.ok) throw new Error("Failed to load settings.");
-          const body = await res.json();
-          if (active && body.success && body.data?.settings) {
-            const s: SiteSettings = body.data.settings;
-            setSettings(s);
-            setContact(s.contact);
-            setSocial(s.social);
-            setNotifications(s.notifications);
-          }
-        } catch (err) {
-          if (active) console.error("Settings fetch error:", err);
-        }
-      })();
-    }
-    return () => {
-      active = false;
-    };
-  }, [user]);
-
-  const handleRetry = () => {
-    setIsLoading(true);
-    setError(null);
-    setRetryTrigger((prev) => prev + 1);
-  };
-
-  // ── Generic PATCH helper ──
   const patchSettings = async (payload: Partial<SiteSettings>) => {
     const res = await fetch("/api/settings", {
       method: "PATCH",
@@ -307,683 +307,579 @@ export default function SettingsDashboardPage() {
     });
     const body = await res.json();
     if (!res.ok || !body.success) {
-      throw new Error(body?.error?.message || "Unable to save changes. Please try again.");
+      throw new Error(body?.error?.message || "Unable to save changes.");
     }
     return body.data.settings as SiteSettings;
   };
 
-  // ── Save: Contact ──
+  const saveBrand = async () => {
+    setBrandSave("saving");
+    setBrandError(undefined);
+    try {
+      const updated = await patchSettings({ brand });
+      if (updated.brand) setBrand(updated.brand);
+      setBrandSave("success");
+      setTimeout(() => setBrandSave("idle"), 3000);
+    } catch (err: unknown) {
+      setBrandError(err instanceof Error ? err.message : "Failed to save brand settings");
+      setBrandSave("error");
+    }
+  };
+
   const saveContact = async () => {
     setContactSave("saving");
     setContactError(undefined);
     try {
       const updated = await patchSettings({ contact });
-      setSettings(updated);
-      setContact(updated.contact);
+      if (updated.contact) setContact(updated.contact);
       setContactSave("success");
-      setTimeout(() => setContactSave("idle"), 3500);
+      setTimeout(() => setContactSave("idle"), 3000);
     } catch (err: unknown) {
-      setContactError(err instanceof Error ? err.message : "Unable to save changes. Please try again.");
+      setContactError(err instanceof Error ? err.message : "Failed to save contact settings");
       setContactSave("error");
     }
   };
 
-  // ── Save: Social ──
   const saveSocial = async () => {
     setSocialSave("saving");
     setSocialError(undefined);
     try {
       const updated = await patchSettings({ social });
-      setSettings(updated);
-      setSocial(updated.social);
+      if (updated.social) setSocial(updated.social);
       setSocialSave("success");
-      setTimeout(() => setSocialSave("idle"), 3500);
+      setTimeout(() => setSocialSave("idle"), 3000);
     } catch (err: unknown) {
-      setSocialError(err instanceof Error ? err.message : "Unable to save changes. Please try again.");
+      setSocialError(err instanceof Error ? err.message : "Failed to save social links");
       setSocialSave("error");
     }
   };
 
-  // ── Save: Notifications (auto-save on toggle) ──
-  const saveNotifications = useCallback(async (next: NotificationSettings) => {
+  const saveFooter = async () => {
+    setFooterSave("saving");
+    setFooterError(undefined);
+    try {
+      const updated = await patchSettings({ footer });
+      if (updated.footer) setFooter(updated.footer);
+      setFooterSave("success");
+      setTimeout(() => setFooterSave("idle"), 3000);
+    } catch (err: unknown) {
+      setFooterError(err instanceof Error ? err.message : "Failed to save footer settings");
+      setFooterSave("error");
+    }
+  };
+
+  const saveSeo = async () => {
+    setSeoSave("saving");
+    setSeoError(undefined);
+    try {
+      const updated = await patchSettings({ seo });
+      if (updated.seo) setSeo(updated.seo);
+      setSeoSave("success");
+      setTimeout(() => setSeoSave("idle"), 3000);
+    } catch (err: unknown) {
+      setSeoError(err instanceof Error ? err.message : "Failed to save SEO settings");
+      setSeoSave("error");
+    }
+  };
+
+  const saveNotifications = async () => {
     setNotifSave("saving");
     setNotifError(undefined);
     try {
-      const updated = await patchSettings({ notifications: next });
-      setSettings(updated);
-      setNotifications(updated.notifications);
+      const updated = await patchSettings({ notifications });
+      if (updated.notifications) setNotifications(updated.notifications);
       setNotifSave("success");
-      setTimeout(() => setNotifSave("idle"), 2500);
+      setTimeout(() => setNotifSave("idle"), 3000);
     } catch (err: unknown) {
-      setNotifError(err instanceof Error ? err.message : "Unable to save. Please try again.");
+      setNotifError(err instanceof Error ? err.message : "Failed to save notification settings");
       setNotifSave("error");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleToggle = (field: keyof NotificationSettings, value: boolean) => {
-    const next = { ...notifications, [field]: value };
-    setNotifications(next);
-    saveNotifications(next);
   };
 
-  // ── Save: Password ──
   const savePassword = async () => {
-    setPasswordFieldError({});
-    setPasswordMessage(undefined);
-
-    // Client-side pre-validation
-    const fieldErrors: Record<string, string> = {};
-    if (!currentPassword) fieldErrors.currentPassword = "Current password is required";
-    if (newPassword.length < 8) fieldErrors.newPassword = "New password must be at least 8 characters";
-    if (newPassword !== confirmPassword) fieldErrors.confirmPassword = "Passwords do not match";
-    if (Object.keys(fieldErrors).length > 0) {
-      setPasswordFieldError(fieldErrors);
-      setPasswordSave("error");
-      return;
-    }
-
     setPasswordSave("saving");
+    setPasswordMessage(undefined);
     try {
+      if (!currentPassword) throw new Error("Current password is required");
+      if (newPassword.length < 8) throw new Error("New password must be at least 8 characters");
+      if (newPassword !== confirmPassword) throw new Error("Passwords do not match");
+
       const res = await fetch("/api/auth/change-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
       });
       const body = await res.json();
-
       if (!res.ok || !body.success) {
-        // Field-level error from server
-        if (body?.error?.field) {
-          setPasswordFieldError({ [body.error.field]: body.error.message });
-        }
-        throw new Error(body?.error?.message || "Unable to change password. Please try again.");
+        throw new Error(body?.error?.message || "Failed to change password");
       }
 
-      // Success — session destroyed, redirect to login
       setPasswordSave("success");
-      setPasswordMessage("Password changed. Redirecting to sign in…");
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setTimeout(() => router.push("/login"), 2200);
+      setPasswordMessage("Password changed! Redirecting to sign in…");
+      setTimeout(() => router.push("/login"), 1800);
     } catch (err: unknown) {
-      setPasswordMessage(err instanceof Error ? err.message : "Unable to change password. Please try again.");
+      setPasswordMessage(err instanceof Error ? err.message : "Failed to change password");
       setPasswordSave("error");
     }
   };
 
-  // ─── Tabs ───────────────────────────────────────────────────────────────────
-
-  const tabs: { id: TabType; label: string; icon: React.ReactNode; isLocked: boolean }[] = [
-    { id: "account", label: "Account Details", icon: <User size={14} />, isLocked: false },
-    { id: "general", label: "General Settings", icon: <SettingsIcon size={14} />, isLocked: true },
-    { id: "contact", label: "Contact Info", icon: <Phone size={14} />, isLocked: false },
-    { id: "social", label: "Social Links", icon: <Share2 size={14} />, isLocked: false },
-    { id: "notifications", label: "Notifications", icon: <Bell size={14} />, isLocked: false },
-    { id: "security", label: "Security", icon: <KeyRound size={14} />, isLocked: false },
+  const tabs: { id: TabType; label: string; icon: React.ComponentType<{ className?: string; size?: number }> }[] = [
+    { id: "brand", label: "Brand Profile", icon: Building2 },
+    { id: "contact", label: "Contact & Hours", icon: Phone },
+    { id: "social", label: "Social Links", icon: Share2 },
+    { id: "footer", label: "Footer Management", icon: FileText },
+    { id: "seo", label: "Default SEO", icon: Search },
+    { id: "notifications", label: "Notifications", icon: Bell },
+    { id: "security", label: "Security & Password", icon: KeyRound },
+    { id: "account", label: "Admin Account", icon: User },
   ];
 
-  // ─── Loading / Error gates ───────────────────────────────────────────────────
-
-  if (isLoading) {
-    return <LoadingState variant="spinner" text="Loading system settings…" />;
-  }
-
+  if (isLoading) return <LoadingState variant="spinner" text="Loading settings…" />;
   if (error || !user) {
-    const isAuthError =
-      (error && (error.includes("unauthenticated") || error.includes("401") || error.includes("Unauthorized"))) ||
-      !user;
     return (
       <ErrorState
-        title={isAuthError ? "Authentication Required" : "Unable to load settings"}
-        description={
-          isAuthError
-            ? "Your operator session has expired or is invalid. Please sign in to view and manage settings."
-            : "Failed to retrieve your active administrative session credentials. Please check your network and retry."
-        }
-        onRetry={isAuthError ? () => router.push("/login") : handleRetry}
+        title="Authentication Required"
+        description="Your session has expired. Please sign in to view settings."
+        onRetry={() => router.push("/login")}
       />
     );
   }
-
-  // ─── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <motion.div
       initial={{ opacity: 0, y: prefersReduced ? 0 : 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: prefersReduced ? 0.05 : 0.6,
-        ease: [0.16, 1, 0.3, 1] as const,
-      }}
-      className="space-y-6 select-none"
+      transition={{ duration: 0.3 }}
+      className="space-y-6 pb-20 select-none"
     >
       {/* Page Header */}
-      <div className="border-b border-white/5 pb-6">
-        <div className="flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-white/60 font-sans mb-1">
-          <span>DASHBOARD</span>
+      <div className="border-b border-white/10 pb-6">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-[#81998D] font-sans font-semibold mb-1">
+          <span>CELIFE CMS</span>
           <span>/</span>
-          <span className="text-white/60">SETTINGS</span>
+          <span>CONFIGURATION</span>
         </div>
-        <h2 className="text-xl md:text-2xl font-serif text-white tracking-wide">Settings</h2>
-        <p className="text-sm text-white/65 font-sans tracking-wide">
-          Manage your dashboard and website configuration.
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+          Site Settings & Brand Controls
+        </h1>
+        <p className="text-xs text-white/60 font-sans mt-0.5">
+          Manage brand identifiers, contact coordinates, social channels, footer copy, and SEO metadata.
         </p>
       </div>
 
-      {/* Main Settings Panel Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-        {/* Navigation Sidebar */}
-        <div className="lg:col-span-1 flex flex-row lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 border-b lg:border-b-0 border-white/5 lg:border-r lg:border-white/5 lg:pr-4 scrollbar-none">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xs text-sm uppercase tracking-wide font-sans font-semibold transition-all duration-300 outline-none text-left whitespace-nowrap lg:w-full cursor-pointer select-none ${
-                activeTab === tab.id
-                  ? "bg-white/5 text-primary border-l-2 border-primary pl-3.5"
-                  : "text-white/65 hover:text-white/80 hover:bg-white/[0.02] border-l-2 border-transparent"
-              }`}
-            >
-              {tab.icon}
-              <span>{tab.label}</span>
-              {tab.isLocked && <Lock size={10} className="ml-auto text-white/20" />}
-            </button>
-          ))}
+      {/* Grid: Nav Sidebar & Content */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Navigation Sidebar (3 cols) */}
+        <div className="lg:col-span-3 flex flex-row lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 border-b lg:border-b-0 border-white/10 lg:border-r lg:border-white/10 lg:pr-4">
+          {tabs.map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xs text-xs font-sans font-medium uppercase tracking-wider transition-all duration-200 outline-none text-left whitespace-nowrap lg:w-full cursor-pointer select-none ${
+                  active
+                    ? "bg-[#123C2D] text-white font-semibold shadow-xs"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
+                }`}
+              >
+                <Icon size={14} className={active ? "text-[#C4D5C7]" : "text-white/40"} />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
         </div>
 
-        {/* Settings Content */}
-        <div className="lg:col-span-3 min-h-[300px]">
+        {/* Tab Content Panel (9 cols) */}
+        <div className="lg:col-span-9 bg-[#0E1B15] border border-white/10 rounded-xs p-6 md:p-8">
+          
+          {/* ── BRAND ── */}
+          {activeTab === "brand" && (
+            <div className="space-y-5">
+              <div className="border-b border-white/10 pb-3">
+                <h2 className="text-base font-serif font-bold text-white">Brand Profile</h2>
+                <p className="text-xs text-white/50 font-sans">
+                  Core identity and brand taglines reflected across navigation and footers.
+                </p>
+              </div>
 
-          {/* ── TAB 1: Account Details ─────────────────────────────────────── */}
-          {activeTab === "account" && (
-            <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6">
-              <div className="border-b border-white/5 pb-4">
-                <h4 className="text-sm uppercase tracking-[0.16em] text-white/90 font-sans font-medium">
-                  Account Details
-                </h4>
-                <p className="text-sm text-white/60 font-sans mt-0.5">
-                  Current authenticated operator session credentials.
+              <div className="space-y-4">
+                <FieldInput
+                  label="Company Name"
+                  value={brand.companyName}
+                  onChange={(v) => setBrand({ ...brand, companyName: v })}
+                  placeholder="Celife Health Solutions"
+                />
+                <FieldInput
+                  label="Short Tagline"
+                  value={brand.tagline}
+                  onChange={(v) => setBrand({ ...brand, tagline: v })}
+                  placeholder="Targeted Botanical & Nutritional Wellness Formulations"
+                />
+                <FieldInput
+                  label="Logo Image URL or Path"
+                  value={brand.logo}
+                  onChange={(v) => setBrand({ ...brand, logo: v })}
+                  placeholder="/images/general/celife-logo.png"
+                />
+                <FieldInput
+                  label="Favicon URL or Path"
+                  value={brand.favicon}
+                  onChange={(v) => setBrand({ ...brand, favicon: v })}
+                  placeholder="/favicon.ico"
+                />
+
+                <SaveBar
+                  state={brandSave}
+                  errorMessage={brandError}
+                  onSave={saveBrand}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ── CONTACT ── */}
+          {activeTab === "contact" && (
+            <div className="space-y-5">
+              <div className="border-b border-white/10 pb-3">
+                <h2 className="text-base font-serif font-bold text-white">Contact & Operating Hours</h2>
+                <p className="text-xs text-white/50 font-sans">
+                  Official communications desk coordinates and customer support availability.
                 </p>
               </div>
 
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <FieldLabel>Operator Name</FieldLabel>
-                    <div className="bg-black border border-white/5 text-sm text-white/90 px-4 py-3 rounded-xs font-sans">
-                      {user.name}
-                    </div>
-                  </div>
-
-                  <div className="space-y-1">
-                    <FieldLabel>Access Role</FieldLabel>
-                    <div className="flex items-center gap-2 bg-black border border-white/5 text-sm text-white/90 px-4 py-2.5 rounded-xs font-sans">
-                      <ShieldCheck size={14} className="text-primary" />
-                        <span className="uppercase tracking-wide text-xs font-semibold text-primary">
-                        {user.role}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-1">
-                  <FieldLabel>Email Address</FieldLabel>
-                  <div className="bg-black border border-white/5 text-sm text-white/90 px-4 py-3 rounded-xs font-sans">
-                    {user.email}
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 text-sm text-white/55 font-sans pt-2 leading-relaxed">
-                  <CheckCircle2 size={12} className="text-[#C9A24A]/60 shrink-0" />
-                  <span>
-                    Session verified via secure JWT token cookie. To change your password, visit the{" "}
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab("security")}
-                      className="text-primary/70 hover:text-primary underline underline-offset-2 cursor-pointer"
-                    >
-                      Security
-                    </button>{" "}
-                    tab.
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── TAB 2: General Settings (read-only, static config) ─────────── */}
-          {activeTab === "general" && (
-            <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6 relative overflow-hidden">
-              <div className="flex items-center gap-2.5 bg-white/[0.02] border border-white/5 p-4 rounded-xs text-sm text-white/60 font-sans leading-relaxed">
-                <Lock size={14} className="text-primary/70 shrink-0" />
-                <span>
-                  <strong>Read-only:</strong> General brand values are defined inside static deployment config
-                  tokens and are not backed by a database model schema. Exposing site updates via write endpoints
-                  is currently unsupported.
-                </span>
-              </div>
-
-              <div className="border-b border-white/5 pb-4">
-                <h4 className="text-sm uppercase tracking-[0.16em] text-white/90 font-sans font-medium">
-                  General Settings
-                </h4>
-                <p className="text-sm text-white/60 font-sans mt-0.5">Global website brand parameters.</p>
-              </div>
-
-              <div className="space-y-4 opacity-50 pointer-events-none">
-                <div className="space-y-1.5">
-                  <span className="text-xs uppercase tracking-wide text-white/70 font-sans font-medium block">
-                    Site Name
-                  </span>
-                  <input
-                    type="text"
-                    value={siteConfig.name}
-                    disabled
-                    className="w-full bg-black border border-white/5 text-xs text-white px-4 py-3 rounded-xs outline-none font-sans"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <span className="text-xs uppercase tracking-wide text-white/70 font-sans font-medium block">
-                    Site Description
-                  </span>
-                  <textarea
-                    rows={3}
-                    value={siteConfig.description}
-                    disabled
-                    className="w-full bg-black border border-white/5 text-xs text-white px-4 py-3 rounded-xs outline-none font-sans resize-none leading-relaxed"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <span className="text-xs uppercase tracking-wide text-white/70 font-sans font-medium block">
-                      Short Initials
-                    </span>
-                    <input
-                      type="text"
-                      value={siteConfig.shortName}
-                      disabled
-                      className="w-full bg-black border border-white/5 text-xs text-white px-4 py-3 rounded-xs outline-none font-sans"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <span className="text-xs uppercase tracking-wide text-white/70 font-sans font-medium block">
-                      Base URL
-                    </span>
-                    <input
-                      type="text"
-                      value={siteConfig.url}
-                      disabled
-                      className="w-full bg-black border border-white/5 text-xs text-white px-4 py-3 rounded-xs outline-none font-sans"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── TAB 3: Contact Info ────────────────────────────────────────── */}
-          {activeTab === "contact" && (
-            <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6">
-              <div className="border-b border-white/5 pb-4">
-                <h4 className="text-[11px] uppercase tracking-[0.2em] text-white/80 font-sans font-semibold">
-                  Contact Coordinates
-                </h4>
-                <p className="text-[10px] text-white/40 font-sans mt-0.5">
-                  Business and customer inquiry response coordinates.
-                </p>
-              </div>
-
-              {settingsLoading ? (
-                <div className="flex items-center gap-2 text-[10px] text-white/40 font-sans py-8 justify-center">
-                  <Loader2 size={14} className="animate-spin text-primary" />
-                  Loading contact settings…
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <FieldInput
-                      label="Inquiry Email"
-                      type="email"
-                      value={contact.email}
-                      onChange={(v) => setContact((c) => ({ ...c, email: v }))}
-                      placeholder="advisory@example.com"
-                    />
-                    <FieldInput
-                      label="Telephone"
-                      value={contact.phone}
-                      onChange={(v) => setContact((c) => ({ ...c, phone: v }))}
-                      placeholder="+44 20 7946 0958"
-                    />
-                  </div>
                   <FieldInput
-                    label="Headquarters Address"
-                    value={contact.address}
-                    onChange={(v) => setContact((c) => ({ ...c, address: v }))}
-                    placeholder="Mayfair, London, UK"
+                    label="Official Enquiry Email"
+                    type="email"
+                    value={contact.email}
+                    onChange={(v) => setContact({ ...contact, email: v })}
+                    placeholder="enquiry@celifehealth.com"
                   />
                   <FieldInput
-                    label="Website URL"
-                    type="url"
-                    value={contact.website}
-                    onChange={(v) => setContact((c) => ({ ...c, website: v }))}
-                    placeholder="https://thedco.com"
-                  />
-
-                  <SaveBar
-                    state={contactSave}
-                    errorMessage={contactError}
-                    onSave={saveContact}
+                    label="Telephone Number"
+                    value={contact.phone}
+                    onChange={(v) => setContact({ ...contact, phone: v })}
+                    placeholder="+91 98200 12345"
                   />
                 </div>
-              )}
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <FieldInput
+                    label="WhatsApp Helpline"
+                    value={contact.whatsapp || ""}
+                    onChange={(v) => setContact({ ...contact, whatsapp: v })}
+                    placeholder="+91 98200 12345"
+                  />
+                  <FieldInput
+                    label="Business Hours"
+                    value={contact.businessHours || ""}
+                    onChange={(v) => setContact({ ...contact, businessHours: v })}
+                    placeholder="Mon – Fri: 9:00 AM – 6:00 PM IST"
+                  />
+                </div>
+
+                <FieldInput
+                  label="Headquarters Address"
+                  value={contact.address}
+                  onChange={(v) => setContact({ ...contact, address: v })}
+                  placeholder="Mumbai, Maharashtra, India"
+                />
+
+                <FieldInput
+                  label="Website Base URL"
+                  value={contact.website}
+                  onChange={(v) => setContact({ ...contact, website: v })}
+                  placeholder="https://celifehealth.com"
+                />
+
+                <SaveBar
+                  state={contactSave}
+                  errorMessage={contactError}
+                  onSave={saveContact}
+                />
+              </div>
             </div>
           )}
 
-          {/* ── TAB 4: Social Links ────────────────────────────────────────── */}
+          {/* ── SOCIAL ── */}
           {activeTab === "social" && (
-            <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6">
-              <div className="border-b border-white/5 pb-4">
-                <h4 className="text-[11px] uppercase tracking-[0.2em] text-white/80 font-sans font-semibold">
-                  Social Links
-                </h4>
-                <p className="text-[10px] text-white/40 font-sans mt-0.5">
-                  Platform integration URLs rendered on client sections.
-                </p>
-              </div>
-
-              {settingsLoading ? (
-                <div className="flex items-center gap-2 text-[10px] text-white/40 font-sans py-8 justify-center">
-                  <Loader2 size={14} className="animate-spin text-primary" />
-                  Loading social settings…
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  <FieldInput
-                    label="LinkedIn URL"
-                    type="url"
-                    value={social.linkedin}
-                    onChange={(v) => setSocial((s) => ({ ...s, linkedin: v }))}
-                    placeholder="https://linkedin.com/company/thedco"
-                  />
-                  <FieldInput
-                    label="Instagram URL"
-                    type="url"
-                    value={social.instagram}
-                    onChange={(v) => setSocial((s) => ({ ...s, instagram: v }))}
-                    placeholder="https://instagram.com/thedco"
-                  />
-                  <FieldInput
-                    label="YouTube URL"
-                    type="url"
-                    value={social.youtube}
-                    onChange={(v) => setSocial((s) => ({ ...s, youtube: v }))}
-                    placeholder="https://youtube.com/@thedco"
-                  />
-                  <FieldInput
-                    label="Facebook URL"
-                    type="url"
-                    value={social.facebook}
-                    onChange={(v) => setSocial((s) => ({ ...s, facebook: v }))}
-                    placeholder="https://facebook.com/thedco"
-                  />
-
-                  <SaveBar
-                    state={socialSave}
-                    errorMessage={socialError}
-                    onSave={saveSocial}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ── TAB 5: Notifications ──────────────────────────────────────── */}
-          {activeTab === "notifications" && (
-            <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6">
-              <div className="border-b border-white/5 pb-4">
-                <h4 className="text-[11px] uppercase tracking-[0.2em] text-white/80 font-sans font-semibold">
-                  Notification Dispatch Routing
-                </h4>
-                <p className="text-[10px] text-white/40 font-sans mt-0.5">
-                  Define dispatch parameters for customer interactions.
-                </p>
-              </div>
-
-              {settingsLoading ? (
-                <div className="flex items-center gap-2 text-[10px] text-white/40 font-sans py-8 justify-center">
-                  <Loader2 size={14} className="animate-spin text-primary" />
-                  Loading notification preferences…
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {/* Row */}
-                  {(
-                    [
-                      { field: "newInquiryEmail", label: "Email Alert on New Inquiries", desc: "Receive an email when a visitor submits an inquiry" },
-                      { field: "weeklyDigest", label: "Weekly Digest Reports", desc: "Summary of activity delivered every Monday" },
-                      { field: "systemAlerts", label: "System Alerts", desc: "Critical system and security notifications" },
-                    ] as { field: keyof NotificationSettings; label: string; desc: string }[]
-                  ).map(({ field, label, desc }) => (
-                    <div
-                      key={field}
-                      className="flex items-center justify-between p-4 border border-white/5 bg-black rounded-xs gap-4"
-                    >
-                      <div className="min-w-0">
-                        <div className="font-sans text-xs text-white/70">{label}</div>
-                        <div className="font-sans text-[10px] text-white/30 mt-0.5">{desc}</div>
-                      </div>
-                      <Toggle
-                        checked={notifications[field]}
-                        onChange={(v) => handleToggle(field, v)}
-                      />
-                    </div>
-                  ))}
-
-                  {/* Save state indicator */}
-                  <div className="pt-2 text-[10px] font-sans">
-                    {notifSave === "saving" && (
-                      <span className="flex items-center gap-2 text-white/50">
-                        <Loader2 size={12} className="animate-spin" />
-                        Saving preferences…
-                      </span>
-                    )}
-                    {notifSave === "success" && (
-                      <span className="flex items-center gap-2 text-emerald-400/80">
-                        <CheckCircle2 size={12} />
-                        Preferences saved.
-                      </span>
-                    )}
-                    {notifSave === "error" && (
-                      <span className="flex items-center gap-2 text-red-400/80">
-                        <AlertCircle size={12} />
-                        {notifError || "Unable to save preferences. Please try again."}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* ── TAB 6: Security / Password ──────────────────────────────────── */}
-          {activeTab === "security" && (
-            <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6">
-              <div className="border-b border-white/5 pb-4">
-                <h4 className="text-[11px] uppercase tracking-[0.2em] text-white/80 font-sans font-semibold">
-                  Security — Change Password
-                </h4>
-                <p className="text-[10px] text-white/40 font-sans mt-0.5">
-                  Update your administrator account password. You will be signed out upon success.
+            <div className="space-y-5">
+              <div className="border-b border-white/10 pb-3">
+                <h2 className="text-base font-serif font-bold text-white">Social Channel Links</h2>
+                <p className="text-xs text-white/50 font-sans">
+                  Official social network profiles linked in headers, footers, and sharing cards.
                 </p>
               </div>
 
               <div className="space-y-4">
-                {/* Current Password */}
-                <div className="space-y-1">
-                  <FieldLabel>Current Password</FieldLabel>
-                  <div className="relative">
-                    <input
-                      type={showCurrent ? "text" : "password"}
-                      value={currentPassword}
-                      onChange={(e) => {
-                        setCurrentPassword(e.target.value);
-                        if (passwordFieldError.currentPassword) {
-                          setPasswordFieldError((prev) => {
-                            const next = { ...prev };
-                            delete next.currentPassword;
-                            return next;
-                          });
-                        }
-                      }}
-                      autoComplete="current-password"
-                      placeholder="Enter current password"
-                      className={`w-full bg-black border text-xs text-white/80 px-4 py-3 pr-10 rounded-xs outline-none font-sans placeholder:text-white/20 focus:border-primary/30 transition-colors ${
-                        passwordFieldError.currentPassword ? "border-red-500/40" : "border-white/5"
-                      }`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowCurrent((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors cursor-pointer"
-                      tabIndex={-1}
-                      aria-label={showCurrent ? "Hide password" : "Show password"}
-                    >
-                      {showCurrent ? <EyeOff size={13} /> : <Eye size={13} />}
-                    </button>
-                  </div>
-                  {passwordFieldError.currentPassword && (
-                    <p className="text-[10px] text-red-400/80 font-sans">{passwordFieldError.currentPassword}</p>
-                  )}
+                <FieldInput
+                  label="LinkedIn URL"
+                  type="url"
+                  value={social.linkedin}
+                  onChange={(v) => setSocial({ ...social, linkedin: v })}
+                  placeholder="https://linkedin.com/company/celifehealth"
+                />
+                <FieldInput
+                  label="Instagram URL"
+                  type="url"
+                  value={social.instagram}
+                  onChange={(v) => setSocial({ ...social, instagram: v })}
+                  placeholder="https://instagram.com/celifehealth"
+                />
+                <FieldInput
+                  label="YouTube Channel URL"
+                  type="url"
+                  value={social.youtube}
+                  onChange={(v) => setSocial({ ...social, youtube: v })}
+                  placeholder="https://youtube.com/@celifehealth"
+                />
+                <FieldInput
+                  label="Facebook Page URL"
+                  type="url"
+                  value={social.facebook}
+                  onChange={(v) => setSocial({ ...social, facebook: v })}
+                  placeholder="https://facebook.com/celifehealth"
+                />
+
+                <SaveBar
+                  state={socialSave}
+                  errorMessage={socialError}
+                  onSave={saveSocial}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ── FOOTER ── */}
+          {activeTab === "footer" && (
+            <div className="space-y-5">
+              <div className="border-b border-white/10 pb-3">
+                <h2 className="text-base font-serif font-bold text-white">Footer Management</h2>
+                <p className="text-xs text-white/50 font-sans">
+                  Global footer description, regulatory healthcare disclaimer, and copyright notices.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <FieldLabel>Footer Brand Narrative</FieldLabel>
+                  <textarea
+                    rows={3}
+                    value={footer.description}
+                    onChange={(e) => setFooter({ ...footer, description: e.target.value })}
+                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-xs text-white rounded-xs focus:border-[#81998D] outline-none font-sans"
+                  />
                 </div>
 
-                {/* New Password */}
-                <div className="space-y-1">
-                  <FieldLabel>New Password</FieldLabel>
-                  <div className="relative">
-                    <input
-                      type={showNew ? "text" : "password"}
-                      value={newPassword}
-                      onChange={(e) => {
-                        setNewPassword(e.target.value);
-                        if (passwordFieldError.newPassword) {
-                          setPasswordFieldError((prev) => {
-                            const next = { ...prev };
-                            delete next.newPassword;
-                            return next;
-                          });
-                        }
-                      }}
-                      autoComplete="new-password"
-                      placeholder="Minimum 8 characters"
-                      className={`w-full bg-black border text-xs text-white/80 px-4 py-3 pr-10 rounded-xs outline-none font-sans placeholder:text-white/20 focus:border-primary/30 transition-colors ${
-                        passwordFieldError.newPassword ? "border-red-500/40" : "border-white/5"
-                      }`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNew((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors cursor-pointer"
-                      tabIndex={-1}
-                      aria-label={showNew ? "Hide password" : "Show password"}
-                    >
-                      {showNew ? <EyeOff size={13} /> : <Eye size={13} />}
-                    </button>
-                  </div>
-                  {passwordFieldError.newPassword && (
-                    <p className="text-[10px] text-red-400/80 font-sans">{passwordFieldError.newPassword}</p>
-                  )}
+                <FieldInput
+                  label="Copyright Notice"
+                  value={footer.copyright}
+                  onChange={(v) => setFooter({ ...footer, copyright: v })}
+                  placeholder="© 2026 Celife Health Solutions. All rights reserved."
+                />
+
+                <div>
+                  <FieldLabel>Regulatory / Educational Disclaimer</FieldLabel>
+                  <textarea
+                    rows={3}
+                    value={footer.disclaimer}
+                    onChange={(e) => setFooter({ ...footer, disclaimer: e.target.value })}
+                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-xs text-white rounded-xs focus:border-[#81998D] outline-none font-sans"
+                  />
                 </div>
 
-                {/* Confirm Password */}
-                <div className="space-y-1">
-                  <FieldLabel>Confirm New Password</FieldLabel>
-                  <div className="relative">
-                    <input
-                      type={showConfirm ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value);
-                        if (passwordFieldError.confirmPassword) {
-                          setPasswordFieldError((prev) => {
-                            const next = { ...prev };
-                            delete next.confirmPassword;
-                            return next;
-                          });
-                        }
-                      }}
-                      autoComplete="new-password"
-                      placeholder="Re-enter new password"
-                      className={`w-full bg-black border text-xs text-white/80 px-4 py-3 pr-10 rounded-xs outline-none font-sans placeholder:text-white/20 focus:border-primary/30 transition-colors ${
-                        passwordFieldError.confirmPassword ? "border-red-500/40" : "border-white/5"
-                      }`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirm((v) => !v)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors cursor-pointer"
-                      tabIndex={-1}
-                      aria-label={showConfirm ? "Hide password" : "Show password"}
-                    >
-                      {showConfirm ? <EyeOff size={13} /> : <Eye size={13} />}
-                    </button>
-                  </div>
-                  {passwordFieldError.confirmPassword && (
-                    <p className="text-[10px] text-red-400/80 font-sans">{passwordFieldError.confirmPassword}</p>
-                  )}
+                <SaveBar
+                  state={footerSave}
+                  errorMessage={footerError}
+                  onSave={saveFooter}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ── SEO ── */}
+          {activeTab === "seo" && (
+            <div className="space-y-5">
+              <div className="border-b border-white/10 pb-3">
+                <h2 className="text-base font-serif font-bold text-white">Default Search Engine Optimization</h2>
+                <p className="text-xs text-white/50 font-sans">
+                  Fallback metadata tags rendered when a specific page or article does not supply its own.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <FieldInput
+                  label="Default Meta Title"
+                  value={seo.defaultTitle}
+                  onChange={(v) => setSeo({ ...seo, defaultTitle: v })}
+                  placeholder="Celife Health Solutions | Premium Wellness & Healthcare Formulations"
+                />
+
+                <div>
+                  <FieldLabel>Default Meta Description</FieldLabel>
+                  <textarea
+                    rows={3}
+                    value={seo.defaultDescription}
+                    onChange={(e) => setSeo({ ...seo, defaultDescription: e.target.value })}
+                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-xs text-white rounded-xs focus:border-[#81998D] outline-none font-sans"
+                  />
                 </div>
 
-                {/* Security notice */}
-                <div className="flex items-start gap-2 bg-white/[0.02] border border-white/5 p-3 rounded-xs">
-                  <ShieldCheck size={13} className="text-primary/60 shrink-0 mt-0.5" />
-                  <p className="text-[10px] text-white/30 font-sans leading-relaxed">
-                    Passwords are hashed server-side using bcrypt. Upon success, your current session will be
-                    terminated and you will be redirected to the sign-in page.
-                  </p>
+                <FieldInput
+                  label="Default Open Graph (OG) Image URL"
+                  value={seo.defaultOgImage}
+                  onChange={(v) => setSeo({ ...seo, defaultOgImage: v })}
+                  placeholder="/images/hero/celife-wellness-hero.jpg"
+                />
+
+                <SaveBar
+                  state={seoSave}
+                  errorMessage={seoError}
+                  onSave={saveSeo}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ── NOTIFICATIONS ── */}
+          {activeTab === "notifications" && (
+            <div className="space-y-5">
+              <div className="border-b border-white/10 pb-3">
+                <h2 className="text-base font-serif font-bold text-white">Notification Preferences</h2>
+                <p className="text-xs text-white/50 font-sans">
+                  Email notifications dispatched when clients submit enquiries or require urgent advisory.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-xs">
+                  <div>
+                    <strong className="text-xs font-sans text-white block">
+                      New Enquiry Email Dispatch
+                    </strong>
+                    <span className="text-[11px] text-white/50 font-sans">
+                      Notify administrative desk immediately when a new product enquiry is received.
+                    </span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={notifications.newInquiryEmail}
+                    onChange={(e) =>
+                      setNotifications({ ...notifications, newInquiryEmail: e.target.checked })
+                    }
+                    className="rounded-xs w-4 h-4 accent-[#123C2D] cursor-pointer"
+                  />
                 </div>
 
-                {/* Save bar */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/5">
-                  <div className="text-[10px] font-sans">
-                    {passwordSave === "saving" && (
-                      <span className="flex items-center gap-2 text-white/50">
-                        <Loader2 size={12} className="animate-spin" />
-                        Changing password…
-                      </span>
-                    )}
-                    {passwordSave === "success" && (
-                      <span className="flex items-center gap-2 text-emerald-400/80">
-                        <CheckCircle2 size={12} />
-                        {passwordMessage}
-                      </span>
-                    )}
-                    {passwordSave === "error" && !Object.keys(passwordFieldError).length && (
-                      <span className="flex items-center gap-2 text-red-400/80">
-                        <AlertCircle size={12} />
-                        {passwordMessage || "Unable to change password. Please try again."}
-                      </span>
-                    )}
+                <div className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-xs">
+                  <div>
+                    <strong className="text-xs font-sans text-white block">
+                      Weekly Digest
+                    </strong>
+                    <span className="text-[11px] text-white/50 font-sans">
+                      Receive weekly summary of product inquiry trends and active catalogue stats.
+                    </span>
                   </div>
+                  <input
+                    type="checkbox"
+                    checked={notifications.weeklyDigest}
+                    onChange={(e) =>
+                      setNotifications({ ...notifications, weeklyDigest: e.target.checked })
+                    }
+                    className="rounded-xs w-4 h-4 accent-[#123C2D] cursor-pointer"
+                  />
+                </div>
 
-                  <button
-                    type="button"
-                    onClick={savePassword}
-                    disabled={passwordSave === "saving" || passwordSave === "success"}
-                    className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 border border-primary/30 text-primary text-[10px] uppercase tracking-widest font-sans font-semibold px-5 py-2.5 rounded-xs transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                  >
-                    {passwordSave === "saving" ? (
-                      <>
-                        <Loader2 size={11} className="animate-spin" />
-                        Changing…
-                      </>
-                    ) : (
-                      "Change Password"
-                    )}
-                  </button>
+                <SaveBar
+                  state={notifSave}
+                  errorMessage={notifError}
+                  onSave={saveNotifications}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ── SECURITY ── */}
+          {activeTab === "security" && (
+            <div className="space-y-5">
+              <div className="border-b border-white/10 pb-3">
+                <h2 className="text-base font-serif font-bold text-white">Operator Security & Credentials</h2>
+                <p className="text-xs text-white/50 font-sans">
+                  Update administrative password for your operator account.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <FieldInput
+                  label="Current Password"
+                  type="password"
+                  value={currentPassword}
+                  onChange={setCurrentPassword}
+                  placeholder="••••••••"
+                />
+
+                <FieldInput
+                  label="New Password"
+                  type="password"
+                  value={newPassword}
+                  onChange={setNewPassword}
+                  placeholder="Minimum 8 characters"
+                />
+
+                <FieldInput
+                  label="Confirm New Password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={setConfirmPassword}
+                  placeholder="Repeat new password"
+                />
+
+                <SaveBar
+                  state={passwordSave}
+                  errorMessage={passwordMessage}
+                  onSave={savePassword}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* ── ACCOUNT ── */}
+          {activeTab === "account" && (
+            <div className="space-y-5">
+              <div className="border-b border-white/10 pb-3">
+                <h2 className="text-base font-serif font-bold text-white">Admin Operator Session</h2>
+                <p className="text-xs text-white/50 font-sans">
+                  Current authenticated operator session details.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <FieldLabel>Operator Name</FieldLabel>
+                  <div className="bg-[#0A1410] border border-white/10 text-xs text-white/90 px-4 py-2.5 rounded-xs font-sans">
+                    {user.name}
+                  </div>
+                </div>
+
+                <div>
+                  <FieldLabel>Access Role</FieldLabel>
+                  <div className="flex items-center gap-2 bg-[#0A1410] border border-white/10 text-xs text-white/90 px-4 py-2 rounded-xs font-sans">
+                    <ShieldCheck size={14} className="text-[#81998D]" />
+                    <span className="uppercase tracking-wide text-xs font-semibold text-[#81998D]">
+                      {user.role}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <FieldLabel>Email Address</FieldLabel>
+                  <div className="bg-[#0A1410] border border-white/10 text-xs text-white/90 px-4 py-2.5 rounded-xs font-sans">
+                    {user.email}
+                  </div>
                 </div>
               </div>
             </div>

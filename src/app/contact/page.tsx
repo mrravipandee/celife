@@ -6,16 +6,29 @@ import { Navbar } from "@/components/layout/Navbar";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
-import { Mail, Phone, MapPin, Send, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
 import { ProductEnquiryForm } from "@/components/enquiry/ProductEnquiryForm";
+import { getPublicSettings } from "@/lib/services/settings";
 
-export const metadata: Metadata = constructMetadata({
-  title: "Contact & Enquiries | Celife Health Solutions",
-  description:
-    "Get in touch with Celife Health Solutions for product enquiries, distributor partnerships, clinical documentation, and general support.",
-});
+export const revalidate = 0;
 
-export default function ContactPage() {
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getPublicSettings();
+  return constructMetadata({
+    title: `Contact & Enquiries | ${settings.brand.companyName}`,
+    description:
+      "Get in touch with Celife Health Solutions for product enquiries, distributor partnerships, clinical documentation, and general support.",
+  });
+}
+
+export default async function ContactPage() {
+  const settings = await getPublicSettings();
+
+  const email = settings.contact.email || "enquiry@celifehealth.com";
+  const phone = settings.contact.phone || "+91 98200 12345";
+  const address = settings.contact.address || "Mumbai, Maharashtra, India";
+  const hours = settings.contact.businessHours || "Mon – Fri: 9:00 AM – 6:00 PM IST";
+
   return (
     <SmoothScroll>
       <Navbar />
@@ -33,7 +46,7 @@ export default function ContactPage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#171B18] tracking-tight leading-[1.1]">
-              Connect With Celife Health Solutions
+              Connect With {settings.brand.companyName}
             </h1>
 
             <p className="text-sm sm:text-base font-sans text-[#52635A] leading-relaxed">
@@ -70,9 +83,11 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3.5">
                     <Mail size={18} className="text-[#123C2D] shrink-0 mt-0.5" />
                     <div>
-                      <span className="block text-[10px] uppercase tracking-wider text-[#52635A]">General & Product Enquiries</span>
-                      <a href="mailto:enquiry@celifehealth.com" className="text-[#171B18] font-medium hover:text-[#123C2D] text-sm">
-                        enquiry@celifehealth.com
+                      <span className="block text-[10px] uppercase tracking-wider text-[#52635A]">
+                        General & Product Enquiries
+                      </span>
+                      <a href={`mailto:${email}`} className="text-[#171B18] font-medium hover:text-[#123C2D] text-sm">
+                        {email}
                       </a>
                     </div>
                   </div>
@@ -80,9 +95,11 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3.5">
                     <Phone size={18} className="text-[#123C2D] shrink-0 mt-0.5" />
                     <div>
-                      <span className="block text-[10px] uppercase tracking-wider text-[#52635A]">Advisory Desk</span>
-                      <a href="tel:+919820012345" className="text-[#171B18] font-medium hover:text-[#123C2D] text-sm">
-                        +91 98200 12345
+                      <span className="block text-[10px] uppercase tracking-wider text-[#52635A]">
+                        Advisory Desk
+                      </span>
+                      <a href={`tel:${phone.replace(/\s+/g, "")}`} className="text-[#171B18] font-medium hover:text-[#123C2D] text-sm">
+                        {phone}
                       </a>
                     </div>
                   </div>
@@ -90,42 +107,44 @@ export default function ContactPage() {
                   <div className="flex items-start gap-3.5">
                     <MapPin size={18} className="text-[#123C2D] shrink-0 mt-0.5" />
                     <div>
-                      <span className="block text-[10px] uppercase tracking-wider text-[#52635A]">Corporate Office</span>
+                      <span className="block text-[10px] uppercase tracking-wider text-[#52635A]">
+                        Corporate Office
+                      </span>
                       <span className="text-[#171B18] font-medium block text-sm">
-                        Celife Health Solutions, Mumbai, Maharashtra, India
+                        {address}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3.5">
+                    <Clock size={18} className="text-[#123C2D] shrink-0 mt-0.5" />
+                    <div>
+                      <span className="block text-[10px] uppercase tracking-wider text-[#52635A]">
+                        Business Hours
+                      </span>
+                      <span className="text-[#171B18] font-medium block text-sm">
+                        {hours}
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Institutional Distribution Note */}
-              <div className="bg-[#123C2D] text-white p-6 md:p-8 rounded-xs space-y-3 shadow-md">
-                <span className="text-[10px] uppercase tracking-[0.24em] font-semibold text-[#C4D5C7] block">
-                  Institutional Partnerships
+              {/* Advisory Response Notice */}
+              <div className="bg-[#123C2D]/5 border border-[#123C2D]/15 rounded-xs p-6 space-y-3">
+                <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#123C2D] block">
+                  Healthcare Advisory Notice
                 </span>
-                <h4 className="text-lg font-serif font-bold text-white">
-                  Pharmacies & Healthcare Facilities
-                </h4>
-                <p className="text-xs text-white/75 leading-relaxed">
-                  For bulk procurement, hospital distribution tenders, and custom formulation inquiries, our team provides complete technical files and batch certifications.
+                <p className="text-xs text-[#52635A] leading-relaxed">
+                  Submissions are routed directly to our formulation and distribution desk. Responses are typically provided within 1 business day.
                 </p>
-                <div className="pt-2">
-                  <a
-                    href="mailto:enquiry@celifehealth.com?subject=Institutional%20Distribution%20Enquiry"
-                    className="inline-flex items-center gap-1.5 text-xs text-white underline underline-offset-4 font-medium"
-                  >
-                    <span>Request Institutional Dossier</span>
-                    <Send size={11} />
-                  </a>
-                </div>
               </div>
             </div>
           </div>
         </div>
       </main>
 
-      <Footer />
+      <Footer settings={settings} />
     </SmoothScroll>
   );
 }

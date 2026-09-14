@@ -4,8 +4,27 @@ import React from "react";
 import Link from "next/link";
 import { CelifeLogo } from "@/components/ui/CelifeLogo";
 import { Mail, Phone, MapPin, Send, ArrowUpRight } from "lucide-react";
+import { PublicSettings } from "@/lib/services/settings";
 
-export function Footer() {
+interface FooterProps {
+  settings?: Partial<PublicSettings>;
+}
+
+export function Footer({ settings }: FooterProps) {
+  const brandName = settings?.brand?.companyName || "Celife Health Solutions";
+  const footerDesc =
+    settings?.footer?.description ||
+    "Celife Health Solutions is a dedicated healthcare, nutraceutical, and herbal wellness brand creating evidence-guided botanical and nutritional formulations to support human vitality.";
+  const address = settings?.contact?.address || "Mumbai, Maharashtra, India";
+  const email = settings?.contact?.email || "enquiry@celifehealth.com";
+  const phone = settings?.contact?.phone || "+91 98200 12345";
+  const copyright =
+    settings?.footer?.copyright ||
+    `© ${new Date().getFullYear()} ${brandName}. All rights reserved.`;
+  const disclaimer =
+    settings?.footer?.disclaimer ||
+    "Disclaimer: Information provided on this website is for professional and general educational purposes. Products are nutraceutical and dietary formulations not intended to diagnose, treat, cure, or prevent any medical condition. Always consult your qualified healthcare practitioner regarding health advice.";
+
   return (
     <footer className="bg-[#123C2D] text-white relative overflow-hidden border-t border-[#294F3D]">
       {/* Top Banner & Quick Enquiry Strip */}
@@ -43,24 +62,24 @@ export function Footer() {
             </Link>
 
             <p className="text-xs sm:text-sm font-sans text-white/75 leading-relaxed max-w-md">
-              Celife Health Solutions is a dedicated healthcare, nutraceutical, and herbal wellness brand creating evidence-guided botanical and nutritional formulations to support human vitality.
+              {footerDesc}
             </p>
 
             <div className="pt-2 flex flex-col space-y-2 text-xs font-sans text-white/70">
               <div className="flex items-center gap-2.5">
                 <MapPin size={14} className="text-[#81998D] shrink-0" />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>{address}</span>
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail size={14} className="text-[#81998D] shrink-0" />
-                <a href="mailto:enquiry@celifehealth.com" className="hover:text-white transition-colors">
-                  enquiry@celifehealth.com
+                <a href={`mailto:${email}`} className="hover:text-white transition-colors">
+                  {email}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
                 <Phone size={14} className="text-[#81998D] shrink-0" />
-                <a href="tel:+919820012345" className="hover:text-white transition-colors">
-                  +91 98200 12345
+                <a href={`tel:${phone.replace(/\s+/g, "")}`} className="hover:text-white transition-colors">
+                  {phone}
                 </a>
               </div>
             </div>
@@ -157,11 +176,11 @@ export function Footer() {
         {/* Disclaimer & Copyright */}
         <div className="mt-14 pt-8 border-t border-white/10 space-y-4">
           <p className="text-[11px] font-sans text-white/50 leading-relaxed max-w-4xl">
-            Disclaimer: Information provided on this website is for professional and general educational purposes. Products are nutraceutical and dietary formulations not intended to diagnose, treat, cure, or prevent any medical condition. Always consult your qualified healthcare practitioner regarding health advice.
+            {disclaimer}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-white/50">
-            <span>&copy; {new Date().getFullYear()} Celife Health Solutions. All rights reserved.</span>
+            <span>{copyright}</span>
             <div className="flex items-center gap-6">
               <Link href="/contact" className="hover:text-white transition-colors">
                 Privacy Policy

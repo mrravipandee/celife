@@ -1,11 +1,26 @@
 import React from "react";
 import Link from "next/link";
-import { productsData } from "@/data/products";
+import { getFeaturedProducts } from "@/lib/services/products";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ArrowRight } from "lucide-react";
 
-export function CelifeFeaturedProducts() {
-  const featured = productsData.slice(0, 3);
+interface CelifeFeaturedProductsProps {
+  content?: {
+    eyebrow?: string;
+    heading?: string;
+    description?: string;
+  };
+}
+
+export async function CelifeFeaturedProducts({ content }: CelifeFeaturedProductsProps) {
+  const featured = await getFeaturedProducts();
+  const displayProducts = featured.slice(0, 3);
+
+  const eyebrow = content?.eyebrow || "Featured Formulations";
+  const heading = content?.heading || "Curated Healthcare & Wellness Solutions";
+  const description =
+    content?.description ||
+    "Explore our core product portfolio formulated for neuro-vitality, joint mobility, and systemic wellness.";
 
   return (
     <section className="py-20 md:py-28 bg-[#F8FAF6]">
@@ -16,16 +31,16 @@ export function CelifeFeaturedProducts() {
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
               <span className="text-xs uppercase tracking-[0.24em] font-sans font-semibold text-[#123C2D]">
-                Featured Formulations
+                {eyebrow}
               </span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#171B18] tracking-tight leading-tight">
-              Curated Healthcare & Wellness Solutions
+              {heading}
             </h2>
 
             <p className="text-sm sm:text-base font-sans text-[#52635A] leading-relaxed">
-              Explore our core product portfolio formulated for neuro-vitality, joint mobility, and systemic wellness.
+              {description}
             </p>
           </div>
 
@@ -40,7 +55,7 @@ export function CelifeFeaturedProducts() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-          {featured.map((product) => (
+          {displayProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

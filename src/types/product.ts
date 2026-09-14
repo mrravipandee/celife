@@ -20,4 +20,6 @@ export interface Product {
   usageAdvice?: string;
   image: string;
   featured?: boolean;
+  published?: boolean;
+  order?: number;
 }

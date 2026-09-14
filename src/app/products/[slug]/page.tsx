@@ -10,6 +10,8 @@ import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { ProductDetailView } from "@/components/products/ProductDetailView";
 
+export const revalidate = 0;
+
 interface ProductDetailPageProps {
   params: Promise<{ slug: string }>;
 }

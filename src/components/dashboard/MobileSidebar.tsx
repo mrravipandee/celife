@@ -102,7 +102,7 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Admin Navigation Menu"
-            className="fixed top-0 bottom-0 left-0 w-[280px] bg-[#050505] flex flex-col shadow-2xl focus:outline-none"
+            className="fixed top-0 bottom-0 left-0 w-[280px] bg-[#0E1B15] flex flex-col shadow-2xl focus:outline-none"
           >
             {/* Header close block (overlapping the sidebar top) */}
             <div className="absolute top-6 right-4 z-50">

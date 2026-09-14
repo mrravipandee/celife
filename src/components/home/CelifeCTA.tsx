@@ -2,7 +2,30 @@ import React from "react";
 import Link from "next/link";
 import { Send, ArrowRight } from "lucide-react";
 
-export function CelifeCTA() {
+interface CelifeCTAProps {
+  content?: {
+    heading?: string;
+    description?: string;
+    primaryCtaLabel?: string;
+    primaryCtaLink?: string;
+    secondaryCtaLabel?: string;
+    secondaryCtaLink?: string;
+  };
+}
+
+export function CelifeCTA({ content }: CelifeCTAProps) {
+  const heading =
+    content?.heading || "Partner With Celife Health Solutions";
+  const description =
+    content?.description ||
+    "Whether you are a healthcare practitioner, pharmacy retailer, or institutional distributor — enquire today to request comprehensive formulation data sheets and availability.";
+  const primaryCtaLabel =
+    content?.primaryCtaLabel || "Submit Product Enquiry";
+  const primaryCtaLink = content?.primaryCtaLink || "/enquire";
+  const secondaryCtaLabel =
+    content?.secondaryCtaLabel || "View Full Catalogue";
+  const secondaryCtaLink = content?.secondaryCtaLink || "/products";
+
   return (
     <section className="py-16 md:py-24 bg-[#123C2D] text-white relative overflow-hidden">
       {/* Subtle radial ambient background accent */}
@@ -20,27 +43,27 @@ export function CelifeCTA() {
         </div>
 
         <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-[1.1]">
-          Partner With Celife Health Solutions
+          {heading}
         </h2>
 
         <p className="text-sm sm:text-base font-sans text-white/75 leading-relaxed max-w-2xl mx-auto">
-          Whether you are a healthcare practitioner, pharmacy retailer, or institutional distributor — enquire today to request comprehensive formulation data sheets and availability.
+          {description}
         </p>
 
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
-            href="/enquire"
+            href={primaryCtaLink}
             className="w-full sm:w-auto px-8 py-4 bg-white text-[#123C2D] hover:bg-[#F4F5EF] text-xs uppercase tracking-[0.2em] font-semibold rounded-xs shadow-lg transition-all flex items-center justify-center gap-2.5 cursor-pointer"
           >
-            <span>Submit Product Enquiry</span>
+            <span>{primaryCtaLabel}</span>
             <Send size={13} />
           </Link>
 
           <Link
-            href="/products"
+            href={secondaryCtaLink}
             className="w-full sm:w-auto px-8 py-4 bg-transparent text-white border border-white/30 hover:border-white text-xs uppercase tracking-[0.2em] font-semibold rounded-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>View Full Catalogue</span>
+            <span>{secondaryCtaLabel}</span>
             <ArrowRight size={13} />
           </Link>
         </div>
