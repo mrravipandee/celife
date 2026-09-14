@@ -21,6 +21,10 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  return <DashboardShell>{children}</DashboardShell>;
+  return (
+    <div className="min-h-screen bg-[#070F0B] text-white">
+      <DashboardShell>{children}</DashboardShell>
+    </div>
+  );
 }
 

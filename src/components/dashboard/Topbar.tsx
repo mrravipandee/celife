@@ -322,40 +322,40 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
 
   // Helper to resolve page title and breadcrumb based on route
   const getRouteDetails = () => {
-    if (pathname.startsWith("/dashboard/projects")) {
-      return { title: "Projects", breadcrumb: "Dashboard / Projects" };
+    if (pathname.startsWith("/dashboard/products")) {
+      return { title: "Product Formulations", breadcrumb: "Celife / Products" };
     }
-    if (pathname.startsWith("/dashboard/clients")) {
-      return { title: "Clients", breadcrumb: "Dashboard / Clients" };
+    if (pathname.startsWith("/dashboard/categories")) {
+      return { title: "Categories", breadcrumb: "Celife / Categories" };
+    }
+    if (pathname.startsWith("/dashboard/homepage")) {
+      return { title: "Homepage CMS", breadcrumb: "Celife / Homepage" };
+    }
+    if (pathname.startsWith("/dashboard/pages/about")) {
+      return { title: "About Page CMS", breadcrumb: "Celife / About" };
     }
     if (pathname.startsWith("/dashboard/inquiries")) {
-      return { title: "Inquiries", breadcrumb: "Dashboard / Inquiries" };
-    }
-    if (pathname.startsWith("/dashboard/services")) {
-      return { title: "Services", breadcrumb: "Dashboard / Services" };
+      return { title: "Inquiries", breadcrumb: "Celife / Inquiries" };
     }
     if (pathname.startsWith("/dashboard/blog")) {
-      return { title: "Blog Articles", breadcrumb: "Dashboard / Blog" };
-    }
-    if (pathname.startsWith("/dashboard/case-studies")) {
-      return { title: "Case Studies", breadcrumb: "Dashboard / Case Studies" };
+      return { title: "Blog Articles", breadcrumb: "Celife / Blog" };
     }
     if (pathname.startsWith("/dashboard/settings")) {
-      return { title: "Settings", breadcrumb: "Dashboard / Settings" };
+      return { title: "Settings", breadcrumb: "Celife / Settings" };
     }
 
     switch (pathname) {
       case "/dashboard":
-        return { title: "Overview", breadcrumb: "THEDCO / Dashboard" };
+        return { title: "Overview", breadcrumb: "Celife / Dashboard" };
       default:
-        return { title: "Dashboard", breadcrumb: "THEDCO / Dashboard" };
+        return { title: "Dashboard", breadcrumb: "Celife / Dashboard" };
     }
   };
 
   const { title, breadcrumb } = getRouteDetails();
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between w-full h-[72px] bg-black border-b border-white/5 px-4 md:px-8 select-none">
+    <header className="sticky top-0 z-40 flex items-center justify-between w-full h-[72px] bg-[#0A1410] border-b border-white/10 px-4 md:px-8 select-none">
       
       {/* ==========================================
           DESKTOP LAYOUT (visible on md screens up)
@@ -592,8 +592,11 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
         </button>
 
         {/* Center: Brand Logo */}
-        <div className="font-serif tracking-widest text-white text-base select-none">
-          THE DCO
+        <div className="flex items-center gap-1.5 select-none">
+          <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
+          <span className="font-serif tracking-wider font-bold text-white text-base">
+            CELIFE
+          </span>
         </div>
 
         {/* Right: Search, Notifications & Profile Avatar */}

@@ -13,7 +13,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <div className="dashboard-shell min-h-screen bg-black text-white antialiased font-sans">
+    <div className="dashboard-shell min-h-screen bg-[#070F0B] text-white antialiased font-sans">
       {/* 1. Desktop Fixed Sidebar */}
       <div className="hidden md:block fixed inset-y-0 left-0 w-[240px] md:w-[260px] h-screen z-30">
         <Sidebar className="w-full h-full" />
@@ -28,7 +28,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
         <Topbar onMenuToggle={() => setIsMobileOpen(true)} />
 
         {/* Content Section Container */}
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 xl:px-12 py-8 bg-black">
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 xl:px-12 py-8 bg-[#070F0B]">
           {children}
         </main>
       </div>

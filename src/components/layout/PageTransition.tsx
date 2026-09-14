@@ -24,7 +24,7 @@ export function PageTransition({ children }: PageTransitionProps) {
     }
   }, [pathname, lenis]);
 
-  if (preferReduced) {
+  if (preferReduced || pathname?.startsWith("/dashboard") || pathname === "/login") {
     return <>{children}</>;
   }
 
