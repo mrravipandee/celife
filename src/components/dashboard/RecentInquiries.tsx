@@ -48,57 +48,57 @@ export function RecentInquiries({ inquiries }: RecentInquiriesProps) {
     const s = status.toLowerCase();
     if (s === "new") {
       return (
-        <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-          <span className="text-xs uppercase tracking-wider text-primary font-semibold">New</span>
-        </div>
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-red-50 text-[#ED1C24] border border-red-200">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#ED1C24] animate-pulse" />
+          New
+        </span>
       );
     }
     if (s === "in-progress" || s === "review") {
       return (
-        <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#C9A24A]" />
-          <span className="text-xs uppercase tracking-wider text-[#C9A24A] font-semibold">In Progress</span>
-        </div>
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-amber-50 text-[#B7791F] border border-amber-200">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#B7791F]" />
+          In Progress
+        </span>
       );
     }
     if (s === "contacted") {
       return (
-        <div className="flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
-          <span className="text-xs uppercase tracking-wider text-white/60 font-medium">Contacted</span>
-        </div>
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+          Contacted
+        </span>
       );
     }
     return (
-      <div className="flex items-center gap-1.5">
-        <span className="w-1.5 h-1.5 rounded-full bg-white/20" />
-        <span className="text-xs uppercase tracking-wider text-white/50 font-medium">Closed</span>
-      </div>
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+        <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+        Closed
+      </span>
     );
   };
 
   return (
-    <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6 select-none flex flex-col justify-between">
+    <div className="bg-white border border-[#E1E8E2] p-6 rounded-lg space-y-6 select-none flex flex-col justify-between shadow-xs">
       {/* Header section */}
-      <div className="flex items-center justify-between border-b border-white/5 pb-4">
-        <h3 className="text-sm font-serif font-medium tracking-wider text-white">
-          Recent Inquiries
+      <div className="flex items-center justify-between border-b border-[#E1E8E2] pb-4">
+        <h3 className="text-base font-serif font-bold text-[#17201B]">
+          Recent Enquiries
         </h3>
         <Link
           href="/dashboard/inquiries"
-          className="text-xs uppercase tracking-[0.15em] text-white/60 hover:text-primary transition-colors flex items-center gap-1 font-medium"
+          className="text-xs uppercase tracking-[0.14em] text-[#123C2D] hover:underline transition-colors flex items-center gap-1 font-semibold"
         >
           <span>View all</span>
-          <ArrowRight size={11} />
+          <ArrowRight size={13} />
         </Link>
       </div>
 
       {/* Inquiry Rows or Empty State */}
       {displayInquiries.length === 0 ? (
         <div className="py-8 text-center space-y-2">
-          <Inbox size={24} className="mx-auto text-white/20" />
-          <p className="text-sm text-white/60 font-sans">No consultation requests received yet.</p>
+          <Inbox size={24} className="mx-auto text-[#68756D]/40" />
+          <p className="text-xs text-[#68756D] font-sans">No consultation requests received yet.</p>
         </div>
       ) : (
         <motion.div
@@ -106,7 +106,7 @@ export function RecentInquiries({ inquiries }: RecentInquiriesProps) {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-20px" }}
-          className="divide-y divide-white/5"
+          className="divide-y divide-[#E1E8E2]"
         >
           {displayInquiries.map((inq) => (
             <motion.div
@@ -115,29 +115,29 @@ export function RecentInquiries({ inquiries }: RecentInquiriesProps) {
             >
               <Link
                 href="/dashboard/inquiries"
-                className="flex items-center justify-between py-3.5 group cursor-pointer px-2 -mx-2 hover:bg-white/[0.02] rounded-xs transition-colors duration-300 block"
+                className="flex items-center justify-between py-3 group cursor-pointer px-3 rounded-md hover:bg-[#F6F8F5] transition-colors duration-150 block"
               >
                 {/* Left: Name and Inquiry Detail */}
                 <div className="flex flex-col gap-0.5 max-w-[50%]">
-                  <span className="text-sm font-sans font-semibold text-white tracking-wide group-hover:text-primary transition-colors">
+                  <span className="text-xs font-sans font-semibold text-[#17201B] group-hover:text-[#123C2D] transition-colors">
                     {inq.name}
                   </span>
-                  <span className="text-xs text-white/60 font-sans tracking-wide truncate">
+                  <span className="text-[11px] text-[#68756D] font-sans truncate">
                     {inq.type}
                   </span>
                 </div>
 
                 {/* Right: metadata (time, status icon, click indicator) */}
-                <div className="flex items-center gap-4 sm:gap-8">
-                  <span className="text-xs font-sans text-white/60 tracking-wider whitespace-nowrap font-medium">
+                <div className="flex items-center gap-4 sm:gap-6">
+                  <span className="text-xs font-sans text-[#68756D] whitespace-nowrap">
                     {inq.timeAgo}
                   </span>
                   <div className="w-24 flex justify-start">
                     {renderStatus(inq.status)}
                   </div>
                   <ArrowRight
-                    size={13}
-                    className="text-white/30 group-hover:text-primary group-hover:translate-x-1 transition-all duration-300"
+                    size={14}
+                    className="text-[#68756D]/40 group-hover:text-[#123C2D] group-hover:translate-x-1 transition-all duration-150"
                   />
                 </div>
               </Link>

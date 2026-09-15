@@ -25,18 +25,18 @@ export function BlogToolbar({
   onSortChange,
 }: BlogToolbarProps) {
   return (
-    <div className="flex flex-col lg:flex-row gap-4 justify-between items-stretch lg:items-center bg-[#050505] border border-white/5 p-4 rounded-xs select-none">
+    <div className="flex flex-col lg:flex-row gap-4 justify-between items-stretch lg:items-center bg-white border border-[#E1E8E2] p-4 rounded-lg shadow-xs select-none">
       {/* Search Input */}
       <div className="relative flex-1 max-w-md group">
-        <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-white/40 group-focus-within:text-primary transition-colors">
-          <Search size={14} />
+        <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#68756D] group-focus-within:text-[#123C2D] transition-colors">
+          <Search size={15} />
         </span>
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Search articles..."
-          className="w-full pl-9 pr-4 py-2 text-xs font-sans bg-black border border-white/5 rounded-xs text-white placeholder-white/30 outline-none transition-all duration-300 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
+          placeholder="Search articles by title or keyword..."
+          className="w-full pl-9 pr-4 py-2 text-xs font-sans bg-[#F6F8F5] border border-[#E1E8E2] rounded-md text-[#17201B] placeholder-[#68756D]/60 outline-none transition-all duration-200 focus:bg-white focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10"
         />
       </div>
 
@@ -44,13 +44,13 @@ export function BlogToolbar({
       <div className="flex flex-wrap items-center gap-3">
         {/* Status Filter */}
         <div className="flex items-center gap-2">
-          <span className="text-[9px] uppercase tracking-wider text-white/40 font-sans">Status</span>
+          <span className="text-xs font-sans font-medium text-[#68756D]">Status:</span>
           <select
             value={statusFilter}
             onChange={(e) => onStatusChange(e.target.value)}
-            className="px-3 py-2 text-xs font-sans bg-black border border-white/5 rounded-xs text-white/85 hover:text-white hover:border-white/10 outline-none cursor-pointer transition-all duration-300 focus:border-primary/40"
+            className="px-3 py-1.5 text-xs font-sans bg-[#F6F8F5] border border-[#E1E8E2] rounded-md text-[#17201B] hover:border-[#123C2D]/40 outline-none cursor-pointer transition-colors focus:border-[#123C2D] focus:bg-white"
           >
-            <option value="all">All</option>
+            <option value="all">All Statuses</option>
             <option value="published">Published</option>
             <option value="draft">Draft</option>
           </select>
@@ -58,31 +58,31 @@ export function BlogToolbar({
 
         {/* Category Filter */}
         <div className="flex items-center gap-2">
-          <span className="text-[9px] uppercase tracking-wider text-white/40 font-sans">Category</span>
+          <span className="text-xs font-sans font-medium text-[#68756D]">Category:</span>
           <select
             value={categoryFilter}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className="px-3 py-2 text-xs font-sans bg-black border border-white/5 rounded-xs text-white/85 hover:text-white hover:border-white/10 outline-none cursor-pointer transition-all duration-300 focus:border-primary/40"
+            className="px-3 py-1.5 text-xs font-sans bg-[#F6F8F5] border border-[#E1E8E2] rounded-md text-[#17201B] hover:border-[#123C2D]/40 outline-none cursor-pointer transition-colors focus:border-[#123C2D] focus:bg-white"
           >
-            <option value="all">All</option>
-            <option value="Hospitality">Hospitality</option>
-            <option value="Operations">Operations</option>
-            <option value="Restaurant">Restaurant</option>
-            <option value="Marketing">Marketing</option>
-            <option value="Resort">Resort</option>
+            <option value="all">All Categories</option>
+            <option value="Nutraceuticals">Nutraceuticals</option>
+            <option value="Herbal Science">Herbal Science</option>
+            <option value="Clinical Formulations">Clinical Formulations</option>
+            <option value="Wellness & Lifestyle">Wellness & Lifestyle</option>
+            <option value="Research & Quality">Research & Quality</option>
           </select>
         </div>
 
         {/* Sort Order */}
         <div className="flex items-center gap-2">
-          <span className="text-[9px] uppercase tracking-wider text-white/40 font-sans">Sort</span>
+          <span className="text-xs font-sans font-medium text-[#68756D]">Sort:</span>
           <select
             value={sortOrder}
             onChange={(e) => onSortChange(e.target.value)}
-            className="px-3 py-2 text-xs font-sans bg-black border border-white/5 rounded-xs text-white/85 hover:text-white hover:border-white/10 outline-none cursor-pointer transition-all duration-300 focus:border-primary/40"
+            className="px-3 py-1.5 text-xs font-sans bg-[#F6F8F5] border border-[#E1E8E2] rounded-md text-[#17201B] hover:border-[#123C2D]/40 outline-none cursor-pointer transition-colors focus:border-[#123C2D] focus:bg-white"
           >
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
           </select>
         </div>
       </div>

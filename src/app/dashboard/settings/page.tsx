@@ -97,7 +97,7 @@ type SaveState = "idle" | "saving" | "success" | "error";
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-xs uppercase tracking-wider text-white/70 font-sans font-medium block mb-1">
+    <span className="text-xs font-sans font-semibold text-[#17201B] block mb-1">
       {children}
     </span>
   );
@@ -127,7 +127,7 @@ function FieldInput({
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className="w-full bg-[#0A1410] border border-white/10 text-xs text-white px-4 py-2.5 rounded-xs outline-none font-sans placeholder:text-white/40 focus:border-[#81998D] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full bg-white border border-[#E1E8E2] text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none font-sans placeholder:text-[#68756D]/60 focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
       />
     </div>
   );
@@ -143,23 +143,23 @@ function SaveBar({
   onSave: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between pt-4 border-t border-white/10">
+    <div className="flex items-center justify-between pt-4 border-t border-[#E1E8E2]">
       <div className="text-xs font-sans">
         {state === "saving" && (
-          <span className="flex items-center gap-2 text-white/50">
-            <Loader2 size={12} className="animate-spin" />
+          <span className="flex items-center gap-2 text-[#68756D]">
+            <Loader2 size={12} className="animate-spin text-[#123C2D]" />
             Saving changes…
           </span>
         )}
         {state === "success" && (
-          <span className="flex items-center gap-2 text-emerald-400">
-            <CheckCircle2 size={12} />
+          <span className="flex items-center gap-2 text-[#2F7D54] font-medium">
+            <CheckCircle2 size={13} />
             Settings saved and revalidated.
           </span>
         )}
         {state === "error" && (
-          <span className="flex items-center gap-2 text-red-400">
-            <AlertCircle size={12} />
+          <span className="flex items-center gap-2 text-[#C0392B] font-medium">
+            <AlertCircle size={13} />
             {errorMessage || "Unable to save changes. Please check input fields."}
           </span>
         )}
@@ -168,7 +168,7 @@ function SaveBar({
         type="button"
         onClick={onSave}
         disabled={state === "saving"}
-        className="flex items-center gap-2 bg-[#123C2D] hover:bg-[#294F3D] border border-white/10 text-white text-xs uppercase tracking-wider font-sans font-semibold px-5 py-2.5 rounded-xs transition-all disabled:opacity-50 cursor-pointer shadow-xs"
+        className="flex items-center gap-2 bg-[#123C2D] hover:bg-[#294F3D] text-white text-xs font-sans font-medium px-5 py-2.5 rounded-md transition-all disabled:opacity-50 cursor-pointer shadow-xs"
       >
         {state === "saving" ? (
           <>
@@ -453,16 +453,16 @@ export default function SettingsDashboardPage() {
       className="space-y-6 pb-20 select-none"
     >
       {/* Page Header */}
-      <div className="border-b border-white/10 pb-6">
-        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] text-[#81998D] font-sans font-semibold mb-1">
+      <div className="border-b border-[#E1E8E2] pb-6">
+        <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] text-[#123C2D] font-sans font-semibold mb-1">
           <span>CELIFE CMS</span>
           <span>/</span>
           <span>CONFIGURATION</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#17201B] tracking-tight">
           Site Settings & Brand Controls
         </h1>
-        <p className="text-xs text-white/60 font-sans mt-0.5">
+        <p className="text-xs text-[#68756D] font-sans mt-0.5">
           Manage brand identifiers, contact coordinates, social channels, footer copy, and SEO metadata.
         </p>
       </div>
@@ -470,7 +470,7 @@ export default function SettingsDashboardPage() {
       {/* Grid: Nav Sidebar & Content */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Navigation Sidebar (3 cols) */}
-        <div className="lg:col-span-3 flex flex-row lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 border-b lg:border-b-0 border-white/10 lg:border-r lg:border-white/10 lg:pr-4">
+        <div className="lg:col-span-3 flex flex-row lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 border-b lg:border-b-0 border-[#E1E8E2] lg:border-r lg:border-[#E1E8E2] lg:pr-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const active = activeTab === tab.id;
@@ -479,13 +479,13 @@ export default function SettingsDashboardPage() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xs text-xs font-sans font-medium uppercase tracking-wider transition-all duration-200 outline-none text-left whitespace-nowrap lg:w-full cursor-pointer select-none ${
+                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-md text-xs font-sans font-medium transition-all duration-200 outline-none text-left whitespace-nowrap lg:w-full cursor-pointer select-none ${
                   active
                     ? "bg-[#123C2D] text-white font-semibold shadow-xs"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
+                    : "text-[#68756D] hover:text-[#17201B] hover:bg-[#F0F4F0]"
                 }`}
               >
-                <Icon size={14} className={active ? "text-[#C4D5C7]" : "text-white/40"} />
+                <Icon size={15} className={active ? "text-white" : "text-[#68756D]"} />
                 <span>{tab.label}</span>
               </button>
             );
@@ -493,14 +493,14 @@ export default function SettingsDashboardPage() {
         </div>
 
         {/* Tab Content Panel (9 cols) */}
-        <div className="lg:col-span-9 bg-[#0E1B15] border border-white/10 rounded-xs p-6 md:p-8">
+        <div className="lg:col-span-9 bg-white border border-[#E1E8E2] rounded-lg p-6 md:p-8 shadow-xs">
           
           {/* ── BRAND ── */}
           {activeTab === "brand" && (
             <div className="space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h2 className="text-base font-serif font-bold text-white">Brand Profile</h2>
-                <p className="text-xs text-white/50 font-sans">
+              <div className="border-b border-[#E1E8E2] pb-3">
+                <h2 className="text-base font-serif font-bold text-[#17201B]">Brand Profile</h2>
+                <p className="text-xs text-[#68756D] font-sans">
                   Core identity and brand taglines reflected across navigation and footers.
                 </p>
               </div>
@@ -543,9 +543,9 @@ export default function SettingsDashboardPage() {
           {/* ── CONTACT ── */}
           {activeTab === "contact" && (
             <div className="space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h2 className="text-base font-serif font-bold text-white">Contact & Operating Hours</h2>
-                <p className="text-xs text-white/50 font-sans">
+              <div className="border-b border-[#E1E8E2] pb-3">
+                <h2 className="text-base font-serif font-bold text-[#17201B]">Contact & Operating Hours</h2>
+                <p className="text-xs text-[#68756D] font-sans">
                   Official communications desk coordinates and customer support availability.
                 </p>
               </div>
@@ -608,9 +608,9 @@ export default function SettingsDashboardPage() {
           {/* ── SOCIAL ── */}
           {activeTab === "social" && (
             <div className="space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h2 className="text-base font-serif font-bold text-white">Social Channel Links</h2>
-                <p className="text-xs text-white/50 font-sans">
+              <div className="border-b border-[#E1E8E2] pb-3">
+                <h2 className="text-base font-serif font-bold text-[#17201B]">Social Channel Links</h2>
+                <p className="text-xs text-[#68756D] font-sans">
                   Official social network profiles linked in headers, footers, and sharing cards.
                 </p>
               </div>
@@ -657,9 +657,9 @@ export default function SettingsDashboardPage() {
           {/* ── FOOTER ── */}
           {activeTab === "footer" && (
             <div className="space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h2 className="text-base font-serif font-bold text-white">Footer Management</h2>
-                <p className="text-xs text-white/50 font-sans">
+              <div className="border-b border-[#E1E8E2] pb-3">
+                <h2 className="text-base font-serif font-bold text-[#17201B]">Footer Management</h2>
+                <p className="text-xs text-[#68756D] font-sans">
                   Global footer description, regulatory healthcare disclaimer, and copyright notices.
                 </p>
               </div>
@@ -671,7 +671,7 @@ export default function SettingsDashboardPage() {
                     rows={3}
                     value={footer.description}
                     onChange={(e) => setFooter({ ...footer, description: e.target.value })}
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-xs text-white rounded-xs focus:border-[#81998D] outline-none font-sans"
+                    className="w-full bg-white border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-md focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 outline-none font-sans placeholder:text-[#68756D]/60 shadow-xs"
                   />
                 </div>
 
@@ -688,7 +688,7 @@ export default function SettingsDashboardPage() {
                     rows={3}
                     value={footer.disclaimer}
                     onChange={(e) => setFooter({ ...footer, disclaimer: e.target.value })}
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-xs text-white rounded-xs focus:border-[#81998D] outline-none font-sans"
+                    className="w-full bg-white border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-md focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 outline-none font-sans placeholder:text-[#68756D]/60 shadow-xs"
                   />
                 </div>
 
@@ -704,9 +704,9 @@ export default function SettingsDashboardPage() {
           {/* ── SEO ── */}
           {activeTab === "seo" && (
             <div className="space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h2 className="text-base font-serif font-bold text-white">Default Search Engine Optimization</h2>
-                <p className="text-xs text-white/50 font-sans">
+              <div className="border-b border-[#E1E8E2] pb-3">
+                <h2 className="text-base font-serif font-bold text-[#17201B]">Default Search Engine Optimization</h2>
+                <p className="text-xs text-[#68756D] font-sans">
                   Fallback metadata tags rendered when a specific page or article does not supply its own.
                 </p>
               </div>
@@ -725,7 +725,7 @@ export default function SettingsDashboardPage() {
                     rows={3}
                     value={seo.defaultDescription}
                     onChange={(e) => setSeo({ ...seo, defaultDescription: e.target.value })}
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-xs text-white rounded-xs focus:border-[#81998D] outline-none font-sans"
+                    className="w-full bg-white border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-md focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 outline-none font-sans placeholder:text-[#68756D]/60 shadow-xs"
                   />
                 </div>
 
@@ -748,20 +748,20 @@ export default function SettingsDashboardPage() {
           {/* ── NOTIFICATIONS ── */}
           {activeTab === "notifications" && (
             <div className="space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h2 className="text-base font-serif font-bold text-white">Notification Preferences</h2>
-                <p className="text-xs text-white/50 font-sans">
+              <div className="border-b border-[#E1E8E2] pb-3">
+                <h2 className="text-base font-serif font-bold text-[#17201B]">Notification Preferences</h2>
+                <p className="text-xs text-[#68756D] font-sans">
                   Email notifications dispatched when clients submit enquiries or require urgent advisory.
                 </p>
               </div>
 
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-xs">
+                <div className="flex items-center justify-between p-4 bg-[#F6F8F5] border border-[#E1E8E2] rounded-md">
                   <div>
-                    <strong className="text-xs font-sans text-white block">
+                    <strong className="text-xs font-sans text-[#17201B] block font-semibold">
                       New Enquiry Email Dispatch
                     </strong>
-                    <span className="text-[11px] text-white/50 font-sans">
+                    <span className="text-[11px] text-[#68756D] font-sans">
                       Notify administrative desk immediately when a new product enquiry is received.
                     </span>
                   </div>
@@ -775,12 +775,12 @@ export default function SettingsDashboardPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-xs">
+                <div className="flex items-center justify-between p-4 bg-[#F6F8F5] border border-[#E1E8E2] rounded-md">
                   <div>
-                    <strong className="text-xs font-sans text-white block">
+                    <strong className="text-xs font-sans text-[#17201B] block font-semibold">
                       Weekly Digest
                     </strong>
-                    <span className="text-[11px] text-white/50 font-sans">
+                    <span className="text-[11px] text-[#68756D] font-sans">
                       Receive weekly summary of product inquiry trends and active catalogue stats.
                     </span>
                   </div>
@@ -806,9 +806,9 @@ export default function SettingsDashboardPage() {
           {/* ── SECURITY ── */}
           {activeTab === "security" && (
             <div className="space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h2 className="text-base font-serif font-bold text-white">Operator Security & Credentials</h2>
-                <p className="text-xs text-white/50 font-sans">
+              <div className="border-b border-[#E1E8E2] pb-3">
+                <h2 className="text-base font-serif font-bold text-[#17201B]">Operator Security & Credentials</h2>
+                <p className="text-xs text-[#68756D] font-sans">
                   Update administrative password for your operator account.
                 </p>
               </div>
@@ -850,9 +850,9 @@ export default function SettingsDashboardPage() {
           {/* ── ACCOUNT ── */}
           {activeTab === "account" && (
             <div className="space-y-5">
-              <div className="border-b border-white/10 pb-3">
-                <h2 className="text-base font-serif font-bold text-white">Admin Operator Session</h2>
-                <p className="text-xs text-white/50 font-sans">
+              <div className="border-b border-[#E1E8E2] pb-3">
+                <h2 className="text-base font-serif font-bold text-[#17201B]">Admin Operator Session</h2>
+                <p className="text-xs text-[#68756D] font-sans">
                   Current authenticated operator session details.
                 </p>
               </div>
@@ -860,16 +860,16 @@ export default function SettingsDashboardPage() {
               <div className="space-y-4">
                 <div>
                   <FieldLabel>Operator Name</FieldLabel>
-                  <div className="bg-[#0A1410] border border-white/10 text-xs text-white/90 px-4 py-2.5 rounded-xs font-sans">
+                  <div className="bg-[#F6F8F5] border border-[#E1E8E2] text-xs text-[#17201B] font-medium px-4 py-2.5 rounded-md font-sans">
                     {user.name}
                   </div>
                 </div>
 
                 <div>
                   <FieldLabel>Access Role</FieldLabel>
-                  <div className="flex items-center gap-2 bg-[#0A1410] border border-white/10 text-xs text-white/90 px-4 py-2 rounded-xs font-sans">
-                    <ShieldCheck size={14} className="text-[#81998D]" />
-                    <span className="uppercase tracking-wide text-xs font-semibold text-[#81998D]">
+                  <div className="flex items-center gap-2 bg-[#F0F4F0] border border-[#E1E8E2] text-xs text-[#123C2D] px-4 py-2 rounded-md font-sans">
+                    <ShieldCheck size={15} className="text-[#123C2D]" />
+                    <span className="uppercase tracking-wide text-xs font-semibold text-[#123C2D]">
                       {user.role}
                     </span>
                   </div>
@@ -877,7 +877,7 @@ export default function SettingsDashboardPage() {
 
                 <div>
                   <FieldLabel>Email Address</FieldLabel>
-                  <div className="bg-[#0A1410] border border-white/10 text-xs text-white/90 px-4 py-2.5 rounded-xs font-sans">
+                  <div className="bg-[#F6F8F5] border border-[#E1E8E2] text-xs text-[#17201B] font-medium px-4 py-2.5 rounded-md font-sans">
                     {user.email}
                   </div>
                 </div>

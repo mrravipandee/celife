@@ -96,7 +96,7 @@ export default function BlogDashboardPage() {
           slug: blog.slug,
           excerpt: blog.excerpt || "",
           category: blog.category,
-          author: blog.author?.name || "THE DCO Team",
+          author: blog.author?.name || "Celife Editorial Desk",
           status: blog.status as BlogStatus,
           publishedAt: blog.publishedAt ? formatDateStr(blog.publishedAt) : null,
           updatedAt: formatDateStr(blog.updatedAt || blog.createdAt),
@@ -263,23 +263,23 @@ export default function BlogDashboardPage() {
 
           {/* Pagination Controls */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between pt-6 border-t border-white/5 font-sans text-[10px] select-none uppercase tracking-wider">
+            <div className="flex items-center justify-between pt-6 border-t border-[#E1E8E2] font-sans text-xs select-none">
               <button
                 type="button"
                 disabled={page === 1}
                 onClick={() => handlePageChange(Math.max(page - 1, 1))}
-                className="px-4 py-2 bg-transparent border border-white/10 text-white/80 hover:text-white hover:border-white/20 transition-all rounded-xs outline-none disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                className="px-4 py-2 bg-white border border-[#E1E8E2] text-[#17201B] hover:bg-[#F0F4F0] transition-colors rounded-md outline-none disabled:opacity-40 disabled:pointer-events-none cursor-pointer shadow-xs font-medium"
               >
                 Previous
               </button>
-              <span className="text-white/40">
+              <span className="text-[#68756D]">
                 Page {page} of {totalPages}
               </span>
               <button
                 type="button"
                 disabled={page === totalPages}
                 onClick={() => handlePageChange(Math.min(page + 1, totalPages))}
-                className="px-4 py-2 bg-transparent border border-white/10 text-white/80 hover:text-white hover:border-white/20 transition-all rounded-xs outline-none disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                className="px-4 py-2 bg-white border border-[#E1E8E2] text-[#17201B] hover:bg-[#F0F4F0] transition-colors rounded-md outline-none disabled:opacity-40 disabled:pointer-events-none cursor-pointer shadow-xs font-medium"
               >
                 Next
               </button>
@@ -288,9 +288,9 @@ export default function BlogDashboardPage() {
         </div>
       ) : (
         <EmptyState
-          title="No Articles Yet"
-          description="Create your first THEDCO insight or hospitality article."
-          actionText="New Article"
+          title="No Articles Found"
+          description="Publish health research insights, herbal formulation guides, or company announcements."
+          actionText="Create Article"
           onAction={handleNewArticleClick}
         />
       )}

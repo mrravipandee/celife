@@ -181,18 +181,18 @@ export default function DashboardOverviewPage() {
       className="space-y-8 pb-12 select-none"
     >
       {/* 1. Celife Header & Quick Actions */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-white/10">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-[#E1E8E2]">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
-            <span className="text-[11px] uppercase tracking-[0.24em] font-sans font-semibold text-[#81998D]">
+            <span className="text-[11px] uppercase tracking-[0.2em] font-sans font-semibold text-[#6F8F80]">
               Celife Health Solutions CMS
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#17201B] tracking-tight mt-1">
             Website Content & Catalogue Overview
           </h1>
-          <p className="text-xs sm:text-sm text-white/60 font-sans mt-1">
+          <p className="text-xs sm:text-sm text-[#68756D] font-sans mt-1">
             Manage your public formulations, sections, enquiries, and brand settings.
           </p>
         </div>
@@ -201,30 +201,30 @@ export default function DashboardOverviewPage() {
         <div className="flex flex-wrap items-center gap-2.5">
           <Link
             href="/dashboard/products/new"
-            className="px-4 py-2.5 bg-[#123C2D] hover:bg-[#294F3D] text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 border border-white/10 shadow-xs"
+            className="px-4 py-2.5 bg-[#123C2D] hover:bg-[#294F3D] text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 border border-[#123C2D] shadow-xs"
           >
             <PlusCircle size={14} />
             <span>Add Product</span>
           </Link>
           <Link
             href="/dashboard/inquiries"
-            className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 border border-white/10"
+            className="px-4 py-2.5 bg-[#FFFFFF] hover:bg-[#F0F4F0] text-[#17201B] text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 border border-[#E1E8E2] shadow-2xs"
           >
-            <Eye size={14} />
+            <Eye size={14} className="text-[#6F8F80]" />
             <span>View Enquiries</span>
           </Link>
           <Link
             href="/dashboard/homepage"
-            className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 border border-white/10"
+            className="px-4 py-2.5 bg-[#FFFFFF] hover:bg-[#F0F4F0] text-[#17201B] text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 border border-[#E1E8E2] shadow-2xs"
           >
-            <Home size={14} />
+            <Home size={14} className="text-[#6F8F80]" />
             <span>Edit Homepage</span>
           </Link>
           <Link
             href="/dashboard/settings"
-            className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 border border-white/10"
+            className="px-4 py-2.5 bg-[#FFFFFF] hover:bg-[#F0F4F0] text-[#17201B] text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 border border-[#E1E8E2] shadow-2xs"
           >
-            <Settings size={14} />
+            <Settings size={14} className="text-[#6F8F80]" />
             <span>Edit Settings</span>
           </Link>
         </div>
@@ -247,19 +247,19 @@ export default function DashboardOverviewPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Recent Enquiries (7 cols) */}
-        <div className="lg:col-span-7 bg-[#0E1B15] border border-white/10 rounded-xs p-6 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="lg:col-span-7 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 space-y-4 shadow-2xs">
+          <div className="flex items-center justify-between pb-3 border-b border-[#E1E8E2]">
             <div>
-              <h2 className="text-base font-serif font-bold text-white">
+              <h2 className="text-base font-serif font-bold text-[#17201B]">
                 Recent Product Enquiries
               </h2>
-              <span className="text-xs text-white/50 font-sans">
+              <span className="text-xs text-[#68756D] font-sans">
                 Real-time submissions from the public enquiry desk
               </span>
             </div>
             <Link
               href="/dashboard/inquiries"
-              className="text-xs text-[#81998D] hover:text-white transition-colors flex items-center gap-1 font-medium"
+              className="text-xs text-[#123C2D] hover:text-[#294F3D] font-semibold transition-colors flex items-center gap-1"
             >
               <span>View All</span>
               <ArrowUpRight size={13} />
@@ -267,11 +267,11 @@ export default function DashboardOverviewPage() {
           </div>
 
           {recentInquiries.length === 0 ? (
-            <div className="py-8 text-center text-xs text-white/50">
+            <div className="py-8 text-center text-xs text-[#68756D]">
               No enquiries recorded yet. Submissions from the public enquiry desk will appear here.
             </div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-[#E1E8E2]">
               {recentInquiries.map((inq) => {
                 const dateStr = inq.createdAt
                   ? new Date(inq.createdAt).toLocaleDateString("en-GB", {
@@ -285,35 +285,35 @@ export default function DashboardOverviewPage() {
                   <div key={inq.id} className="py-3 flex items-center justify-between gap-4">
                     <div className="space-y-0.5 min-w-0">
                       <div className="flex items-center gap-2">
-                        <strong className="text-sm font-sans font-medium text-white truncate">
+                        <strong className="text-sm font-sans font-medium text-[#17201B] truncate">
                           {inq.name}
                         </strong>
                         {inq.product && (
-                          <span className="text-[10px] px-2 py-0.5 bg-[#123C2D] text-[#C4D5C7] rounded-xs font-semibold uppercase tracking-wider shrink-0">
+                          <span className="text-[10px] px-2 py-0.5 bg-[#F0F4F0] text-[#123C2D] border border-[#E1E8E2] rounded-xs font-semibold uppercase tracking-wider shrink-0">
                             {inq.product}
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-white/60 truncate font-sans">
+                      <p className="text-xs text-[#68756D] truncate font-sans">
                         {inq.email} · {inq.phone}
                       </p>
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0">
                       <span
-                        className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-xs tracking-wider ${
+                        className={`text-[10px] uppercase font-semibold px-2.5 py-0.5 rounded-xs tracking-wider border ${
                           inq.status === "new"
-                            ? "bg-[#ED1C24]/20 text-[#FF7A7A]"
+                            ? "bg-[#ED1C24]/10 text-[#ED1C24] border-[#ED1C24]/20"
                             : inq.status === "in-progress"
-                            ? "bg-amber-500/20 text-amber-300"
+                            ? "bg-amber-50 text-[#B7791F] border-amber-200"
                             : inq.status === "contacted"
-                            ? "bg-blue-500/20 text-blue-300"
-                            : "bg-emerald-500/20 text-emerald-300"
+                            ? "bg-blue-50 text-blue-700 border-blue-200"
+                            : "bg-emerald-50 text-[#2F7D54] border-emerald-200"
                         }`}
                       >
                         {inq.status}
                       </span>
-                      <span className="text-[11px] text-white/40 font-sans hidden sm:inline">
+                      <span className="text-[11px] text-[#68756D] font-sans hidden sm:inline">
                         {dateStr}
                       </span>
                     </div>
@@ -325,19 +325,19 @@ export default function DashboardOverviewPage() {
         </div>
 
         {/* Product Catalog Highlights (5 cols) */}
-        <div className="lg:col-span-5 bg-[#0E1B15] border border-white/10 rounded-xs p-6 space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-white/10">
+        <div className="lg:col-span-5 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 space-y-4 shadow-2xs">
+          <div className="flex items-center justify-between pb-3 border-b border-[#E1E8E2]">
             <div>
-              <h2 className="text-base font-serif font-bold text-white">
+              <h2 className="text-base font-serif font-bold text-[#17201B]">
                 Catalogue Formulations
               </h2>
-              <span className="text-xs text-white/50 font-sans">
+              <span className="text-xs text-[#68756D] font-sans">
                 Formulations active in the website catalogue
               </span>
             </div>
             <Link
               href="/dashboard/products"
-              className="text-xs text-[#81998D] hover:text-white transition-colors flex items-center gap-1 font-medium"
+              className="text-xs text-[#123C2D] hover:text-[#294F3D] font-semibold transition-colors flex items-center gap-1"
             >
               <span>Manage</span>
               <ArrowUpRight size={13} />
@@ -345,38 +345,38 @@ export default function DashboardOverviewPage() {
           </div>
 
           {recentProducts.length === 0 ? (
-            <div className="py-8 text-center text-xs text-white/50">
+            <div className="py-8 text-center text-xs text-[#68756D]">
               No products found.
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-2.5">
               {recentProducts.map((p) => (
                 <div
                   key={p.id}
-                  className="p-3 bg-white/5 rounded-xs border border-white/5 flex items-center justify-between gap-3"
+                  className="p-3 bg-[#F6F8F5] hover:bg-[#F0F4F0] rounded-xs border border-[#E1E8E2] flex items-center justify-between gap-3 transition-colors"
                 >
                   <div className="min-w-0">
-                    <strong className="text-sm font-serif font-bold text-white block truncate">
+                    <strong className="text-sm font-serif font-bold text-[#17201B] block truncate">
                       {p.name}
                     </strong>
-                    <span className="text-xs text-[#81998D] block truncate font-sans">
+                    <span className="text-xs text-[#68756D] block truncate font-sans">
                       {p.category}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
                     <span
-                      className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-xs tracking-wider ${
+                      className={`text-[10px] uppercase font-semibold px-2 py-0.5 rounded-xs tracking-wider border ${
                         p.published
-                          ? "bg-emerald-500/20 text-emerald-300"
-                          : "bg-white/10 text-white/50"
+                          ? "bg-emerald-50 text-[#2F7D54] border-emerald-200"
+                          : "bg-gray-100 text-[#68756D] border-gray-200"
                       }`}
                     >
                       {p.published ? "Published" : "Draft"}
                     </span>
                     <Link
                       href={`/dashboard/products/${p.id}/edit`}
-                      className="px-2.5 py-1 text-xs text-white/80 hover:text-white bg-white/10 rounded-xs transition-colors"
+                      className="px-2.5 py-1 text-xs text-[#17201B] hover:text-[#123C2D] bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs transition-colors font-medium shadow-2xs"
                     >
                       Edit
                     </Link>
@@ -390,15 +390,15 @@ export default function DashboardOverviewPage() {
       </div>
 
       {/* 4. Quick CMS Guide / Notice Card */}
-      <div className="p-6 bg-gradient-to-r from-[#0E1B15] to-[#123C2D]/40 border border-white/10 rounded-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="p-5 bg-[#F0F4F0] border border-[#E1E8E2] rounded-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
-            <h3 className="text-sm font-serif font-bold text-white">
+            <span className="w-2 h-2 rounded-full bg-[#2F7D54]" />
+            <h3 className="text-sm font-serif font-bold text-[#123C2D]">
               Public Website Sync Active
             </h3>
           </div>
-          <p className="text-xs text-white/70 font-sans leading-relaxed">
+          <p className="text-xs text-[#68756D] font-sans leading-relaxed">
             All edits made to Products, Categories, Homepage, and About page revalidate on-demand immediately.
           </p>
         </div>
@@ -406,7 +406,7 @@ export default function DashboardOverviewPage() {
         <Link
           href="/"
           target="_blank"
-          className="px-4 py-2 bg-white text-[#123C2D] hover:bg-[#F4F5EF] text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 shrink-0 shadow-xs"
+          className="px-4 py-2 bg-[#123C2D] text-white hover:bg-[#294F3D] text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-2 shrink-0 shadow-xs"
         >
           <span>View Public Site</span>
           <ArrowUpRight size={13} />

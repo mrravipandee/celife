@@ -313,18 +313,18 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
       {/* 1. Header with Breadcrumbs & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-white/5 pb-6">
         <div className="space-y-1">
-          <div className="flex items-center gap-1.5 text-[9px] uppercase tracking-[0.2em] text-white/40 font-sans">
-            <Link href="/dashboard" className="hover:text-white transition-colors">DASHBOARD</Link>
+          <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.18em] text-[#123C2D] font-sans font-semibold">
+            <Link href="/dashboard" className="hover:underline">DASHBOARD</Link>
             <span>/</span>
-            <Link href="/dashboard/blog" className="hover:text-white transition-colors">BLOG</Link>
+            <Link href="/dashboard/blog" className="hover:underline">EDITORIAL</Link>
             <span>/</span>
-            <span className="text-white/60">{mode === "create" ? "NEW" : "EDIT"}</span>
+            <span className="text-[#68756D]">{mode === "create" ? "NEW" : "EDIT"}</span>
           </div>
-          <h2 className="text-2xl md:text-3xl font-serif text-white tracking-wide">
-            {mode === "create" ? "Create Blog Post" : "Edit Blog Post"}
+          <h2 className="text-2xl md:text-3xl font-serif font-bold text-[#17201B] tracking-tight">
+            {mode === "create" ? "Create Article" : "Edit Article"}
           </h2>
-          <p className="text-xs text-white/50 font-sans tracking-wide">
-            {mode === "create" ? "Create and publish a new THE DCO article." : "Update and manage this article."}
+          <p className="text-xs text-[#68756D] font-sans mt-0.5">
+            {mode === "create" ? "Draft and publish a new healthcare insight or wellness article." : "Update and manage article content and metadata."}
           </p>
         </div>
 
@@ -334,7 +334,7 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
             type="button"
             onClick={onCancel}
             disabled={saveStatus === "saving" || isUploadingImage}
-            className="px-4 py-2.5 text-[9px] uppercase tracking-widest font-sans font-semibold border border-transparent text-white/40 hover:text-white disabled:opacity-30 transition-colors rounded-xs outline-none cursor-pointer"
+            className="px-4 py-2 text-xs font-sans font-medium text-[#68756D] hover:text-[#17201B] disabled:opacity-40 transition-colors rounded-md outline-none cursor-pointer"
           >
             Cancel
           </button>
@@ -345,18 +345,18 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                 type="button"
                 onClick={() => handleSubmit("draft")}
                 disabled={saveStatus === "saving" || isUploadingImage}
-                className="flex items-center gap-1.5 px-4 py-2.5 text-[9px] uppercase tracking-widest font-sans font-semibold border border-white/10 text-white/85 hover:text-white disabled:opacity-30 transition-all rounded-xs outline-none cursor-pointer"
+                className="flex items-center gap-1.5 px-4 py-2 text-xs font-sans font-medium bg-white border border-[#E1E8E2] text-[#17201B] hover:bg-[#F0F4F0] disabled:opacity-40 transition-colors rounded-md shadow-xs outline-none cursor-pointer"
               >
-                {saveStatus === "saving" && <Loader2 className="animate-spin mr-1" size={10} />}
+                {saveStatus === "saving" && <Loader2 className="animate-spin mr-1 text-[#123C2D]" size={12} />}
                 Save Draft
               </button>
               <button
                 type="button"
                 onClick={() => handleSubmit("published")}
                 disabled={saveStatus === "saving" || isUploadingImage}
-                className="flex items-center gap-1.5 px-5 py-2.5 text-[9px] uppercase tracking-widest font-sans font-semibold bg-primary text-black hover:bg-white disabled:opacity-30 transition-all rounded-xs outline-none cursor-pointer"
+                className="flex items-center gap-1.5 px-5 py-2 text-xs font-sans font-medium bg-[#123C2D] text-white hover:bg-[#294F3D] disabled:opacity-40 transition-colors rounded-md shadow-xs outline-none cursor-pointer"
               >
-                {saveStatus === "saving" && <Loader2 className="animate-spin mr-1" size={10} />}
+                {saveStatus === "saving" && <Loader2 className="animate-spin mr-1" size={12} />}
                 Publish
               </button>
             </>
@@ -365,9 +365,9 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
               type="button"
               onClick={() => handleSubmit((initialBlog?.status as BlogStatus) || "draft")}
               disabled={saveStatus === "saving" || isUploadingImage}
-              className="flex items-center gap-1.5 px-5 py-2.5 text-[9px] uppercase tracking-widest font-sans font-semibold bg-primary text-black hover:bg-white disabled:opacity-30 transition-all rounded-xs outline-none cursor-pointer"
+              className="flex items-center gap-1.5 px-5 py-2 text-xs font-sans font-medium bg-[#123C2D] text-white hover:bg-[#294F3D] disabled:opacity-40 transition-colors rounded-md shadow-xs outline-none cursor-pointer"
             >
-              {saveStatus === "saving" && <Loader2 className="animate-spin mr-1" size={10} />}
+              {saveStatus === "saving" && <Loader2 className="animate-spin mr-1" size={12} />}
               Save Changes
             </button>
           )}
@@ -378,10 +378,10 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Editor fields */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6">
+          <div className="bg-white border border-[#E1E8E2] p-6 rounded-lg space-y-6 shadow-xs">
             {/* Title */}
             <div className="space-y-1.5">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Post Title
               </label>
               <input
@@ -389,14 +389,14 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                 value={title}
                 onChange={(e) => handleTitleChange(e.target.value)}
                 placeholder="Enter post title..."
-                className={`w-full bg-black border ${errors.title ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-3 rounded-xs outline-none focus:border-primary/45 transition-colors font-sans`}
+                className={`w-full bg-white border ${errors.title ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 transition-colors font-sans placeholder:text-[#68756D]/60 shadow-xs`}
               />
-              {errors.title && <p className="text-[10px] text-red-500 font-sans">{errors.title}</p>}
+              {errors.title && <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.title}</p>}
             </div>
 
             {/* Excerpt */}
             <div className="space-y-1.5">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Short Excerpt
               </label>
               <textarea
@@ -404,27 +404,27 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                 value={excerpt}
                 onChange={(e) => setExcerpt(e.target.value)}
                 placeholder="Write a brief article summary (20-500 characters)..."
-                className={`w-full bg-black border ${errors.excerpt ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-3 rounded-xs outline-none focus:border-primary/45 resize-none transition-colors font-sans leading-relaxed`}
+                className={`w-full bg-white border ${errors.excerpt ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 resize-none transition-colors font-sans leading-relaxed placeholder:text-[#68756D]/60 shadow-xs`}
               />
-              {errors.excerpt && <p className="text-[10px] text-red-500 font-sans">{errors.excerpt}</p>}
+              {errors.excerpt && <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.excerpt}</p>}
             </div>
 
             {/* ========================================================= */}
             {/* COVER IMAGE UPLOADER SECTION (Cloudinary Integrated) */}
             {/* ========================================================= */}
-            <div className="space-y-3 pt-2 border-t border-white/5">
+            <div className="space-y-3 pt-2 border-t border-[#E1E8E2]">
               <div className="flex items-center justify-between">
-                <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold flex items-center gap-1.5">
-                  <ImageIcon size={12} className="text-primary" />
+                <label className="text-xs font-sans font-semibold text-[#17201B] flex items-center gap-1.5">
+                  <ImageIcon size={14} className="text-[#123C2D]" />
                   <span>Cover / Featured Image</span>
                 </label>
 
                 <button
                   type="button"
                   onClick={() => setShowManualUrl(!showManualUrl)}
-                  className="text-[9px] uppercase tracking-widest text-white/40 hover:text-primary transition-colors flex items-center gap-1"
+                  className="text-xs text-[#68756D] hover:text-[#123C2D] transition-colors flex items-center gap-1 cursor-pointer"
                 >
-                  <LinkIcon size={10} />
+                  <LinkIcon size={12} />
                   <span>{showManualUrl ? "Hide Direct URL" : "Direct URL / Advanced"}</span>
                 </button>
               </div>
@@ -450,37 +450,37 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
                   onClick={() => !isUploadingImage && fileInputRef.current?.click()}
-                  className={`group relative w-full h-52 border-2 border-dashed rounded-xs flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-all duration-300 ${
+                  className={`group relative w-full h-48 border-2 border-dashed rounded-lg flex flex-col items-center justify-center p-6 text-center cursor-pointer transition-colors ${
                     isDragging
-                      ? "border-primary bg-primary/[0.04] scale-[1.005]"
+                      ? "border-[#123C2D] bg-[#F0F4F0]"
                       : errors.coverImage
-                      ? "border-red-500/40 bg-red-950/10 hover:border-red-500/70"
-                      : "border-white/10 bg-black/40 hover:border-primary/40 hover:bg-white/[0.01]"
+                      ? "border-[#C0392B] bg-red-50/30"
+                      : "border-[#E1E8E2] bg-[#F6F8F5] hover:bg-white hover:border-[#123C2D]/40"
                   }`}
                 >
                   {isUploadingImage ? (
                     <div className="flex flex-col items-center space-y-3">
-                      <Loader2 className="animate-spin text-primary" size={28} />
-                      <p className="text-xs text-white/80 font-sans tracking-wide">
+                      <Loader2 className="animate-spin text-[#123C2D]" size={28} />
+                      <p className="text-xs text-[#17201B] font-sans font-medium">
                         Uploading cover image to Cloudinary...
                       </p>
-                      <p className="text-[10px] text-white/40 font-sans">
+                      <p className="text-[11px] text-[#68756D] font-sans">
                         Optimizing delivery quality & format
                       </p>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center space-y-3 pointer-events-none">
-                      <div className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:border-primary/40 group-hover:scale-105 transition-all">
-                        <UploadCloud size={20} className="text-white/60 group-hover:text-primary transition-colors" />
+                      <div className="w-12 h-12 rounded-full bg-white border border-[#E1E8E2] flex items-center justify-center group-hover:border-[#123C2D]/40 group-hover:scale-105 transition-all shadow-xs">
+                        <UploadCloud size={20} className="text-[#123C2D]" />
                       </div>
                       <div className="space-y-1">
-                        <p className="text-xs text-white/80 font-sans">
-                          <span className="text-primary font-medium underline underline-offset-4">
+                        <p className="text-xs text-[#17201B] font-sans">
+                          <span className="text-[#123C2D] font-semibold underline underline-offset-4">
                             Click to upload
                           </span>{" "}
                           or drag and drop cover image
                         </p>
-                        <p className="text-[10px] text-white/40 font-sans">
+                        <p className="text-[11px] text-[#68756D] font-sans">
                           Supported: JPG, PNG, WEBP, AVIF (Max 5MB)
                         </p>
                       </div>
@@ -489,31 +489,31 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                 </div>
               ) : (
                 // Full-fidelity Preview card with replace and remove actions
-                <div className="relative border border-white/10 rounded-xs overflow-hidden bg-black group">
-                  <div className="relative w-full h-56 md:h-64 bg-zinc-950 flex items-center justify-center overflow-hidden">
+                <div className="relative border border-[#E1E8E2] rounded-lg overflow-hidden bg-white shadow-xs group">
+                  <div className="relative w-full h-56 md:h-64 bg-[#F6F8F5] flex items-center justify-center overflow-hidden">
                     <img
                       src={coverImageUrl}
                       alt={coverImageAlt || "Blog cover preview"}
-                      className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-[1.01] transition-transform duration-300"
                       onError={(e) => {
                         (e.target as HTMLElement).style.display = "none";
                       }}
                     />
 
                     {/* Gradient Overlay for controls */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40 opacity-90 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-90 transition-opacity" />
 
                     {/* Top Badges */}
                     <div className="absolute top-3 left-3 flex items-center gap-2">
-                      <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-xs text-[9px] uppercase tracking-widest font-sans font-semibold bg-black/70 backdrop-blur-md border border-white/10 text-white/90">
+                      <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-sans font-semibold bg-black/60 backdrop-blur-md border border-white/20 text-white">
                         {coverImagePublicId ? (
                           <>
-                            <CheckCircle2 size={10} className="text-primary" />
+                            <CheckCircle2 size={12} className="text-emerald-400" />
                             <span>Cloudinary Asset</span>
                           </>
                         ) : (
                           <>
-                            <ImageIcon size={10} className="text-white/60" />
+                            <ImageIcon size={12} className="text-white/80" />
                             <span>Image Selected</span>
                           </>
                         )}
@@ -526,12 +526,12 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                         type="button"
                         disabled={isUploadingImage}
                         onClick={() => fileInputRef.current?.click()}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xs text-[9px] uppercase tracking-widest font-sans font-semibold bg-black/80 backdrop-blur-md border border-white/15 text-white hover:border-primary hover:text-primary transition-all cursor-pointer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-sans font-medium bg-black/70 backdrop-blur-md border border-white/20 text-white hover:bg-black/90 transition-all cursor-pointer"
                       >
                         {isUploadingImage ? (
-                          <Loader2 size={11} className="animate-spin" />
+                          <Loader2 size={12} className="animate-spin" />
                         ) : (
-                          <RefreshCw size={11} />
+                          <RefreshCw size={12} />
                         )}
                         <span>{isUploadingImage ? "Uploading..." : "Replace Image"}</span>
                       </button>
@@ -540,9 +540,9 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                         type="button"
                         onClick={handleRemoveCoverImage}
                         disabled={isUploadingImage}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xs text-[9px] uppercase tracking-widest font-sans font-semibold bg-red-950/80 backdrop-blur-md border border-red-900/50 text-red-300 hover:bg-red-900 hover:text-white transition-all cursor-pointer"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-sans font-medium bg-red-600/90 backdrop-blur-md border border-red-500/50 text-white hover:bg-red-700 transition-all cursor-pointer"
                       >
-                        <Trash2 size={11} />
+                        <Trash2 size={12} />
                         <span>Remove</span>
                       </button>
                     </div>
@@ -552,25 +552,25 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
 
               {/* Cover Image Alt Text Input */}
               <div className="space-y-1.5 pt-1">
-                <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+                <label className="text-xs font-sans font-semibold text-[#17201B] block">
                   Cover Image Alt Text (SEO & Accessibility)
                 </label>
                 <input
                   type="text"
                   value={coverImageAlt}
                   onChange={(e) => setCoverImageAlt(e.target.value)}
-                  placeholder="e.g. Modern hotel suite interior with panoramic ocean view..."
-                  className={`w-full bg-black border ${errors.coverImageAlt ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-2.5 rounded-xs outline-none focus:border-primary/45 transition-colors font-sans`}
+                  placeholder="e.g. Pure botanical herbal formulation extract..."
+                  className={`w-full bg-white border ${errors.coverImageAlt ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 transition-colors font-sans placeholder:text-[#68756D]/60 shadow-xs`}
                 />
                 {errors.coverImageAlt && (
-                  <p className="text-[10px] text-red-500 font-sans">{errors.coverImageAlt}</p>
+                  <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.coverImageAlt}</p>
                 )}
               </div>
 
               {/* Collapsible Direct URL Editor */}
               {showManualUrl && (
-                <div className="p-3 bg-black/50 border border-white/10 rounded-xs space-y-2">
-                  <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+                <div className="p-3 bg-[#F6F8F5] border border-[#E1E8E2] rounded-md space-y-2">
+                  <label className="text-xs font-sans font-semibold text-[#17201B] block">
                     Direct Image URL
                   </label>
                   <input
@@ -578,24 +578,24 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                     value={coverImageUrl}
                     onChange={(e) => setCoverImageUrl(e.target.value)}
                     placeholder="https://res.cloudinary.com/... or /images/blog/..."
-                    className="w-full bg-black border border-white/10 text-xs text-white px-3 py-2 rounded-xs outline-none focus:border-primary/45 font-mono"
+                    className="w-full bg-white border border-[#E1E8E2] text-xs text-[#17201B] px-3 py-2 rounded-md outline-none focus:border-[#123C2D] font-mono shadow-xs"
                   />
                   {coverImagePublicId && (
-                    <p className="text-[9px] text-white/40 font-mono">
-                      Cloudinary Public ID: <span className="text-white/70">{coverImagePublicId}</span>
+                    <p className="text-[11px] text-[#68756D] font-mono">
+                      Cloudinary Public ID: <span className="text-[#17201B] font-semibold">{coverImagePublicId}</span>
                     </p>
                   )}
                 </div>
               )}
 
               {errors.coverImage && (
-                <p className="text-[10px] text-red-500 font-sans">{errors.coverImage}</p>
+                <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.coverImage}</p>
               )}
             </div>
 
             {/* Content Body */}
             <div className="space-y-1.5 pt-2">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Article Body Content
               </label>
               <textarea
@@ -603,29 +603,29 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Write the full body content here (markdown/text)..."
-                className={`w-full bg-black border ${errors.content ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-3 rounded-xs outline-none focus:border-primary/45 transition-colors font-mono leading-relaxed`}
+                className={`w-full bg-white border ${errors.content ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-3 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 transition-colors font-mono leading-relaxed placeholder:text-[#68756D]/60 shadow-xs`}
               />
-              {errors.content && <p className="text-[10px] text-red-500 font-sans">{errors.content}</p>}
+              {errors.content && <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.content}</p>}
             </div>
           </div>
         </div>
 
         {/* Right Column: Settings */}
         <div className="space-y-6">
-          <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6">
-            <h4 className="text-[10px] uppercase tracking-[0.2em] text-white/80 font-sans font-semibold border-b border-white/5 pb-3">
-              Settings
+          <div className="bg-white border border-[#E1E8E2] p-6 rounded-lg space-y-6 shadow-xs">
+            <h4 className="text-xs uppercase tracking-[0.14em] text-[#123C2D] font-sans font-bold border-b border-[#E1E8E2] pb-3">
+              Article Settings
             </h4>
 
             {/* Category selection */}
             <div className="space-y-1.5">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Category
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full bg-black border border-white/10 text-xs text-white/80 px-4 py-3 rounded-xs outline-none focus:border-primary/45 cursor-pointer font-sans"
+                className="w-full bg-white border border-[#E1E8E2] text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] cursor-pointer font-sans shadow-xs"
               >
                 {BLOG_CATEGORIES.map((cat) => (
                   <option key={cat} value={cat}>{cat}</option>
@@ -635,37 +635,37 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
 
             {/* Author */}
             <div className="space-y-1.5">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Author
               </label>
               <input
                 type="text"
                 value={authorName}
                 onChange={(e) => setAuthorName(e.target.value)}
-                placeholder="Manav Chandak"
-                className={`w-full bg-black border ${errors.authorName ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-3 rounded-xs outline-none focus:border-primary/45 transition-colors font-sans`}
+                placeholder="Celife Medical & Wellness Team"
+                className={`w-full bg-white border ${errors.authorName ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 transition-colors font-sans placeholder:text-[#68756D]/60 shadow-xs`}
               />
-              {errors.authorName && <p className="text-[10px] text-red-500 font-sans">{errors.authorName}</p>}
+              {errors.authorName && <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.authorName}</p>}
             </div>
 
             {/* Slug */}
             <div className="space-y-1.5">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Slug Path
               </label>
               <input
                 type="text"
                 value={slug}
                 onChange={(e) => handleSlugChange(e.target.value)}
-                placeholder="hospitality-insights-2026"
-                className={`w-full bg-black border ${errors.slug ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-3 rounded-xs outline-none focus:border-primary/45 transition-colors font-sans`}
+                placeholder="botanical-wellness-guide-2026"
+                className={`w-full bg-white border ${errors.slug ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 transition-colors font-sans placeholder:text-[#68756D]/60 shadow-xs`}
               />
-              {errors.slug && <p className="text-[10px] text-red-500 font-sans">{errors.slug}</p>}
+              {errors.slug && <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.slug}</p>}
             </div>
 
             {/* Read Time */}
             <div className="space-y-1.5">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Read Time (minutes)
               </label>
               <input
@@ -675,21 +675,21 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                 placeholder="5"
                 min="1"
                 max="120"
-                className={`w-full bg-black border ${errors.readTime ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-3 rounded-xs outline-none focus:border-primary/45 transition-colors font-sans`}
+                className={`w-full bg-white border ${errors.readTime ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 transition-colors font-sans placeholder:text-[#68756D]/60 shadow-xs`}
               />
-              {errors.readTime && <p className="text-[10px] text-red-500 font-sans">{errors.readTime}</p>}
+              {errors.readTime && <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.readTime}</p>}
             </div>
           </div>
 
           {/* SEO Options Collapsible */}
-          <div className="bg-[#050505] border border-white/5 p-6 rounded-xs space-y-6">
-            <h4 className="text-[10px] uppercase tracking-[0.2em] text-white/80 font-sans font-semibold border-b border-white/5 pb-3">
+          <div className="bg-white border border-[#E1E8E2] p-6 rounded-lg space-y-6 shadow-xs">
+            <h4 className="text-xs uppercase tracking-[0.14em] text-[#123C2D] font-sans font-bold border-b border-[#E1E8E2] pb-3">
               SEO Metadata
             </h4>
 
             {/* Meta Title */}
             <div className="space-y-1.5">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Meta Title
               </label>
               <input
@@ -697,14 +697,14 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                 value={metaTitle}
                 onChange={(e) => setMetaTitle(e.target.value)}
                 placeholder="Title optimized for SEO..."
-                className={`w-full bg-black border ${errors.metaTitle ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-3 rounded-xs outline-none focus:border-primary/45 transition-colors font-sans`}
+                className={`w-full bg-white border ${errors.metaTitle ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 transition-colors font-sans placeholder:text-[#68756D]/60 shadow-xs`}
               />
-              {errors.metaTitle && <p className="text-[10px] text-red-500 font-sans">{errors.metaTitle}</p>}
+              {errors.metaTitle && <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.metaTitle}</p>}
             </div>
 
             {/* Meta Description */}
             <div className="space-y-1.5">
-              <label className="text-[9px] uppercase tracking-[0.18em] text-white/40 font-sans font-semibold block">
+              <label className="text-xs font-sans font-semibold text-[#17201B] block">
                 Meta Description
               </label>
               <textarea
@@ -712,9 +712,9 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
                 value={metaDescription}
                 onChange={(e) => setMetaDescription(e.target.value)}
                 placeholder="Brief summary optimized for search engines..."
-                className={`w-full bg-black border ${errors.metaDescription ? "border-red-500/50" : "border-white/10"} text-xs text-white px-4 py-3 rounded-xs outline-none focus:border-primary/45 resize-none transition-colors font-sans leading-relaxed`}
+                className={`w-full bg-white border ${errors.metaDescription ? "border-[#C0392B]" : "border-[#E1E8E2]"} text-xs text-[#17201B] px-4 py-2.5 rounded-md outline-none focus:border-[#123C2D] focus:ring-2 focus:ring-[#123C2D]/10 resize-none transition-colors font-sans leading-relaxed placeholder:text-[#68756D]/60 shadow-xs`}
               />
-              {errors.metaDescription && <p className="text-[10px] text-red-500 font-sans">{errors.metaDescription}</p>}
+              {errors.metaDescription && <p className="text-xs text-[#C0392B] font-sans mt-1">{errors.metaDescription}</p>}
             </div>
           </div>
         </div>
@@ -731,12 +731,12 @@ export function BlogForm({ mode, initialBlog, onSave, onCancel }: BlogFormProps)
             className="fixed bottom-6 right-6 z-50 flex items-center justify-center pointer-events-auto"
           >
             <div
-              className={`flex items-center gap-2.5 border shadow-2xl px-5 py-3 rounded-xs text-[10px] uppercase tracking-widest font-sans font-semibold text-white select-none ${toast.type === "error" ? "bg-red-950/90 border-red-900/50" : "bg-[#0A0A0A] border-white/10"}`}
+              className={`flex items-center gap-2.5 border shadow-xl px-4 py-3 rounded-md text-xs font-sans font-semibold select-none ${toast.type === "error" ? "bg-white border-[#C0392B] text-[#C0392B]" : "bg-white border-[#E1E8E2] text-[#123C2D]"}`}
             >
               {toast.type === "error" ? (
-                <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-pulse" />
+                <span className="h-2 w-2 rounded-full bg-[#C0392B] animate-pulse" />
               ) : (
-                <span className="h-1.5 w-1.5 rounded-full bg-[#C9A24A]" />
+                <span className="h-2 w-2 rounded-full bg-[#2F7D54]" />
               )}
               <span>{toast.message}</span>
             </div>

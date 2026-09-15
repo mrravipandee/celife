@@ -355,7 +355,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
   const { title, breadcrumb } = getRouteDetails();
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between w-full h-[72px] bg-[#0A1410] border-b border-white/10 px-4 md:px-8 select-none">
+    <header className="sticky top-0 z-40 flex items-center justify-between w-full h-[70px] bg-[#FFFFFF] border-b border-[#E1E8E2] px-4 md:px-8 select-none">
       
       {/* ==========================================
           DESKTOP LAYOUT (visible on md screens up)
@@ -364,20 +364,20 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
         
         {/* Left: Title & Breadcrumbs */}
         <div className="flex flex-col justify-center">
-          <span className="text-xs uppercase tracking-[0.14em] text-white/60 font-sans mb-0.5">
+          <span className="text-xs uppercase tracking-[0.12em] text-[#68756D] font-sans font-medium mb-0.5">
             {breadcrumb}
           </span>
-          <h1 className="text-xl font-serif font-medium tracking-wide text-white">
+          <h1 className="text-xl font-serif font-bold tracking-tight text-[#17201B]">
             {title}
           </h1>
         </div>
 
         {/* Right Actions Block */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4 lg:gap-6">
           
           {/* Global Search Interface Box */}
           <div ref={searchContainerRef} className="relative group z-50">
-            <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-white/40 group-focus-within:text-primary transition-colors">
+            <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#68756D] group-focus-within:text-[#123C2D] transition-colors">
               <Search size={14} />
             </span>
             <input
@@ -388,13 +388,13 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
               onFocus={() => setIsSearchFocused(true)}
               onKeyDown={handleSearchKeyDown}
               placeholder="Search dashboard... (Cmd+K)"
-              className="w-48 xl:w-64 pl-9 pr-8 py-2 text-sm font-sans bg-transparent border border-white/10 rounded-sm text-white placeholder-white/50 outline-none transition-all duration-300 focus:border-primary/40 focus:ring-1 focus:ring-primary/10"
+              className="w-52 xl:w-72 pl-9 pr-8 py-2 text-xs font-sans bg-[#F6F8F5] border border-[#E1E8E2] rounded-xs text-[#17201B] placeholder-[#68756D] outline-none transition-all duration-200 focus:border-[#123C2D] focus:bg-white focus:ring-1 focus:ring-[#123C2D]/10"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => handleSearchQueryChange("")}
-                className="absolute right-2.5 top-2.5 text-[8px] uppercase tracking-wider font-sans text-white/20 hover:text-white/60 transition-colors cursor-pointer"
+                className="absolute right-2.5 top-2.5 text-[10px] font-sans text-[#68756D] hover:text-[#17201B] transition-colors cursor-pointer"
               >
                 Clear
               </button>
@@ -407,21 +407,21 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   initial={{ opacity: 0, y: prefersReduced ? 0 : 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
-                  transition={{ duration: prefersReduced ? 0.05 : 0.25, ease: "easeOut" }}
-                  className="absolute right-0 mt-2 w-80 max-h-[350px] overflow-y-auto bg-[#0A0A0A] border border-white/10 rounded-sm shadow-2xl z-50 p-4 space-y-4"
+                  transition={{ duration: prefersReduced ? 0.05 : 0.2, ease: "easeOut" }}
+                  className="absolute right-0 mt-2 w-84 max-h-[360px] overflow-y-auto bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs shadow-xl z-50 p-3.5 space-y-3"
                 >
                   {isSearchLoading ? (
                     <div className="flex items-center justify-center py-8 gap-2">
-                      <Loader2 className="animate-spin text-primary" size={14} />
-                      <span className="text-xs uppercase tracking-widest text-white/60 font-sans">
+                      <Loader2 className="animate-spin text-[#123C2D]" size={15} />
+                      <span className="text-xs text-[#68756D] font-sans font-medium">
                         Querying database...
                       </span>
                     </div>
                   ) : searchResults.length > 0 ? (
-                    <div className="space-y-4 font-sans text-left">
+                    <div className="space-y-3 font-sans text-left">
                       {Object.entries(groupedResults).map(([cat, list]) => (
                         <div key={cat} className="space-y-1">
-                          <span className="text-xs font-semibold text-primary uppercase tracking-[0.18em] block pl-2 mb-1.5">
+                          <span className="text-[11px] font-semibold text-[#123C2D] uppercase tracking-[0.14em] block pl-2 mb-1">
                             {cat}s
                           </span>
                           <div className="space-y-0.5">
@@ -439,15 +439,15 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                                     setSearchQuery("");
                                   }}
                                   onMouseEnter={() => setSelectedSearchIndex(overallIdx)}
-                                  className={`w-full text-left px-2.5 py-2.5 rounded-xs flex flex-col gap-0.5 border border-transparent outline-none transition-colors cursor-pointer ${
+                                  className={`w-full text-left px-2.5 py-2 rounded-xs flex flex-col gap-0.5 border outline-none transition-colors cursor-pointer ${
                                     active
-                                      ? "bg-white/10 border-white/10 text-white"
-                                      : "text-white/80 hover:bg-white/5"
+                                      ? "bg-[#F0F4F0] border-[#E1E8E2] text-[#17201B]"
+                                      : "border-transparent text-[#17201B] hover:bg-[#F6F8F5]"
                                   }`}
                                 >
-                                  <span className="text-sm font-medium truncate">{item.title}</span>
+                                  <span className="text-xs font-semibold truncate">{item.title}</span>
                                   {item.subtitle && (
-                                    <span className="text-xs text-white/50 truncate">{item.subtitle}</span>
+                                    <span className="text-[11px] text-[#68756D] truncate">{item.subtitle}</span>
                                   )}
                                 </button>
                               );
@@ -458,11 +458,11 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                     </div>
                   ) : (
                     <div className="text-center py-8 space-y-1">
-                      <ShieldAlert className="mx-auto text-white/30 mb-1" size={18} />
-                      <p className="text-xs uppercase tracking-wider text-white/70 font-sans font-semibold">
+                      <ShieldAlert className="mx-auto text-[#68756D] mb-1" size={18} />
+                      <p className="text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold">
                         No matches found
                       </p>
-                      <p className="text-xs text-white/50 font-sans">
+                      <p className="text-xs text-[#68756D] font-sans">
                         Verify spelling and query filters.
                       </p>
                     </div>
@@ -478,8 +478,8 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
               type="button"
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
               aria-label="View notifications"
-              className={`relative p-1.5 transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/50 rounded-sm ${
-                isNotificationsOpen ? "text-primary" : "text-white/60 hover:text-white"
+              className={`relative p-2 rounded-xs transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#123C2D]/50 ${
+                isNotificationsOpen ? "text-[#123C2D] bg-[#F0F4F0]" : "text-[#68756D] hover:text-[#17201B] hover:bg-[#F6F8F5]"
               }`}
             >
               <Bell size={16} />
@@ -492,17 +492,17 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   initial={{ opacity: 0, y: prefersReduced ? 0 : 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
-                  transition={{ duration: prefersReduced ? 0.05 : 0.25, ease: "easeOut" }}
-                  className="absolute right-0 mt-2 w-72 bg-[#0A0A0A] border border-white/10 rounded-sm shadow-2xl p-4 text-center select-none font-sans"
+                  transition={{ duration: prefersReduced ? 0.05 : 0.2, ease: "easeOut" }}
+                  className="absolute right-0 mt-2 w-72 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs shadow-xl p-4 text-center select-none font-sans"
                 >
-                  <span className="text-xs uppercase tracking-[0.18em] text-white/60 block border-b border-white/5 pb-2 mb-3 font-semibold">
+                  <span className="text-xs uppercase tracking-[0.14em] text-[#68756D] block border-b border-[#E1E8E2] pb-2 mb-3 font-semibold">
                     Notifications
                   </span>
-                  <div className="py-6">
-                    <p className="text-xs uppercase tracking-wider text-white/80 font-semibold mb-0.5">
+                  <div className="py-5">
+                    <p className="text-xs font-semibold text-[#17201B] mb-0.5">
                       You&apos;re all caught up
                     </p>
-                    <p className="text-xs text-white/50">
+                    <p className="text-xs text-[#68756D]">
                       No new notifications.
                     </p>
                   </div>
@@ -512,19 +512,19 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
           </div>
 
           {/* Profile Dropdown Trigger */}
-          <div ref={profileContainerRef} className="relative z-50 flex items-center gap-3 border-l border-white/5 pl-6 py-1.5">
-            <div className="flex items-center justify-center w-7 h-7 rounded-full border border-white/10 bg-white/5 text-xs font-sans font-semibold text-white select-none">
+          <div ref={profileContainerRef} className="relative z-50 flex items-center gap-3 border-l border-[#E1E8E2] pl-4 lg:pl-6 py-1">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full border border-[#123C2D]/20 bg-[#123C2D]/10 text-xs font-sans font-bold text-[#123C2D] select-none">
               {userInitials}
             </div>
             <button
               type="button"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center gap-1.5 text-sm font-sans text-white/80 hover:text-white transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/50 py-0.5 rounded-sm"
+              className="flex items-center gap-1.5 text-xs font-sans text-[#17201B] hover:text-[#123C2D] transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#123C2D]/50 py-0.5"
             >
               <span className="font-semibold">{user?.name || "Admin"}</span>
               <ChevronDown
                 size={13}
-                className={`text-white/50 transition-transform duration-300 ${isProfileOpen ? "rotate-180" : ""}`}
+                className={`text-[#68756D] transition-transform duration-200 ${isProfileOpen ? "rotate-180" : ""}`}
               />
             </button>
 
@@ -535,18 +535,18 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   initial={{ opacity: 0, scale: prefersReduced ? 1 : 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: prefersReduced ? 1 : 0.95 }}
-                  transition={{ duration: prefersReduced ? 0.05 : 0.2, ease: "easeOut" }}
-                  className="absolute right-0 mt-2 w-56 bg-[#0A0A0A] border border-white/10 rounded-sm shadow-2xl p-2 select-none z-50 text-left font-sans"
+                  transition={{ duration: prefersReduced ? 0.05 : 0.15, ease: "easeOut" }}
+                  className="absolute right-0 mt-2 w-56 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs shadow-xl p-2 select-none z-50 text-left font-sans"
                 >
                   {/* Account Header info */}
-                  <div className="px-3 py-2 border-b border-white/5 mb-1.5">
-                    <span className="text-xs font-semibold text-white tracking-wide block truncate">
-                      {user?.name || "Admin operator"}
+                  <div className="px-3 py-2 border-b border-[#E1E8E2] mb-1.5">
+                    <span className="text-xs font-semibold text-[#17201B] tracking-wide block truncate">
+                      {user?.name || "Celife Admin"}
                     </span>
-                    <span className="text-xs text-white/50 block truncate">
-                      {user?.email || "advisory@thedco.com"}
+                    <span className="text-[11px] text-[#68756D] block truncate">
+                      {user?.email || "admin@celife.in"}
                     </span>
-                    <div className="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-xs bg-primary/10 border border-primary/20 text-xs font-bold text-primary tracking-widest uppercase">
+                    <div className="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-xs bg-[#123C2D]/10 border border-[#123C2D]/20 text-[10px] font-bold text-[#123C2D] tracking-wider uppercase">
                       <Lock size={10} /> {user?.role || "Admin"}
                     </div>
                   </div>
@@ -555,18 +555,18 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   <Link
                     href="/dashboard/settings"
                     onClick={() => setIsProfileOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-xs transition-colors"
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#17201B] hover:bg-[#F6F8F5] rounded-xs transition-colors"
                   >
-                    <Settings size={14} className="text-white/50" />
+                    <Settings size={14} className="text-[#68756D]" />
                     <span>Settings</span>
                   </Link>
 
                   <button
                     type="button"
                     onClick={handleLogoutClick}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-950/20 rounded-xs transition-colors text-left cursor-pointer border border-transparent outline-none"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#C0392B] hover:bg-red-50 rounded-xs transition-colors text-left cursor-pointer border border-transparent outline-none"
                   >
-                    <LogOut size={14} className="text-red-400/80" />
+                    <LogOut size={14} className="text-[#C0392B]" />
                     <span>Log Out</span>
                   </button>
                 </motion.div>
@@ -586,7 +586,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
           type="button"
           onClick={onMenuToggle}
           aria-label="Open navigation menu"
-          className="p-2 -ml-2 text-white/80 hover:text-white transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/50 rounded-sm"
+          className="p-2 -ml-2 text-[#17201B] hover:bg-[#F6F8F5] rounded-xs transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#123C2D]/50"
         >
           <Menu size={20} />
         </button>
@@ -594,20 +594,20 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
         {/* Center: Brand Logo */}
         <div className="flex items-center gap-1.5 select-none">
           <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
-          <span className="font-serif tracking-wider font-bold text-white text-base">
+          <span className="font-serif tracking-wider font-bold text-[#17201B] text-base">
             CELIFE
           </span>
         </div>
 
         {/* Right: Search, Notifications & Profile Avatar */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           
           {/* Mobile Search Button */}
           <button
             type="button"
             onClick={() => setIsMobileSearchOpen(true)}
             aria-label="Search"
-            className="p-2 text-white/50 hover:text-white transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/50 rounded-sm"
+            className="p-2 text-[#68756D] hover:text-[#17201B] hover:bg-[#F6F8F5] rounded-xs transition-colors cursor-pointer outline-none"
           >
             <Search size={16} />
           </button>
@@ -618,8 +618,8 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
               type="button"
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
               aria-label="View notifications"
-              className={`p-2 transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/50 rounded-sm ${
-                isNotificationsOpen ? "text-primary" : "text-white/50 hover:text-white"
+              className={`p-2 rounded-xs transition-colors cursor-pointer outline-none ${
+                isNotificationsOpen ? "text-[#123C2D] bg-[#F0F4F0]" : "text-[#68756D] hover:text-[#17201B] hover:bg-[#F6F8F5]"
               }`}
             >
               <Bell size={16} />
@@ -632,17 +632,17 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   initial={{ opacity: 0, y: prefersReduced ? 0 : 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 6 }}
-                  transition={{ duration: prefersReduced ? 0.05 : 0.25, ease: "easeOut" }}
-                  className="absolute right-0 top-10 w-64 bg-[#0A0A0A] border border-white/10 rounded-sm shadow-2xl p-4 text-center select-none font-sans z-50"
+                  transition={{ duration: prefersReduced ? 0.05 : 0.2, ease: "easeOut" }}
+                  className="absolute right-0 top-10 w-64 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs shadow-xl p-4 text-center select-none font-sans z-50"
                 >
-                  <span className="text-xs uppercase tracking-[0.18em] text-white/60 block border-b border-white/5 pb-2 mb-3 font-semibold">
+                  <span className="text-xs uppercase tracking-[0.14em] text-[#68756D] block border-b border-[#E1E8E2] pb-2 mb-3 font-semibold">
                     Notifications
                   </span>
                   <div className="py-4">
-                    <p className="text-xs uppercase tracking-wider text-white/80 font-semibold mb-0.5">
+                    <p className="text-xs font-semibold text-[#17201B] mb-0.5">
                       You&apos;re all caught up
                     </p>
-                    <p className="text-xs text-white/50">
+                    <p className="text-xs text-[#68756D]">
                       No new notifications.
                     </p>
                   </div>
@@ -657,7 +657,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
               type="button"
               onClick={() => setIsProfileOpen(!isProfileOpen)}
               aria-label="Toggle profile menu"
-              className="flex items-center justify-center w-7 h-7 rounded-full border border-white/10 bg-white/5 text-xs font-sans font-semibold text-white select-none cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-primary/50"
+              className="flex items-center justify-center w-7 h-7 rounded-full border border-[#123C2D]/20 bg-[#123C2D]/10 text-xs font-sans font-bold text-[#123C2D] select-none cursor-pointer outline-none"
             >
               {userInitials}
             </button>
@@ -668,17 +668,17 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   initial={{ opacity: 0, scale: prefersReduced ? 1 : 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: prefersReduced ? 1 : 0.95 }}
-                  transition={{ duration: prefersReduced ? 0.05 : 0.2, ease: "easeOut" }}
-                  className="absolute right-0 top-10 w-52 bg-[#0A0A0A] border border-white/10 rounded-sm shadow-2xl p-2 select-none z-50 text-left font-sans"
+                  transition={{ duration: prefersReduced ? 0.05 : 0.15, ease: "easeOut" }}
+                  className="absolute right-0 top-10 w-52 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs shadow-xl p-2 select-none z-50 text-left font-sans"
                 >
-                  <div className="px-3 py-2 border-b border-white/5 mb-1.5">
-                    <span className="text-xs font-semibold text-white tracking-wide block truncate">
-                      {user?.name || "Admin"}
+                  <div className="px-3 py-2 border-b border-[#E1E8E2] mb-1.5">
+                    <span className="text-xs font-semibold text-[#17201B] tracking-wide block truncate">
+                      {user?.name || "Celife Admin"}
                     </span>
-                    <span className="text-xs text-white/50 block truncate">
-                      {user?.email || "advisory@thedco.com"}
+                    <span className="text-[11px] text-[#68756D] block truncate">
+                      {user?.email || "admin@celife.in"}
                     </span>
-                    <div className="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded-xs bg-primary/10 border border-primary/20 text-xs font-bold text-primary tracking-widest uppercase">
+                    <div className="inline-flex items-center gap-1 mt-1 px-1.5 py-0.5 rounded-xs bg-[#123C2D]/10 border border-[#123C2D]/20 text-[10px] font-bold text-[#123C2D] tracking-wider uppercase">
                       <Lock size={10} /> {user?.role || "Admin"}
                     </div>
                   </div>
@@ -686,18 +686,18 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   <Link
                     href="/dashboard/settings"
                     onClick={() => setIsProfileOpen(false)}
-                    className="flex items-center gap-2.5 px-3 py-2 text-sm text-white/80 hover:text-white hover:bg-white/5 rounded-xs transition-colors"
+                    className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#17201B] hover:bg-[#F6F8F5] rounded-xs transition-colors"
                   >
-                    <Settings size={14} className="text-white/50" />
+                    <Settings size={14} className="text-[#68756D]" />
                     <span>Settings</span>
                   </Link>
 
                   <button
                     type="button"
                     onClick={handleLogoutClick}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-950/20 rounded-xs transition-colors text-left cursor-pointer border border-transparent outline-none animate-none"
+                    className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-medium text-[#C0392B] hover:bg-red-50 rounded-xs transition-colors text-left cursor-pointer border border-transparent outline-none"
                   >
-                    <LogOut size={14} className="text-red-400/80" />
+                    <LogOut size={14} className="text-[#C0392B]" />
                     <span>Log Out</span>
                   </button>
                 </motion.div>
@@ -716,7 +716,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: prefersReduced ? 0.05 : 0.2, ease: "easeOut" }}
-            className="fixed inset-0 bg-[#050505] z-[60] flex flex-col p-4 space-y-4"
+            className="fixed inset-0 bg-[#FFFFFF] z-[60] flex flex-col p-4 space-y-4"
           >
             {/* Top input bar */}
             <div className="flex items-center gap-3">
@@ -726,14 +726,14 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   setIsMobileSearchOpen(false);
                   handleSearchQueryChange("");
                 }}
-                className="p-2 text-white/60 hover:text-white outline-none cursor-pointer"
+                className="p-2 text-[#68756D] hover:text-[#17201B] outline-none cursor-pointer"
                 aria-label="Close search overlay"
               >
                 <ArrowLeft size={18} />
               </button>
               
               <div className="relative flex-grow">
-                <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-white/40">
+                <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#68756D]">
                   <Search size={14} />
                 </span>
                 <input
@@ -741,14 +741,14 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   value={searchQuery}
                   onChange={(e) => handleSearchQueryChange(e.target.value)}
                   placeholder="Search dashboard..."
-                  className="w-full pl-9 pr-8 py-2.5 text-sm font-sans bg-transparent border border-white/15 rounded-sm text-white placeholder-white/40 outline-none focus:border-primary/40 focus:ring-1 focus:ring-primary/10"
+                  className="w-full pl-9 pr-8 py-2.5 text-xs font-sans bg-[#F6F8F5] border border-[#E1E8E2] rounded-xs text-[#17201B] placeholder-[#68756D] outline-none focus:border-[#123C2D]"
                   autoFocus
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => handleSearchQueryChange("")}
-                    className="absolute right-2.5 top-2.5 text-xs uppercase tracking-wider font-sans text-white/40 hover:text-white/80 cursor-pointer"
+                    className="absolute right-2.5 top-2.5 text-xs font-sans text-[#68756D] hover:text-[#17201B] cursor-pointer"
                   >
                     Clear
                   </button>
@@ -760,16 +760,16 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
             <div className="flex-grow overflow-y-auto max-h-[calc(100vh-80px)] scrollbar-none">
               {isSearchLoading ? (
                 <div className="flex items-center justify-center py-16 gap-2">
-                  <Loader2 className="animate-spin text-primary" size={16} />
-                  <span className="text-xs uppercase tracking-widest text-white/60 font-sans">
+                  <Loader2 className="animate-spin text-[#123C2D]" size={16} />
+                  <span className="text-xs text-[#68756D] font-sans">
                     Searching...
                   </span>
                 </div>
               ) : searchResults.length > 0 ? (
-                <div className="space-y-5 font-sans pb-12">
+                <div className="space-y-4 font-sans pb-12">
                   {Object.entries(groupedResults).map(([cat, list]) => (
-                    <div key={cat} className="space-y-1.5">
-                      <span className="text-xs font-semibold text-primary uppercase tracking-[0.18em] block pl-2 mb-1">
+                    <div key={cat} className="space-y-1">
+                      <span className="text-xs font-semibold text-[#123C2D] uppercase tracking-[0.14em] block pl-2 mb-1">
                         {cat}s
                       </span>
                       <div className="space-y-1">
@@ -782,11 +782,11 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                               setIsMobileSearchOpen(false);
                               handleSearchQueryChange("");
                             }}
-                            className="w-full text-left px-3 py-3 rounded-xs bg-white/[0.02] border border-white/5 flex flex-col gap-1 text-white hover:bg-white/5 cursor-pointer"
+                            className="w-full text-left px-3 py-2.5 rounded-xs bg-[#F6F8F5] border border-[#E1E8E2] flex flex-col gap-0.5 text-[#17201B] hover:bg-[#F0F4F0] cursor-pointer"
                           >
-                            <span className="text-sm font-medium truncate">{item.title}</span>
+                            <span className="text-xs font-semibold truncate">{item.title}</span>
                             {item.subtitle && (
-                              <span className="text-xs text-white/50 truncate">{item.subtitle}</span>
+                              <span className="text-[11px] text-[#68756D] truncate">{item.subtitle}</span>
                             )}
                           </button>
                         ))}
@@ -796,11 +796,11 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                 </div>
               ) : searchQuery.trim() !== "" ? (
                 <div className="text-center py-16 space-y-1">
-                  <ShieldAlert className="mx-auto text-white/30 mb-2" size={20} />
-                  <p className="text-sm uppercase tracking-wider text-white/70 font-sans font-semibold">
+                  <ShieldAlert className="mx-auto text-[#68756D] mb-2" size={20} />
+                  <p className="text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold">
                     No results found
                   </p>
-                  <p className="text-xs text-white/50 font-sans">
+                  <p className="text-xs text-[#68756D] font-sans">
                     Verify spelling and search filters.
                   </p>
                 </div>

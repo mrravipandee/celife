@@ -48,13 +48,13 @@ export default function EditProductPage() {
   return (
     <div className="space-y-6">
       <div>
-        <span className="text-[11px] uppercase tracking-[0.2em] font-sans font-semibold text-[#81998D]">
+        <span className="text-[11px] uppercase tracking-[0.2em] font-sans font-semibold text-[#6F8F80]">
           Product Catalogue
         </span>
-        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight mt-1">
+        <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#17201B] tracking-tight mt-1">
           Edit {product.name}
         </h1>
-        <p className="text-xs text-white/60 font-sans mt-0.5">
+        <p className="text-xs text-[#68756D] font-sans mt-0.5">
           Update formulation specifications, presentation, and publishing visibility.
         </p>
       </div>

@@ -105,10 +105,10 @@ export function BlogEditClient({ id }: BlogEditClientProps) {
       >
         <Link
           href="/dashboard/blog"
-          className="flex items-center gap-2 px-5 py-2.5 text-[9px] uppercase tracking-[0.2em] font-sans bg-transparent border border-white/10 text-white hover:border-primary hover:text-primary transition-all duration-300 rounded-xs outline-none"
+          className="flex items-center gap-2 px-4 py-2 text-xs font-sans font-medium bg-white border border-[#E1E8E2] text-[#17201B] hover:bg-[#F0F4F0] transition-colors rounded-md outline-none shadow-xs"
         >
-          <ArrowLeft size={12} />
-          <span>Back to Blogs</span>
+          <ArrowLeft size={13} />
+          <span>Back to Articles</span>
         </Link>
       </ErrorState>
     );
@@ -124,8 +124,8 @@ export function BlogEditClient({ id }: BlogEditClientProps) {
       />
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 flex items-center justify-center pointer-events-auto">
-          <div className="flex items-center gap-2.5 border shadow-2xl px-5 py-3 rounded-xs text-[10px] uppercase tracking-widest font-sans font-semibold text-white select-none bg-[#0A0A0A] border-white/10">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#C9A24A]" />
+          <div className="flex items-center gap-2.5 border shadow-lg px-4 py-2.5 rounded-md text-xs font-sans font-medium text-[#123C2D] select-none bg-white border-[#E1E8E2]">
+            <span className="h-2 w-2 rounded-full bg-[#2F7D54]" />
             <span>{toastMessage}</span>
           </div>
         </div>

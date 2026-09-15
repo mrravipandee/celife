@@ -189,10 +189,10 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl pb-16 select-none">
       {/* Top action row */}
-      <div className="flex items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex items-center justify-between gap-4 pb-6 border-b border-[#E1E8E2]">
         <Link
           href="/dashboard/products"
-          className="text-xs uppercase tracking-wider text-white/60 hover:text-white transition-colors flex items-center gap-2"
+          className="text-xs uppercase tracking-wider text-[#68756D] hover:text-[#17201B] font-semibold transition-colors flex items-center gap-2"
         >
           <ArrowLeft size={14} />
           <span>Back to Products</span>
@@ -202,7 +202,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-6 py-2.5 bg-[#123C2D] hover:bg-[#294F3D] text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-all flex items-center gap-2 border border-white/10 shadow-xs disabled:opacity-50 cursor-pointer"
+            className="px-6 py-2.5 bg-[#123C2D] hover:bg-[#294F3D] text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-all flex items-center gap-2 border border-[#123C2D] shadow-xs disabled:opacity-50 cursor-pointer"
           >
             {isSubmitting ? (
               <>
@@ -221,10 +221,10 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
 
       {feedback && (
         <div
-          className={`p-4 rounded-xs text-xs font-sans flex items-center gap-2.5 ${
+          className={`p-4 rounded-xs text-xs font-sans flex items-center gap-2.5 border ${
             feedback.type === "error"
-              ? "bg-red-500/15 border border-red-500/30 text-red-300"
-              : "bg-emerald-500/15 border border-emerald-500/30 text-emerald-300"
+              ? "bg-red-50 border-red-200 text-[#C0392B]"
+              : "bg-emerald-50 border-emerald-200 text-[#2F7D54]"
           }`}
         >
           {feedback.type === "error" ? <AlertCircle size={15} /> : <CheckCircle2 size={15} />}
@@ -233,14 +233,14 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
       )}
 
       {/* Basic Details Section */}
-      <div className="bg-[#0E1B15] border border-white/10 rounded-xs p-6 md:p-8 space-y-5">
-        <h2 className="text-base font-serif font-bold text-white border-b border-white/10 pb-3">
+      <div className="bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 md:p-8 space-y-5 shadow-2xs">
+        <h2 className="text-base font-serif font-bold text-[#17201B] border-b border-[#E1E8E2] pb-3">
           Product Identification & Category
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               Product Name *
             </label>
             <input
@@ -249,12 +249,12 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               value={formData.name}
               onChange={(e) => handleNameChange(e.target.value)}
               placeholder="e.g. Nervify Forte"
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               URL Slug *
             </label>
             <input
@@ -263,24 +263,24 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               value={formData.slug}
               onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
               placeholder="nervify-forte"
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               Category *
             </label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none cursor-pointer transition-colors"
             >
               {categories.length > 0 ? (
                 categories.map((c) => (
-                  <option key={c.id} value={c.name} className="bg-[#0E1B15] text-white">
+                  <option key={c.id} value={c.name} className="bg-white text-[#17201B]">
                     {c.name}
                   </option>
                 ))
@@ -296,7 +296,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               Formulation Subtitle
             </label>
             <input
@@ -304,13 +304,13 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               value={formData.subtitle}
               onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
               placeholder="e.g. Advanced Neuro-Cellular Formulation"
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+          <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
             Short Description (Product Card Snippet) *
           </label>
           <textarea
@@ -319,12 +319,12 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
             value={formData.shortDescription}
             onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
             placeholder="Concise overview summarizing physiological support..."
-            className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+            className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
           />
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+          <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
             Full Description (Product Detail Page) *
           </label>
           <textarea
@@ -333,20 +333,20 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
             value={formData.description}
             onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             placeholder="Detailed editorial narrative of the formulation..."
-            className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+            className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
           />
         </div>
       </div>
 
       {/* Specifications & Presentation */}
-      <div className="bg-[#0E1B15] border border-white/10 rounded-xs p-6 md:p-8 space-y-5">
-        <h2 className="text-base font-serif font-bold text-white border-b border-white/10 pb-3">
+      <div className="bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 md:p-8 space-y-5 shadow-2xs">
+        <h2 className="text-base font-serif font-bold text-[#17201B] border-b border-[#E1E8E2] pb-3">
           Formulation & Packaging Specs
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               Dosage Form
             </label>
             <input
@@ -354,12 +354,12 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               value={formData.form}
               onChange={(e) => setFormData({ ...formData, form: e.target.value })}
               placeholder="e.g. Film-Coated Tablets, Vegetarian Capsules"
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               Packaging Presentation
             </label>
             <input
@@ -367,14 +367,14 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               value={formData.packaging}
               onChange={(e) => setFormData({ ...formData, packaging: e.target.value })}
               placeholder="e.g. Box of 60 Tablets (6 × 10 Blister Pack)"
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               Formulation Composition Matrix
             </label>
             <input
@@ -382,12 +382,12 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               value={formData.formulation}
               onChange={(e) => setFormData({ ...formData, formulation: e.target.value })}
               placeholder="e.g. Neuro-supportive micronutrient matrix with bio-factors"
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               Wellness Focus
             </label>
             <input
@@ -395,13 +395,13 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               value={formData.wellnessFocus}
               onChange={(e) => setFormData({ ...formData, wellnessFocus: e.target.value })}
               placeholder="e.g. Peripheral nervous system & everyday vitality"
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+          <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
             Usage Advice (Non-clinical instruction)
           </label>
           <input
@@ -409,20 +409,20 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
             value={formData.usageAdvice}
             onChange={(e) => setFormData({ ...formData, usageAdvice: e.target.value })}
             placeholder="e.g. Take as directed by your healthcare professional."
-            className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+            className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
           />
         </div>
       </div>
 
       {/* Key Focus & Highlights */}
-      <div className="bg-[#0E1B15] border border-white/10 rounded-xs p-6 md:p-8 space-y-5">
-        <h2 className="text-base font-serif font-bold text-white border-b border-white/10 pb-3">
+      <div className="bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 md:p-8 space-y-5 shadow-2xs">
+        <h2 className="text-base font-serif font-bold text-[#17201B] border-b border-[#E1E8E2] pb-3">
           Key Focus Points & Highlights
         </h2>
 
         {/* Key Focus Bullets */}
         <div className="space-y-3">
-          <label className="block text-xs uppercase tracking-wider text-white/70 font-sans">
+          <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold">
             Key Focus Bullets (Displayed on PDP)
           </label>
           {formData.keyFocus.map((item, idx) => (
@@ -436,7 +436,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
                   setFormData({ ...formData, keyFocus: updated });
                 }}
                 placeholder="e.g. Nerve tissue nourishment & micro-cellular support"
-                className="flex-1 bg-[#0A1410] border border-white/10 px-4 py-2 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                className="flex-1 bg-[#F6F8F5] focus:bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
               />
               <button
                 type="button"
@@ -444,7 +444,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
                   const updated = formData.keyFocus.filter((_, i) => i !== idx);
                   setFormData({ ...formData, keyFocus: updated });
                 }}
-                className="p-2 text-white/40 hover:text-red-400 transition-colors"
+                className="p-2 text-[#68756D] hover:text-[#C0392B] rounded-xs hover:bg-red-50 transition-colors"
               >
                 <Trash2 size={16} />
               </button>
@@ -455,7 +455,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
             onClick={() =>
               setFormData({ ...formData, keyFocus: [...formData.keyFocus, ""] })
             }
-            className="text-xs text-[#81998D] hover:text-white transition-colors flex items-center gap-1 font-semibold uppercase tracking-wider pt-1"
+            className="text-xs text-[#123C2D] hover:text-[#294F3D] transition-colors flex items-center gap-1 font-semibold uppercase tracking-wider pt-1"
           >
             <Plus size={13} />
             <span>Add Focus Bullet</span>
@@ -463,8 +463,8 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
         </div>
 
         {/* Highlights Key-Value Pairs */}
-        <div className="space-y-3 pt-4 border-t border-white/10">
-          <label className="block text-xs uppercase tracking-wider text-white/70 font-sans">
+        <div className="space-y-3 pt-4 border-t border-[#E1E8E2]">
+          <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold">
             Technical Specification Highlights
           </label>
           {formData.highlights.map((item, idx) => (
@@ -478,7 +478,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
                   setFormData({ ...formData, highlights: updated });
                 }}
                 placeholder="Label (e.g. Form)"
-                className="w-1/3 bg-[#0A1410] border border-white/10 px-4 py-2 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                className="w-1/3 bg-[#F6F8F5] focus:bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
               />
               <input
                 type="text"
@@ -489,7 +489,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
                   setFormData({ ...formData, highlights: updated });
                 }}
                 placeholder="Value (e.g. Film-Coated Tablets)"
-                className="flex-1 bg-[#0A1410] border border-white/10 px-4 py-2 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                className="flex-1 bg-[#F6F8F5] focus:bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
               />
               <button
                 type="button"
@@ -497,7 +497,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
                   const updated = formData.highlights.filter((_, i) => i !== idx);
                   setFormData({ ...formData, highlights: updated });
                 }}
-                className="p-2 text-white/40 hover:text-red-400 transition-colors"
+                className="p-2 text-[#68756D] hover:text-[#C0392B] rounded-xs hover:bg-red-50 transition-colors"
               >
                 <Trash2 size={16} />
               </button>
@@ -511,7 +511,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
                 highlights: [...formData.highlights, { label: "", value: "" }],
               })
             }
-            className="text-xs text-[#81998D] hover:text-white transition-colors flex items-center gap-1 font-semibold uppercase tracking-wider pt-1"
+            className="text-xs text-[#123C2D] hover:text-[#294F3D] transition-colors flex items-center gap-1 font-semibold uppercase tracking-wider pt-1"
           >
             <Plus size={13} />
             <span>Add Highlight Row</span>
@@ -520,18 +520,18 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
       </div>
 
       {/* Product Image & Visibility Settings */}
-      <div className="bg-[#0E1B15] border border-white/10 rounded-xs p-6 md:p-8 space-y-5">
-        <h2 className="text-base font-serif font-bold text-white border-b border-white/10 pb-3">
+      <div className="bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 md:p-8 space-y-5 shadow-2xs">
+        <h2 className="text-base font-serif font-bold text-[#17201B] border-b border-[#E1E8E2] pb-3">
           Product Photography & Publishing State
         </h2>
 
         <div>
-          <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+          <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
             Primary Product Image *
           </label>
           <div className="flex flex-col sm:flex-row items-start gap-4">
             {formData.image && (
-              <div className="relative w-24 h-24 rounded-xs overflow-hidden border border-white/15 bg-white shrink-0">
+              <div className="relative w-24 h-24 rounded-xs overflow-hidden border border-[#E1E8E2] bg-[#F6F8F5] shrink-0">
                 <Image
                   src={formData.image}
                   alt="Preview"
@@ -548,9 +548,9 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
                   value={formData.image}
                   onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                   placeholder="/images/products/nervify-forte.jpg"
-                  className="flex-1 bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="flex-1 bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
-                <label className="px-4 py-2.5 bg-white/10 hover:bg-white/15 text-white text-xs font-semibold uppercase tracking-wider rounded-xs transition-colors flex items-center gap-1.5 cursor-pointer border border-white/10 shrink-0">
+                <label className="px-4 py-2.5 bg-[#F0F4F0] hover:bg-[#E1E8E2] text-[#17201B] text-xs font-semibold uppercase tracking-wider rounded-xs transition-colors flex items-center gap-1.5 cursor-pointer border border-[#E1E8E2] shrink-0 shadow-2xs">
                   <Upload size={13} />
                   <span>{isUploading ? "Uploading..." : "Upload"}</span>
                   <input
@@ -562,23 +562,23 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
                   />
                 </label>
               </div>
-              <span className="text-[11px] text-white/40 block font-sans">
+              <span className="text-[11px] text-[#68756D] block font-sans">
                 Enter an image URL, local path, or click Upload to attach a file.
               </span>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-4 border-t border-white/10 items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-4 border-t border-[#E1E8E2] items-center">
           <div>
-            <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+            <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
               Display Order
             </label>
             <input
               type="number"
               value={formData.order}
               onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-              className="w-full bg-[#0A1410] border border-white/10 px-4 py-2 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+              className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
             />
           </div>
 
@@ -590,7 +590,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
               className="rounded-xs w-4 h-4 accent-[#123C2D]"
             />
-            <label htmlFor="featured-checkbox" className="text-xs uppercase tracking-wider text-white font-sans cursor-pointer">
+            <label htmlFor="featured-checkbox" className="text-xs uppercase tracking-wider text-[#17201B] font-sans font-medium cursor-pointer">
               Mark as Featured Product
             </label>
           </div>
@@ -603,7 +603,7 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
               onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
               className="rounded-xs w-4 h-4 accent-[#123C2D]"
             />
-            <label htmlFor="published-checkbox" className="text-xs uppercase tracking-wider text-white font-sans cursor-pointer">
+            <label htmlFor="published-checkbox" className="text-xs uppercase tracking-wider text-[#17201B] font-sans font-medium cursor-pointer">
               Published (Visible on site)
             </label>
           </div>

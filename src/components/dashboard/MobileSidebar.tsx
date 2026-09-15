@@ -102,18 +102,18 @@ export function MobileSidebar({ isOpen, onClose }: MobileSidebarProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Admin Navigation Menu"
-            className="fixed top-0 bottom-0 left-0 w-[280px] bg-[#0E1B15] flex flex-col shadow-2xl focus:outline-none"
+            className="fixed top-0 bottom-0 left-0 w-[280px] bg-[#FFFFFF] border-r border-[#E1E8E2] flex flex-col shadow-2xl focus:outline-none"
           >
             {/* Header close block (overlapping the sidebar top) */}
-            <div className="absolute top-6 right-4 z-50">
+            <div className="absolute top-5 right-3.5 z-50">
               <button
                 ref={closeButtonRef}
                 type="button"
                 onClick={onClose}
                 aria-label="Close navigation menu"
-                className="p-1.5 rounded-sm border border-white/5 bg-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-all outline-none focus-visible:ring-1 focus-visible:ring-primary/50 cursor-pointer"
+                className="p-1.5 rounded-xs border border-[#E1E8E2] bg-[#F6F8F5] text-[#68756D] hover:text-[#17201B] hover:bg-[#F0F4F0] transition-all outline-none focus-visible:ring-1 focus-visible:ring-[#123C2D]/50 cursor-pointer"
               >
-                <X size={16} />
+                <X size={15} />
               </button>
             </div>
 

@@ -33,21 +33,21 @@ export function StatCard({ label, value, change, index }: StatCardProps) {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-20px" }}
-      className="flex flex-col justify-between p-6 bg-[#050505] border border-white/5 rounded-xs transition-all duration-300 hover:border-white/10 group relative overflow-hidden select-none"
+      className="flex flex-col justify-between p-5 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs transition-all duration-200 hover:border-[#123C2D]/30 hover:shadow-xs group relative overflow-hidden select-none"
     >
-      {/* Subtle gold accent top border line appearing on card hover */}
-      <span className="absolute top-0 left-0 right-0 h-[1.5px] bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+      {/* Subtle green accent top border line appearing on card hover */}
+      <span className="absolute top-0 left-0 right-0 h-[2px] bg-[#123C2D] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
       
-      <span className="text-xs uppercase tracking-[0.16em] text-white/60 font-sans font-semibold mb-3 block">
+      <span className="text-[11px] uppercase tracking-[0.14em] text-[#68756D] font-sans font-semibold mb-2 block">
         {label}
       </span>
       
-      <div className="space-y-1.5 mt-auto">
-        <h4 className="text-2xl font-serif text-white tracking-wide font-medium">
+      <div className="space-y-1 mt-auto">
+        <h4 className="text-3xl font-serif text-[#17201B] tracking-tight font-bold">
           {value}
         </h4>
         <div className="flex items-center gap-1.5">
-          <span className="text-sm text-primary/80 font-sans tracking-wide">
+          <span className="text-xs text-[#6F8F80] font-sans">
             {change}
           </span>
         </div>

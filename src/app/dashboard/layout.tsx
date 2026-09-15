@@ -6,8 +6,8 @@ import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { getSession } from "@/lib/auth/session";
 
 export const metadata: Metadata = constructMetadata({
-  title: "Admin Dashboard",
-  description: "Internal workspace for THEDCO Hospitality Advisory.",
+  title: "Celife CMS | Admin Dashboard",
+  description: "Content Management Dashboard for Celife Health Solutions.",
   noIndex: true,
 });
 
@@ -22,7 +22,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#070F0B] text-white">
+    <div className="min-h-screen bg-[#F6F8F5] text-[#17201B] antialiased font-sans">
       <DashboardShell>{children}</DashboardShell>
     </div>
   );

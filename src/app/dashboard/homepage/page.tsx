@@ -212,18 +212,18 @@ export default function HomepageCMSEditor() {
       className="space-y-8 pb-20 select-none"
     >
       {/* Top Bar with Page Title & Save Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#E1E8E2]">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
-            <span className="text-[11px] uppercase tracking-[0.2em] font-sans font-semibold text-[#81998D]">
+            <span className="text-[11px] uppercase tracking-[0.2em] font-sans font-semibold text-[#6F8F80]">
               Page Content Manager
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-white tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#17201B] tracking-tight mt-1">
             Homepage Editor
           </h1>
-          <p className="text-xs text-white/60 font-sans mt-0.5">
+          <p className="text-xs text-[#68756D] font-sans mt-0.5">
             Modify text, banners, featured products, and calls-to-action for the public homepage.
           </p>
         </div>
@@ -232,7 +232,7 @@ export default function HomepageCMSEditor() {
           <Link
             href="/"
             target="_blank"
-            className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-1.5 border border-white/10"
+            className="px-4 py-2.5 bg-[#FFFFFF] hover:bg-[#F0F4F0] text-[#17201B] text-xs uppercase tracking-wider font-semibold rounded-xs transition-colors flex items-center gap-1.5 border border-[#E1E8E2] shadow-2xs"
           >
             <span>Preview</span>
             <ExternalLink size={13} />
@@ -241,7 +241,7 @@ export default function HomepageCMSEditor() {
           <button
             onClick={handleSave}
             disabled={saveState === "saving"}
-            className="px-5 py-2.5 bg-[#123C2D] hover:bg-[#294F3D] text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-all flex items-center gap-2 border border-white/10 shadow-xs disabled:opacity-50 cursor-pointer"
+            className="px-5 py-2.5 bg-[#123C2D] hover:bg-[#294F3D] text-white text-xs uppercase tracking-wider font-semibold rounded-xs transition-all flex items-center gap-2 border border-[#123C2D] shadow-xs disabled:opacity-50 cursor-pointer"
           >
             {saveState === "saving" ? (
               <>
@@ -250,7 +250,7 @@ export default function HomepageCMSEditor() {
               </>
             ) : saveState === "success" ? (
               <>
-                <CheckCircle2 size={14} className="text-emerald-400" />
+                <CheckCircle2 size={14} className="text-emerald-300" />
                 <span>Saved!</span>
               </>
             ) : (
@@ -266,10 +266,10 @@ export default function HomepageCMSEditor() {
       {/* Save Feedback Banner */}
       {saveMessage && (
         <div
-          className={`p-4 rounded-xs text-xs font-sans flex items-center gap-2.5 ${
+          className={`p-4 rounded-xs text-xs font-sans flex items-center gap-2.5 border ${
             saveState === "error"
-              ? "bg-red-500/15 border border-red-500/30 text-red-300"
-              : "bg-emerald-500/15 border border-emerald-500/30 text-emerald-300"
+              ? "bg-red-50 border-red-200 text-[#C0392B]"
+              : "bg-emerald-50 border-emerald-200 text-[#2F7D54]"
           }`}
         >
           {saveState === "error" ? <AlertCircle size={15} /> : <CheckCircle2 size={15} />}
@@ -278,7 +278,7 @@ export default function HomepageCMSEditor() {
       )}
 
       {/* Main Tabs Navigation */}
-      <div className="flex flex-wrap gap-2 border-b border-white/10 pb-3">
+      <div className="flex flex-wrap gap-2 border-b border-[#E1E8E2] pb-3">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const active = activeTab === tab.key;
@@ -288,11 +288,11 @@ export default function HomepageCMSEditor() {
               onClick={() => setActiveTab(tab.key)}
               className={`px-4 py-2 text-xs font-sans font-medium uppercase tracking-wider rounded-xs transition-all flex items-center gap-2 cursor-pointer ${
                 active
-                  ? "bg-[#123C2D] text-white font-semibold border border-white/10 shadow-xs"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
+                  ? "bg-[#123C2D] text-white font-semibold border border-[#123C2D] shadow-xs"
+                  : "bg-[#FFFFFF] text-[#68756D] hover:text-[#17201B] hover:bg-[#F0F4F0] border border-[#E1E8E2] shadow-2xs"
               }`}
             >
-              <Icon size={14} className={active ? "text-[#C4D5C7]" : "text-white/40"} />
+              <Icon size={14} className={active ? "text-white" : "text-[#6F8F80]"} />
               <span>{tab.label}</span>
             </button>
           );
@@ -300,18 +300,18 @@ export default function HomepageCMSEditor() {
       </div>
 
       {/* TAB CONTENT PANELS */}
-      <div className="bg-[#0E1B15] border border-white/10 rounded-xs p-6 md:p-8">
+      <div className="bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 md:p-8 shadow-2xs">
         
         {/* ─── TAB 1: HERO ───────────────────────────────────────── */}
         {activeTab === "hero" && (
           <div className="space-y-6 max-w-3xl">
-            <h2 className="text-lg font-serif font-bold text-white border-b border-white/10 pb-3">
+            <h2 className="text-lg font-serif font-bold text-[#17201B] border-b border-[#E1E8E2] pb-3">
               Hero Section Settings
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Eyebrow Tagline
                 </label>
                 <input
@@ -323,13 +323,13 @@ export default function HomepageCMSEditor() {
                       hero: { ...sections.hero, eyebrow: e.target.value },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   placeholder="e.g. Healthcare & Wellness Formulations"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Main Headline
                 </label>
                 <textarea
@@ -341,13 +341,13 @@ export default function HomepageCMSEditor() {
                       hero: { ...sections.hero, heading: e.target.value },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   placeholder="Targeted Wellness Guided by Botanical Purity & Evidence."
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Hero Narrative / Description
                 </label>
                 <textarea
@@ -359,14 +359,14 @@ export default function HomepageCMSEditor() {
                       hero: { ...sections.hero, description: e.target.value },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               {/* CTAs */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     Primary CTA Label
                   </label>
                   <input
@@ -378,12 +378,12 @@ export default function HomepageCMSEditor() {
                         hero: { ...sections.hero, primaryCtaLabel: e.target.value },
                       })
                     }
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                    className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                     placeholder="Explore Products"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     Primary CTA Destination
                   </label>
                   <input
@@ -395,7 +395,7 @@ export default function HomepageCMSEditor() {
                         hero: { ...sections.hero, primaryCtaLink: e.target.value },
                       })
                     }
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                    className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                     placeholder="/products"
                   />
                 </div>
@@ -403,7 +403,7 @@ export default function HomepageCMSEditor() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     Secondary CTA Label
                   </label>
                   <input
@@ -415,12 +415,12 @@ export default function HomepageCMSEditor() {
                         hero: { ...sections.hero, secondaryCtaLabel: e.target.value },
                       })
                     }
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                    className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                     placeholder="Product Enquiry"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     Secondary CTA Destination
                   </label>
                   <input
@@ -432,20 +432,20 @@ export default function HomepageCMSEditor() {
                         hero: { ...sections.hero, secondaryCtaLink: e.target.value },
                       })
                     }
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                    className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                     placeholder="/enquire"
                   />
                 </div>
               </div>
 
               {/* Spotlight Product Image & Badge */}
-              <div className="pt-4 border-t border-white/10 space-y-4">
-                <h3 className="text-sm font-serif font-bold text-[#C4D5C7]">
+              <div className="pt-4 border-t border-[#E1E8E2] space-y-4">
+                <h3 className="text-sm font-serif font-bold text-[#17201B]">
                   Hero Showcase Product
                 </h3>
 
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     Product Image Path or URL
                   </label>
                   <div className="flex gap-2">
@@ -458,10 +458,10 @@ export default function HomepageCMSEditor() {
                           hero: { ...sections.hero, heroImage: e.target.value },
                         })
                       }
-                      className="flex-1 bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                      className="flex-1 bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                       placeholder="/images/products/nervify-forte.jpg"
                     />
-                    <label className="px-4 py-2.5 bg-white/10 hover:bg-white/15 text-white text-xs font-semibold uppercase tracking-wider rounded-xs transition-colors flex items-center gap-1.5 cursor-pointer border border-white/10">
+                    <label className="px-4 py-2.5 bg-[#F0F4F0] hover:bg-[#E1E8E2] text-[#17201B] text-xs font-semibold uppercase tracking-wider rounded-xs transition-colors flex items-center gap-1.5 cursor-pointer border border-[#E1E8E2] shadow-2xs">
                       <Upload size={13} />
                       <span>{isUploading ? "Uploading..." : "Upload"}</span>
                       <input
@@ -477,7 +477,7 @@ export default function HomepageCMSEditor() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                    <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                       Spotlight Badge
                     </label>
                     <input
@@ -489,11 +489,11 @@ export default function HomepageCMSEditor() {
                           hero: { ...sections.hero, spotlightBadge: e.target.value },
                         })
                       }
-                      className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                      className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                    <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                       Spotlight Title
                     </label>
                     <input
@@ -505,14 +505,14 @@ export default function HomepageCMSEditor() {
                           hero: { ...sections.hero, spotlightTitle: e.target.value },
                         })
                       }
-                      className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                      className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                    <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                       Spotlight Subtitle
                     </label>
                     <input
@@ -524,11 +524,11 @@ export default function HomepageCMSEditor() {
                           hero: { ...sections.hero, spotlightSubtitle: e.target.value },
                         })
                       }
-                      className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                      className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                    <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                       Pack Presentation Info
                     </label>
                     <input
@@ -540,7 +540,7 @@ export default function HomepageCMSEditor() {
                           hero: { ...sections.hero, packInfo: e.target.value },
                         })
                       }
-                      className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                      className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                       placeholder="60 Film-Coated Tablets"
                     />
                   </div>
@@ -553,8 +553,8 @@ export default function HomepageCMSEditor() {
         {/* ─── TAB 2: FEATURED PRODUCTS ──────────────────────────── */}
         {activeTab === "featured" && (
           <div className="space-y-6 max-w-3xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h2 className="text-lg font-serif font-bold text-white">
+            <div className="flex items-center justify-between border-b border-[#E1E8E2] pb-3">
+              <h2 className="text-lg font-serif font-bold text-[#17201B]">
                 Featured Products Section
               </h2>
               <label className="flex items-center gap-2 cursor-pointer">
@@ -572,7 +572,7 @@ export default function HomepageCMSEditor() {
                   }
                   className="rounded-xs w-4 h-4 accent-[#123C2D]"
                 />
-                <span className="text-xs uppercase tracking-wider text-white/80 font-sans">
+                <span className="text-xs uppercase tracking-wider text-[#17201B] font-sans font-medium">
                   Enable Section
                 </span>
               </label>
@@ -580,7 +580,7 @@ export default function HomepageCMSEditor() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Section Eyebrow
                 </label>
                 <input
@@ -595,12 +595,12 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Section Heading
                 </label>
                 <input
@@ -615,12 +615,12 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Section Description
                 </label>
                 <textarea
@@ -635,17 +635,17 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
-              <div className="p-4 bg-white/5 border border-white/5 rounded-xs space-y-2">
-                <span className="text-xs font-semibold text-[#81998D] block">
+              <div className="p-4 bg-[#F6F8F5] border border-[#E1E8E2] rounded-xs space-y-2">
+                <span className="text-xs font-semibold text-[#123C2D] block">
                   Product Source:
                 </span>
-                <p className="text-xs text-white/70 leading-relaxed">
+                <p className="text-xs text-[#68756D] leading-relaxed">
                   Featured products are automatically selected from the central Product CMS. You can mark any product as &ldquo;Featured&rdquo; directly in the{" "}
-                  <Link href="/dashboard/products" className="text-white underline hover:text-[#C4D5C7]">
+                  <Link href="/dashboard/products" className="text-[#123C2D] underline hover:text-[#294F3D] font-medium">
                     Products catalogue manager
                   </Link>.
                 </p>
@@ -657,8 +657,8 @@ export default function HomepageCMSEditor() {
         {/* ─── TAB 3: PHILOSOPHY ─────────────────────────────────── */}
         {activeTab === "philosophy" && (
           <div className="space-y-6 max-w-3xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h2 className="text-lg font-serif font-bold text-white">
+            <div className="flex items-center justify-between border-b border-[#E1E8E2] pb-3">
+              <h2 className="text-lg font-serif font-bold text-[#17201B]">
                 Philosophy & Heritage Section
               </h2>
               <label className="flex items-center gap-2 cursor-pointer">
@@ -676,7 +676,7 @@ export default function HomepageCMSEditor() {
                   }
                   className="rounded-xs w-4 h-4 accent-[#123C2D]"
                 />
-                <span className="text-xs uppercase tracking-wider text-white/80 font-sans">
+                <span className="text-xs uppercase tracking-wider text-[#17201B] font-sans font-medium">
                   Enable Section
                 </span>
               </label>
@@ -684,7 +684,7 @@ export default function HomepageCMSEditor() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Eyebrow
                 </label>
                 <input
@@ -699,12 +699,12 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Heading
                 </label>
                 <input
@@ -719,12 +719,12 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Description
                 </label>
                 <textarea
@@ -739,13 +739,13 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     CTA Label
                   </label>
                   <input
@@ -760,11 +760,11 @@ export default function HomepageCMSEditor() {
                         },
                       })
                     }
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                    className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     CTA Link
                   </label>
                   <input
@@ -779,7 +779,7 @@ export default function HomepageCMSEditor() {
                         },
                       })
                     }
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                    className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -790,8 +790,8 @@ export default function HomepageCMSEditor() {
         {/* ─── TAB 4: QUALITY & TRUST ────────────────────────────── */}
         {activeTab === "quality" && (
           <div className="space-y-6 max-w-3xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h2 className="text-lg font-serif font-bold text-white">
+            <div className="flex items-center justify-between border-b border-[#E1E8E2] pb-3">
+              <h2 className="text-lg font-serif font-bold text-[#17201B]">
                 Therapeutic Categories & Quality
               </h2>
               <label className="flex items-center gap-2 cursor-pointer">
@@ -809,7 +809,7 @@ export default function HomepageCMSEditor() {
                   }
                   className="rounded-xs w-4 h-4 accent-[#123C2D]"
                 />
-                <span className="text-xs uppercase tracking-wider text-white/80 font-sans">
+                <span className="text-xs uppercase tracking-wider text-[#17201B] font-sans font-medium">
                   Enable Section
                 </span>
               </label>
@@ -817,7 +817,7 @@ export default function HomepageCMSEditor() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Eyebrow
                 </label>
                 <input
@@ -832,12 +832,12 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Heading
                 </label>
                 <input
@@ -852,12 +852,12 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Description
                 </label>
                 <textarea
@@ -872,7 +872,7 @@ export default function HomepageCMSEditor() {
                       },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
             </div>
@@ -882,8 +882,8 @@ export default function HomepageCMSEditor() {
         {/* ─── TAB 5: CTA ────────────────────────────────────────── */}
         {activeTab === "cta" && (
           <div className="space-y-6 max-w-3xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <h2 className="text-lg font-serif font-bold text-white">
+            <div className="flex items-center justify-between border-b border-[#E1E8E2] pb-3">
+              <h2 className="text-lg font-serif font-bold text-[#17201B]">
                 Bottom Product Enquiry CTA Section
               </h2>
               <label className="flex items-center gap-2 cursor-pointer">
@@ -901,7 +901,7 @@ export default function HomepageCMSEditor() {
                   }
                   className="rounded-xs w-4 h-4 accent-[#123C2D]"
                 />
-                <span className="text-xs uppercase tracking-wider text-white/80 font-sans">
+                <span className="text-xs uppercase tracking-wider text-[#17201B] font-sans font-medium">
                   Enable Section
                 </span>
               </label>
@@ -909,7 +909,7 @@ export default function HomepageCMSEditor() {
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Heading
                 </label>
                 <input
@@ -921,12 +921,12 @@ export default function HomepageCMSEditor() {
                       cta: { ...sections.cta, heading: e.target.value },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Description
                 </label>
                 <textarea
@@ -938,13 +938,13 @@ export default function HomepageCMSEditor() {
                       cta: { ...sections.cta, description: e.target.value },
                     })
                   }
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     Primary Button Label
                   </label>
                   <input
@@ -956,11 +956,11 @@ export default function HomepageCMSEditor() {
                         cta: { ...sections.cta, primaryCtaLabel: e.target.value },
                       })
                     }
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                    className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                  <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                     Primary Destination
                   </label>
                   <input
@@ -972,7 +972,7 @@ export default function HomepageCMSEditor() {
                         cta: { ...sections.cta, primaryCtaLink: e.target.value },
                       })
                     }
-                    className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                    className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -983,46 +983,46 @@ export default function HomepageCMSEditor() {
         {/* ─── TAB 6: SEO ────────────────────────────────────────── */}
         {activeTab === "seo" && (
           <div className="space-y-6 max-w-3xl">
-            <h2 className="text-lg font-serif font-bold text-white border-b border-white/10 pb-3">
+            <h2 className="text-lg font-serif font-bold text-[#17201B] border-b border-[#E1E8E2] pb-3">
               Homepage Search Engine Optimization (SEO)
             </h2>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Meta Title
                 </label>
                 <input
                   type="text"
                   value={seo.metaTitle || ""}
                   onChange={(e) => setSeo({ ...seo, metaTitle: e.target.value })}
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   placeholder="Celife Health Solutions | Targeted Wellness"
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Meta Description
                 </label>
                 <textarea
                   rows={3}
                   value={seo.metaDescription || ""}
                   onChange={(e) => setSeo({ ...seo, metaDescription: e.target.value })}
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   placeholder="Formulating evidence-guided botanical solutions..."
                 />
               </div>
 
               <div>
-                <label className="block text-xs uppercase tracking-wider text-white/70 font-sans mb-1.5">
+                <label className="block text-xs uppercase tracking-wider text-[#17201B] font-sans font-semibold mb-1.5">
                   Social Sharing Image (OG Image)
                 </label>
                 <input
                   type="text"
                   value={seo.ogImage || ""}
                   onChange={(e) => setSeo({ ...seo, ogImage: e.target.value })}
-                  className="w-full bg-[#0A1410] border border-white/10 px-4 py-2.5 text-sm text-white rounded-xs focus:border-[#81998D] outline-none"
+                  className="w-full bg-[#FFFFFF] border border-[#E1E8E2] px-4 py-2.5 text-xs text-[#17201B] rounded-xs focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D]/10 outline-none transition-colors"
                   placeholder="/images/hero/celife-wellness-hero.jpg"
                 />
               </div>

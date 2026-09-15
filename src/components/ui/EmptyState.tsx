@@ -19,18 +19,18 @@ export function EmptyState({
   actionIcon,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center p-12 md:p-20 bg-[#050505] border border-white/5 rounded-xs space-y-5 select-none text-center">
+    <div className="flex flex-col items-center justify-center p-10 md:p-14 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs space-y-4 select-none text-center shadow-2xs">
       <div className="space-y-1">
-        <h4 className="text-xs uppercase tracking-[0.2em] text-white/65 font-sans font-semibold">
+        <h4 className="text-xs uppercase tracking-[0.14em] text-[#17201B] font-sans font-bold">
           {title}
         </h4>
-        <p className="text-sm text-white/55 font-sans tracking-wide">
+        <p className="text-xs text-[#68756D] font-sans max-w-sm">
           {description}
         </p>
       </div>
 
-      {/* Small gold line detail */}
-      <div className="w-8 h-[1px] bg-primary" />
+      {/* Small green line detail */}
+      <div className="w-8 h-[2px] bg-[#123C2D]/30 rounded-full" />
 
       {/* Action button if applicable */}
       {actionText && onAction && (
@@ -38,9 +38,9 @@ export function EmptyState({
           <button
             type="button"
             onClick={onAction}
-            className="flex items-center gap-1.5 px-4 py-2 bg-primary text-black hover:bg-white hover:text-black transition-all duration-300 text-xs uppercase tracking-wider font-sans font-semibold rounded-xs outline-none cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2 bg-[#123C2D] text-white hover:bg-[#294F3D] transition-all duration-150 text-xs uppercase tracking-wider font-sans font-semibold rounded-xs outline-none cursor-pointer shadow-xs"
           >
-            {actionIcon || <Plus size={10} />}
+            {actionIcon || <Plus size={12} />}
             <span>{actionText}</span>
           </button>
         </div>

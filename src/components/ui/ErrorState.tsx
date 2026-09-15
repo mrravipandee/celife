@@ -20,12 +20,12 @@ export function ErrorState({
   children,
 }: ErrorStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center p-12 bg-[#050505] border border-white/5 rounded-xs space-y-6 select-none text-center max-w-lg mx-auto mt-20">
-      <div className="space-y-2">
-        <h4 className="text-sm uppercase tracking-[0.2em] text-red-400 font-sans font-semibold">
+    <div className="flex flex-col items-center justify-center p-10 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs space-y-5 select-none text-center max-w-md mx-auto my-12 shadow-2xs">
+      <div className="space-y-1.5">
+        <h4 className="text-xs uppercase tracking-[0.16em] text-[#C0392B] font-sans font-bold">
           {title}
         </h4>
-        <p className="text-sm text-white/60 font-sans leading-relaxed">
+        <p className="text-xs text-[#68756D] font-sans leading-relaxed">
           {description}
         </p>
       </div>
@@ -36,10 +36,10 @@ export function ErrorState({
             <button
               type="button"
               onClick={onRetry}
-              className={`px-5 py-2.5 text-xs uppercase tracking-[0.15em] font-sans font-semibold transition-all duration-300 rounded-xs outline-none cursor-pointer ${
+              className={`px-5 py-2 text-xs uppercase tracking-wider font-sans font-semibold transition-all duration-150 rounded-xs outline-none cursor-pointer ${
                 retryVariant === "solid"
-                  ? "bg-primary text-black hover:bg-white hover:text-black"
-                  : "bg-transparent border border-white/10 text-white hover:border-primary hover:text-primary"
+                  ? "bg-[#123C2D] text-white hover:bg-[#294F3D]"
+                  : "bg-transparent border border-[#E1E8E2] text-[#17201B] hover:border-[#123C2D] hover:text-[#123C2D]"
               }`}
             >
               {retryText}
