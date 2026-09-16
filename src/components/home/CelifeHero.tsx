@@ -90,6 +90,7 @@ export function CelifeHero({ content }: CelifeHeroProps) {
                   alt="Nervify Forte - Flagship Celife Formulation"
                   fill
                   priority
+                  loading="eager"
                   sizes="(max-width: 1024px) 100vw, 42vw"
                   className="object-cover object-center"
                 />
