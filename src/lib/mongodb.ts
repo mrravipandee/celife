@@ -6,6 +6,7 @@ interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
   lastFailureTime: number;
+  lastError: Error | null;
 }
 
 // Use global cache to prevent multiple connections in dev hot-reloads
@@ -14,13 +15,28 @@ declare global {
 }
 
 if (!global.mongooseCache) {
-  global.mongooseCache = { conn: null, promise: null, lastFailureTime: 0 };
+  global.mongooseCache = { conn: null, promise: null, lastFailureTime: 0, lastError: null };
 }
 
 const cached = global.mongooseCache;
-const CIRCUIT_BREAKER_COOLDOWN_MS = 30000; // 30s cooldown after connection failure
+const CIRCUIT_BREAKER_COOLDOWN_MS = process.env.NODE_ENV === "production" ? 15000 : 5000;
+const LOCAL_MONGODB_URI = "mongodb://127.0.0.1:27017/celife";
 
-export async function connectToDatabase() {
+async function attemptConnect(uri: string, timeoutMs: number): Promise<typeof mongoose> {
+  const opts: mongoose.ConnectOptions = {
+    bufferCommands: false,
+    maxPoolSize: 20,
+    minPoolSize: 2,
+    serverSelectionTimeoutMS: timeoutMs,
+    connectTimeoutMS: timeoutMs,
+    socketTimeoutMS: 20000,
+    maxIdleTimeMS: 30000,
+  };
+
+  return mongoose.connect(uri, opts);
+}
+
+export async function connectToDatabase(): Promise<typeof mongoose> {
   const MONGODB_URI = process.env.MONGODB_URI;
 
   if (!MONGODB_URI) {
@@ -31,8 +47,10 @@ export async function connectToDatabase() {
   if (cached.lastFailureTime > 0) {
     const timeSinceLastFailure = Date.now() - cached.lastFailureTime;
     if (timeSinceLastFailure < CIRCUIT_BREAKER_COOLDOWN_MS) {
+      const remainingSec = Math.round((CIRCUIT_BREAKER_COOLDOWN_MS - timeSinceLastFailure) / 1000);
+      const rootCause = cached.lastError?.message ? ` (Cause: ${cached.lastError.message})` : "";
       throw new Error(
-        `MongoDB connection cooldown active (${Math.round((CIRCUIT_BREAKER_COOLDOWN_MS - timeSinceLastFailure) / 1000)}s remaining)`
+        `MongoDB connection cooldown active (${remainingSec}s remaining)${rootCause}`
       );
     }
   }
@@ -48,26 +66,45 @@ export async function connectToDatabase() {
   }
 
   if (!cached.promise) {
-    const opts: mongoose.ConnectOptions = {
-      bufferCommands: false,
-      maxPoolSize: 20,
-      minPoolSize: 2,
-      serverSelectionTimeoutMS: 1500, // 1.5s max timeout to prevent stalling page rendering
-      socketTimeoutMS: 20000,
-      maxIdleTimeMS: 30000,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
-      return mongooseInstance;
-    });
+    cached.promise = (async () => {
+      try {
+        const timeoutMs = process.env.NODE_ENV === "production" ? 5000 : 3000;
+        return await attemptConnect(MONGODB_URI, timeoutMs);
+      } catch (primaryErr) {
+        // In local development, if primary URI fails (e.g. Atlas IP not whitelisted),
+        // gracefully attempt fallback to local MongoDB instance
+        const isRemoteUri = !MONGODB_URI.includes("127.0.0.1") && !MONGODB_URI.includes("localhost");
+        if (process.env.NODE_ENV !== "production" && isRemoteUri) {
+          console.warn(
+            `[MongoDB] Primary connection failed: ${(primaryErr as Error).message}. Attempting local MongoDB fallback (${LOCAL_MONGODB_URI})...`
+          );
+          try {
+            try {
+              await mongoose.disconnect();
+            } catch {}
+            const fallbackConn = await attemptConnect(LOCAL_MONGODB_URI, 2000);
+            console.log(`[MongoDB] Connected to local MongoDB fallback successfully.`);
+            return fallbackConn;
+          } catch (fallbackErr) {
+            console.error(
+              `[MongoDB] Local fallback also failed: ${(fallbackErr as Error).message}`
+            );
+          }
+        }
+        throw primaryErr;
+      }
+    })();
   }
 
   try {
     cached.conn = await cached.promise;
     cached.lastFailureTime = 0; // reset circuit breaker on success
+    cached.lastError = null;
   } catch (e) {
     cached.promise = null;
+    cached.conn = null;
     cached.lastFailureTime = Date.now(); // trigger cooldown on failure
+    cached.lastError = e as Error;
     throw e;
   }
 

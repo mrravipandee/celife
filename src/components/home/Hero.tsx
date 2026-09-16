@@ -241,6 +241,8 @@ export function Hero() {
         </svg>
       )}
 
+      <CornerFrame preferReduced={preferReduced} />
+
       {/* Hero Content */}
       <motion.div
         className="relative z-10 flex-1 flex items-center"

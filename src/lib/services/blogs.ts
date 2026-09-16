@@ -85,7 +85,7 @@ function serializeBlog(doc: RawBlogDoc): BlogItem {
 }
 
 // Fallback high-end advisory mock articles
-const MOCK_BLOGS: BlogItem[] = [
+export const MOCK_BLOGS: BlogItem[] = [
   {
     title: "HOW TO GET UNSTUCK WITHOUT HIRING ANOTHER ADVISOR",
     slug: "how-to-get-unstuck-without-hiring-another-advisor",
@@ -105,7 +105,7 @@ Focus on labor cost optimization, waste reduction, and guest retention.
       url: "/images/hero/celife-wellness-hero.jpg",
       alt: "Celife Wellness Formulations",
     },
-    category: "Building & Growth",
+    category: "Operations",
     tags: ["Operations", "Strategy", "Growth"],
     author: { name: "Manav Chandak" },
     status: "published",
@@ -128,7 +128,7 @@ Break down your P&L line by line before making sweeping changes.
       url: "/images/hero/celife-wellness-hero.jpg",
       alt: "Celife Formulations",
     },
-    category: "Mindset & Decisions",
+    category: "Business Strategy",
     tags: ["Leadership", "Problem Solving"],
     author: { name: "Vikram Malhotra" },
     status: "published",
@@ -148,7 +148,7 @@ The unvarnished truth about managing cash flow, retaining top culinary talent, a
       url: "/images/general/detail-architecture.jpg",
       alt: "Architectural Detail",
     },
-    category: "Founder Life",
+    category: "Industry Insights",
     tags: ["Leadership", "Culture"],
     author: { name: "Ankit Sharma" },
     status: "published",
@@ -168,7 +168,7 @@ Networking without actionable insights is just noise; here is how we build true 
       url: "/images/hero/celife-wellness-hero.jpg",
       alt: "Celife Community",
     },
-    category: "Squads & Community",
+    category: "Hospitality",
     tags: ["Community", "Networking"],
     author: { name: "Manav Chandak" },
     status: "published",
@@ -188,7 +188,7 @@ Key steps for a flawless luxury resort launch.
       url: "/images/hero/celife-wellness-hero.jpg",
       alt: "Celife Operations",
     },
-    category: "Operations",
+    category: "Hotels",
     tags: ["Pre-Opening", "Hotels"],
     author: { name: "Manav Chandak" },
     status: "published",
@@ -208,7 +208,7 @@ The seismic shift towards boutique and experiential hospitality in secondary mar
       url: "/images/general/detail-architecture.jpg",
       alt: "Market Trends",
     },
-    category: "Event",
+    category: "Industry Insights",
     tags: ["Market Analysis", "Trends"],
     author: { name: "Vikram Malhotra" },
     status: "published",
@@ -217,9 +217,41 @@ The seismic shift towards boutique and experiential hospitality in secondary mar
   },
 ];
 
+let isBlogsSeeded = false;
+
+export async function ensureDefaultBlogsSeeded() {
+  if (isBlogsSeeded) return;
+  try {
+    await connectToDatabase();
+    const count = await Blog.countDocuments();
+    if (count === 0) {
+      await Blog.insertMany(
+        MOCK_BLOGS.map((b) => ({
+          title: b.title,
+          slug: b.slug,
+          excerpt: b.excerpt,
+          content: b.content,
+          coverImage: b.coverImage,
+          category: b.category,
+          tags: b.tags,
+          author: b.author,
+          status: b.status,
+          publishedAt: b.publishedAt ? new Date(b.publishedAt) : new Date(),
+          readTime: b.readTime,
+        }))
+      );
+    }
+    isBlogsSeeded = true;
+  } catch (error) {
+    // Non-blocking in serverless/build environments
+    console.warn("Blog seeding notice:", error);
+  }
+}
+
 export const getBlogs = cache(async (): Promise<BlogItem[]> => {
   try {
     await connectToDatabase();
+    await ensureDefaultBlogsSeeded();
     const docs = await Blog.find({ status: "published" }).sort({ publishedAt: -1 }).lean();
     if (!docs || docs.length === 0) {
       return MOCK_BLOGS;
@@ -234,6 +266,7 @@ export const getBlogs = cache(async (): Promise<BlogItem[]> => {
 export const getBlogBySlug = cache(async (slug: string): Promise<BlogItem | null> => {
   try {
     await connectToDatabase();
+    await ensureDefaultBlogsSeeded();
     const doc = await Blog.findOne({ slug, status: "published" }).lean();
     if (!doc) {
       // Fallback search in mock data

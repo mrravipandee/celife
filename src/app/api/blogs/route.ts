@@ -8,6 +8,7 @@ import { createBlogSchema } from "@/lib/validations/blog";
 import { paginationQuerySchema, searchQuerySchema } from "@/lib/validations/query";
 import { BLOG_STATUSES, BLOG_CATEGORIES } from "@/types/blog";
 import { handleApiError } from "@/lib/error";
+import { MOCK_BLOGS, ensureDefaultBlogsSeeded } from "@/lib/services/blogs";
 
 function escapeRegex(text: string): string {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -136,7 +137,7 @@ export async function GET(req: Request) {
     // 3. Enforce visibility permissions (public sees only published)
     if (!isAdmin) {
       query.status = "published";
-    } else if (statusParam) {
+    } else if (statusParam && statusParam !== "all") {
       // Validate status query parameter
       if (!BLOG_STATUSES.includes(statusParam as (typeof BLOG_STATUSES)[number])) {
         return NextResponse.json(
@@ -153,7 +154,7 @@ export async function GET(req: Request) {
     }
 
     // 4. Category filter validation
-    if (categoryParam) {
+    if (categoryParam && categoryParam !== "all") {
       if (!BLOG_CATEGORIES.includes(categoryParam as (typeof BLOG_CATEGORIES)[number])) {
         return NextResponse.json(
           {
@@ -184,7 +185,69 @@ export async function GET(req: Request) {
       }
     }
 
-    await connectToDatabase();
+    let isConnected = false;
+    try {
+      await connectToDatabase();
+      await ensureDefaultBlogsSeeded();
+      isConnected = true;
+    } catch (dbErr) {
+      console.warn(
+        "MongoDB unavailable in GET /api/blogs, serving fallback blogs:",
+        (dbErr as Error).message
+      );
+    }
+
+    if (!isConnected) {
+      // Graceful fallback to mock data when database is completely down
+      let filtered = [...MOCK_BLOGS];
+      if (query.status) {
+        filtered = filtered.filter((b) => b.status === query.status);
+      }
+      if (query.category) {
+        filtered = filtered.filter(
+          (b) => b.category.toLowerCase() === query.category?.toLowerCase()
+        );
+      }
+      if (searchParam) {
+        const s = searchParam.toLowerCase();
+        filtered = filtered.filter(
+          (b) => b.title.toLowerCase().includes(s) || b.excerpt.toLowerCase().includes(s)
+        );
+      }
+      const total = filtered.length;
+      const skip = (page - 1) * limit;
+      const paginated = filtered.slice(skip, skip + limit);
+      const fallbackList = paginated.map((b, idx) => ({
+        id: b._id || `mock-${idx + 1}`,
+        title: b.title,
+        slug: b.slug,
+        excerpt: b.excerpt,
+        coverImage: b.coverImage,
+        category: b.category,
+        tags: b.tags,
+        author: b.author,
+        status: b.status,
+        publishedAt: b.publishedAt ? new Date(b.publishedAt) : undefined,
+        readTime: b.readTime,
+        createdAt: b.createdAt ? new Date(b.createdAt) : new Date(),
+        updatedAt: new Date(),
+      }));
+
+      return NextResponse.json(
+        {
+          success: true,
+          data: fallbackList,
+          pagination: {
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit) || 1,
+          },
+          warning: "Database is temporarily unreachable. Serving fallback articles.",
+        },
+        { status: 200 }
+      );
+    }
 
     const skip = (page - 1) * limit;
 
