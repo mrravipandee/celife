@@ -17,6 +17,8 @@ export const createEnquirySchema = z.object({
     .trim()
     .min(6, { message: "Please enter a valid phone number." })
     .max(30, { message: "Phone number cannot exceed 30 characters." }),
+  productId: z.string().trim().optional().or(z.literal("")),
+  productNameSnapshot: z.string().trim().max(200).optional().or(z.literal("")),
   product: z
     .string()
     .trim()
@@ -77,6 +79,8 @@ export const productEnquirySchema = z.object({
     .trim()
     .email({ message: "Please enter a valid email address." })
     .lowercase(),
+  productId: z.string().trim().optional().or(z.literal("")),
+  productNameSnapshot: z.string().trim().max(200).optional().or(z.literal("")),
   product: z
     .string()
     .trim()

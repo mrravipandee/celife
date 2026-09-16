@@ -13,15 +13,18 @@ import { cn } from "@/lib/utils";
 
 interface ProductEnquiryFormProps {
   initialProductSlug?: string;
+  products?: Product[];
 }
 
-export function ProductEnquiryForm({ initialProductSlug }: ProductEnquiryFormProps) {
+export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnquiryFormProps) {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const availableProducts = products && products.length > 0 ? products : productsData;
+
   // Determine initial product
   const defaultProduct =
-    productsData.find((p) => p.slug === initialProductSlug) || productsData[0];
+    availableProducts.find((p) => p.slug === initialProductSlug) || availableProducts[0];
 
   const [selectedProduct, setSelectedProduct] = useState<Product>(defaultProduct);
 
@@ -45,7 +48,7 @@ export function ProductEnquiryForm({ initialProductSlug }: ProductEnquiryFormPro
 
   const handleProductChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const slug = e.target.value;
-    const found = productsData.find((p) => p.slug === slug);
+    const found = availableProducts.find((p) => p.slug === slug);
     if (found) {
       setSelectedProduct(found);
       setValue("product", found.name, { shouldValidate: true });
@@ -68,6 +71,8 @@ export function ProductEnquiryForm({ initialProductSlug }: ProductEnquiryFormPro
           email: data.email,
           phone: data.phone,
           product: data.product,
+          productId: selectedProduct._id || selectedProduct.id,
+          productNameSnapshot: selectedProduct.name,
           company: data.company || "",
           projectType: "Product Enquiry",
           message: data.message,
@@ -92,6 +97,11 @@ export function ProductEnquiryForm({ initialProductSlug }: ProductEnquiryFormPro
     }
   };
 
+  const currentDisplayImage =
+    selectedProduct.images && selectedProduct.images.length > 0
+      ? selectedProduct.images[0].url
+      : selectedProduct.image;
+
   return (
     <div className="bg-white border border-[#123C2D]/10 rounded-xs shadow-sm overflow-hidden">
       {/* Active Selected Product Banner */}
@@ -99,7 +109,7 @@ export function ProductEnquiryForm({ initialProductSlug }: ProductEnquiryFormPro
         <div className="flex items-center gap-4">
           <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-white/10 rounded-xs overflow-hidden border border-white/20 shrink-0">
             <Image
-              src={selectedProduct.image}
+              src={currentDisplayImage}
               alt={selectedProduct.name}
               fill
               className="object-cover"
@@ -113,7 +123,7 @@ export function ProductEnquiryForm({ initialProductSlug }: ProductEnquiryFormPro
               {selectedProduct.name}
             </h2>
             <span className="text-xs text-white/70 block mt-0.5">
-              {selectedProduct.category} • {selectedProduct.packaging.split("(")[0].trim()}
+              {selectedProduct.category} • {selectedProduct.packSize || (selectedProduct.packaging ? selectedProduct.packaging.split("(")[0].trim() : "Standard Packaging")}
             </span>
           </div>
         </div>
@@ -183,7 +193,7 @@ export function ProductEnquiryForm({ initialProductSlug }: ProductEnquiryFormPro
                 onChange={handleProductChange}
                 className="w-full px-4 py-3 bg-[#F8FAF6] border border-[#123C2D]/20 rounded-xs text-sm text-[#171B18] focus:outline-none focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D] transition-colors"
               >
-                {productsData.map((p) => (
+                {availableProducts.map((p) => (
                   <option key={p.slug} value={p.slug}>
                     {p.name} ({p.category})
                   </option>

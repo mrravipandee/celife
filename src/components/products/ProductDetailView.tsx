@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/types/product";
+import { Product, ProductImage } from "@/types/product";
 import { getFormulationDetail } from "@/data/product-formulation-details";
 import { SpecTable, CompositionTable } from "@/components/ui/SpecTable";
 import { ActiveNodeDiagram } from "@/components/products/ActiveNodeDiagram";
@@ -14,6 +14,8 @@ import { SectionDivider } from "@/components/ui/SectionDivider";
 import { BotanicalMandala } from "@/components/ui/BotanicalMandala";
 import { ArrowLeft, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ProductImageGallery } from "@/components/products/ProductImageGallery";
+import { ProductNutritionPanel } from "@/components/products/ProductNutritionPanel";
 
 interface ProductDetailViewProps {
   product: Product;
@@ -25,13 +27,36 @@ export function ProductDetailView({
   relatedProducts = [],
 }: ProductDetailViewProps) {
   const detail = getFormulationDetail(product.slug);
-  const [selectedImage, setSelectedImage] = useState<string>(product.image);
+  const hasDbComposition = Boolean(product.composition && product.composition.length > 0);
 
-  const thumbnails = [
-    { label: "Pack View", src: product.image },
-    { label: "Formulation", src: product.image },
-    { label: "Specification", src: product.image },
+  const dynamicSpecs = [
+    ...(product.brand ? [{ label: "Brand", value: product.brand }] : []),
+    ...(product.productClassification ? [{ label: "Classification", value: product.productClassification }] : []),
+    ...(product.packSize ? [{ label: "Pack Presentation", value: product.packSize }] : []),
+    ...(product.netVolume ? [{ label: "Net Volume", value: product.netVolume }] : []),
+    ...(product.flavour ? [{ label: "Flavour", value: product.flavour }] : []),
+    ...(product.sugarStatement ? [{ label: "Sugar Profile", value: product.sugarStatement }] : []),
+    ...(product.ageStatement ? [{ label: "Target Demographics", value: product.ageStatement }] : []),
   ];
+
+  const effectiveSpecs = dynamicSpecs.length > 0
+    ? [...dynamicSpecs, ...(product.specs || detail.specs || [])]
+    : (product.specs || detail.specs || []);
+
+  const galleryImages: ProductImage[] =
+    product.images && product.images.length > 0
+      ? product.images
+      : [
+          {
+            url: product.image,
+            alt: product.name,
+            altText: product.name,
+            type: "main",
+            order: 1,
+            isPrimary: true,
+            sortOrder: 0,
+          },
+        ];
 
   return (
     <div className="w-full bg-[var(--bone)] text-[var(--ink)]">
@@ -74,48 +99,12 @@ export function ProductDetailView({
 
         {/* 1. Product Hero (6/6 Asymmetric Split) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column (6 cols): Product Image on Bone Plinth + Thumbnails */}
-          <div className="lg:col-span-6 space-y-4">
-            <div className="bg-[var(--paper)] border border-[var(--line)] rounded-[6px] p-4 sm:p-6 shadow-xs">
-              <div className="relative aspect-[4/3] sm:aspect-[1/1] w-full rounded-[4px] overflow-hidden bg-[var(--bone)]/50">
-                <Image
-                  src={selectedImage}
-                  alt={product.name}
-                  fill
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 50vw"
-                  className="object-cover object-center transition-opacity duration-300"
-                />
-              </div>
-            </div>
-
-            {/* Thumbnail States Below Image */}
-            <div className="grid grid-cols-3 gap-3">
-              {thumbnails.map((thumb, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setSelectedImage(thumb.src)}
-                  className={cn(
-                    "relative aspect-[4/3] rounded-[4px] overflow-hidden border p-1 bg-[var(--paper)] transition-all cursor-pointer",
-                    selectedImage === thumb.src
-                      ? "border-[var(--forest)] ring-1 ring-[var(--forest)]"
-                      : "border-[var(--line)] hover:border-[var(--sage)]"
-                  )}
-                >
-                  <div className="relative w-full h-full bg-[var(--bone)]/40 rounded-[2px] overflow-hidden">
-                    <Image
-                      src={thumb.src}
-                      alt={`${product.name} thumbnail ${idx + 1}`}
-                      fill
-                      sizes="120px"
-                      className="object-cover object-center"
-                    />
-                  </div>
-                  <span className="sr-only">{thumb.label}</span>
-                </button>
-              ))}
-            </div>
+          {/* Left Column (6 cols): Product Image Gallery with Zoom Lens & Lightbox */}
+          <div className="lg:col-span-6">
+            <ProductImageGallery
+              images={galleryImages}
+              productName={product.name}
+            />
           </div>
 
           {/* Right Column (6 cols): Sticky Formulation Specs & Primary Conversion */}
@@ -135,13 +124,13 @@ export function ProductDetailView({
 
             {/* One-Line Positioning Statement */}
             <p className="text-sm sm:text-base font-sans text-[var(--ink)]/80 leading-[1.65] max-w-[60ch]">
-              {detail.positioning}
+              {product.description || detail.positioning}
             </p>
 
             {/* Hairline Spec Table */}
             <SpecTable
               caption={`${product.name} technical specifications`}
-              rows={detail.specs}
+              rows={effectiveSpecs}
             />
 
             {/* Primary & Tertiary Conversion Actions */}
@@ -222,29 +211,35 @@ export function ProductDetailView({
           <SectionDivider />
         </div>
 
-        {/* 3. Active Composition Table (Real Semantic Table) */}
-        <section className="py-8 space-y-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)]" />
-              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
-                Composition
-              </span>
+        {/* 3. Composition & Nutrition: Verified DB Panel or Legacy Table */}
+        {hasDbComposition ? (
+          <section id="nutrition-panel" className="py-8">
+            <ProductNutritionPanel product={product} />
+          </section>
+        ) : (
+          <section className="py-8 space-y-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)]" />
+                <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+                  Composition
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[var(--ink)] tracking-tight">
+                Active Bioactive Markers & Specifications
+              </h2>
+              <p className="text-xs sm:text-sm font-sans text-[var(--sage)] max-w-[65ch]">
+                Standardized quantitative active assay per single administration unit.
+              </p>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[var(--ink)] tracking-tight">
-              Active Bioactive Markers & Specifications
-            </h2>
-            <p className="text-xs sm:text-sm font-sans text-[var(--sage)] max-w-[65ch]">
-              Standardized quantitative active assay per single administration unit.
-            </p>
-          </div>
 
-          <CompositionTable
-            caption={`${product.name} complete bioactive formulation breakdown`}
-            rows={detail.composition}
-            footnote={detail.excipientFootnote}
-          />
-        </section>
+            <CompositionTable
+              caption={`${product.name} complete bioactive formulation breakdown`}
+              rows={detail.composition}
+              footnote={detail.excipientFootnote}
+            />
+          </section>
+        )}
 
         {/* Section Divider */}
         <div className="my-16 md:my-24">
@@ -262,54 +257,57 @@ export function ProductDetailView({
           />
         </section>
 
-        {/* Section Divider */}
-        <div className="my-16 md:my-24">
-          <SectionDivider />
-        </div>
-
-        {/* 5. Usage, Storage & Cautions (3-Column Hairline Panel) */}
-        <section className="py-8 space-y-6">
-          <div className="space-y-2">
-            <h3 className="text-xl sm:text-2xl font-serif font-bold text-[var(--ink)] tracking-tight">
-              Usage & Administration Parameters
-            </h3>
-            <p className="text-xs sm:text-sm font-sans text-[var(--sage)]">
-              Factual, practitioner-guided parameters for safe and effective administration.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 border border-[var(--line)] rounded-[6px] bg-[var(--paper)] overflow-hidden">
-            {/* Column 1: Suggested Use */}
-            <div className="p-6 sm:p-7 border-b md:border-b-0 md:border-r border-[var(--line)] space-y-2.5">
-              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--forest)] block">
-                Suggested Use
-              </span>
-              <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
-                {detail.usage}
-              </p>
+        {/* 5. Legacy Usage, Storage & Cautions (Only shown if not already rendered by ProductNutritionPanel) */}
+        {!hasDbComposition && (
+          <>
+            <div className="my-16 md:my-24">
+              <SectionDivider />
             </div>
 
-            {/* Column 2: Storage */}
-            <div className="p-6 sm:p-7 border-b md:border-b-0 md:border-r border-[var(--line)] space-y-2.5">
-              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--forest)] block">
-                Storage Environment
-              </span>
-              <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
-                {detail.storage}
-              </p>
-            </div>
+            <section className="py-8 space-y-6">
+              <div className="space-y-2">
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-[var(--ink)] tracking-tight">
+                  Usage & Administration Parameters
+                </h3>
+                <p className="text-xs sm:text-sm font-sans text-[var(--sage)]">
+                  Factual, practitioner-guided parameters for safe and effective administration.
+                </p>
+              </div>
 
-            {/* Column 3: Cautions */}
-            <div className="p-6 sm:p-7 space-y-2.5 bg-[var(--bone)]/30">
-              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--clay)] block">
-                Professional Cautions
-              </span>
-              <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
-                {detail.cautions}
-              </p>
-            </div>
-          </div>
-        </section>
+              <div className="grid grid-cols-1 md:grid-cols-3 border border-[var(--line)] rounded-[6px] bg-[var(--paper)] overflow-hidden">
+                {/* Column 1: Suggested Use */}
+                <div className="p-6 sm:p-7 border-b md:border-b-0 md:border-r border-[var(--line)] space-y-2.5">
+                  <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--forest)] block">
+                    Suggested Use
+                  </span>
+                  <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
+                    {detail.usage}
+                  </p>
+                </div>
+
+                {/* Column 2: Storage */}
+                <div className="p-6 sm:p-7 border-b md:border-b-0 md:border-r border-[var(--line)] space-y-2.5">
+                  <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--forest)] block">
+                    Storage Environment
+                  </span>
+                  <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
+                    {detail.storage}
+                  </p>
+                </div>
+
+                {/* Column 3: Cautions */}
+                <div className="p-6 sm:p-7 space-y-2.5 bg-[var(--bone)]/30">
+                  <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--clay)] block">
+                    Professional Cautions
+                  </span>
+                  <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
+                    {detail.cautions}
+                  </p>
+                </div>
+              </div>
+            </section>
+          </>
+        )}
 
         {/* Section Divider */}
         {relatedProducts.length > 0 && (

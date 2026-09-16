@@ -6,6 +6,7 @@ import { MobileMenu } from "@/components/layout/MobileMenu";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { ProductEnquiryForm } from "@/components/enquiry/ProductEnquiryForm";
+import { getProducts } from "@/lib/services/products";
 import { Mail, Phone, MapPin, ShieldCheck } from "lucide-react";
 
 export const metadata: Metadata = constructMetadata({
@@ -21,6 +22,7 @@ interface EnquirePageProps {
 export default async function EnquirePage({ searchParams }: EnquirePageProps) {
   const params = await searchParams;
   const initialProductSlug = params?.product;
+  const products = await getProducts();
 
   return (
     <SmoothScroll>
@@ -51,7 +53,7 @@ export default async function EnquirePage({ searchParams }: EnquirePageProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             {/* Left/Main Column: The Enquiry Form */}
             <div className="lg:col-span-8">
-              <ProductEnquiryForm initialProductSlug={initialProductSlug} />
+              <ProductEnquiryForm initialProductSlug={initialProductSlug} products={products} />
             </div>
 
             {/* Right Column: Trust Badges & Contact Info */}

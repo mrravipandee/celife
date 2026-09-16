@@ -101,7 +101,12 @@ export async function POST(req: Request) {
       name: parsed.name,
       email: parsed.email,
       phone: parsed.phone,
-      product: parsed.product,
+      productId:
+        parsed.productId && mongoose.Types.ObjectId.isValid(parsed.productId)
+          ? new mongoose.Types.ObjectId(parsed.productId)
+          : undefined,
+      productNameSnapshot: parsed.productNameSnapshot || parsed.product || undefined,
+      product: parsed.product || parsed.productNameSnapshot,
       company: parsed.company,
       projectType: parsed.projectType || "Product Enquiry",
       location: parsed.location,

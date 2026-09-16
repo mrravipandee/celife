@@ -17,7 +17,8 @@ interface ProductDetailPageProps {
 }
 
 export async function generateStaticParams() {
-  return productsData.map((product) => ({
+  const products = await getProducts();
+  return products.map((product) => ({
     slug: product.slug,
   }));
 }
@@ -33,10 +34,14 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
     });
   }
 
+  const title = product.seo?.metaTitle || `${product.name} | Celife Health Solutions`;
+  const description = product.seo?.metaDescription || `${product.name} - ${product.shortDescription}`;
+  const image = product.images?.[0]?.url || product.image;
+
   return constructMetadata({
-    title: `${product.name} | Celife Health Solutions`,
-    description: `${product.name} - ${product.shortDescription}`,
-    image: product.image,
+    title,
+    description,
+    image,
   });
 }
 

@@ -22,6 +22,64 @@ export interface FormulationDetail {
 }
 
 export const formulationDetails: Record<string, FormulationDetail> = {
+  "vitafiv-syrup": {
+    slug: "vitafiv-syrup",
+    positioning:
+      "A high-potency, multi-nutrient syrup formulation delivering 25 essential vitamins, minerals, and amino acids in a light-protected amber bottle.",
+    pullQuote:
+      "Calibrated multivitamin and mineral supplementation to support energy metabolism, immune defense, and general physiological wellbeing.",
+    overviewParagraphs: [
+      "VITAFIV Syrup is a calibrated health supplement containing a synergistic matrix of 25 micronutrients including essential B-complex vitamins, antioxidant vitamins A, C, and E, vital trace minerals (Zinc, Iodine, Selenium, Molybdenum, Manganese, Copper, Chromium), and conditionally essential amino acid L-Lysine.",
+      "Engineered for superior bioavailability in an oral liquid syrup format with pleasant mixed fruit flavour. Calibrated to ICMR 2020 RDA guidelines for adults and adolescents, packaged in amber bottle to preserve photosensitive co-factors.",
+    ],
+    specs: [
+      { label: "Dosage Form", value: "Liquid Oral Formulation (Syrup)" },
+      { label: "Pack Presentation", value: "200 ml Amber Bottle in Unit Carton" },
+      { label: "Flavour", value: "Mixed Fruit Flavour" },
+      { label: "Therapeutic Domain", value: "General Wellness & Multi-Micronutrient Support" },
+      { label: "Serving Size", value: "5 ml (One Teaspoonful)" },
+      { label: "Regulatory Category", value: "Health Supplement (FSSAI Regulated)" },
+    ],
+    composition: [
+      { ingredient: "L-Lysine Hydrochloride", standardisedTo: "Essential Amino Acid", quantity: "37.5 mg" },
+      { ingredient: "Vitamin C (L-Ascorbic Acid)", standardisedTo: "Antioxidant Vitamin (100% RDA)", quantity: "40 mg" },
+      { ingredient: "Vitamin B3 (Nicotinamide)", standardisedTo: "Niacinamide (100% RDA)", quantity: "14 mg" },
+      { ingredient: "Vitamin E (dl-alpha-Tocopheryl Acetate)", standardisedTo: "Fat-Soluble Antioxidant (100% RDA)", quantity: "7.5 mg" },
+      { ingredient: "Zinc (as Zinc Sulphate)", standardisedTo: "Essential Trace Mineral (75.8% RDA)", quantity: "10 mg" },
+      { ingredient: "Vitamin B5 (D-Panthenol)", standardisedTo: "Co-Enzyme A Precursor (25% RDA)", quantity: "1.25 mg" },
+      { ingredient: "Vitamin B1 (Thiamine Hydrochloride)", standardisedTo: "Thiamine (71.4% RDA)", quantity: "1 mg" },
+      { ingredient: "Vitamin B2 (Riboflavin Sodium Phosphate)", standardisedTo: "Bioactive Riboflavin (62.5% RDA)", quantity: "1.25 mg" },
+      { ingredient: "Vitamin B6 (Pyridoxine Hydrochloride)", standardisedTo: "Pyridoxine (52.6% RDA)", quantity: "1 mg" },
+      { ingredient: "Vitamin A (Retinyl Palmitate)", standardisedTo: "Vision & Immune Micronutrient (100% RDA)", quantity: "600 mcg" },
+      { ingredient: "Vitamin B12 (Cyanocobalamin)", standardisedTo: "Bioactive Cobalamin (45.5% RDA)", quantity: "1 mcg" },
+    ],
+    excipientFootnote: "Contains permitted natural and synthetic food colours and added flavour (nature identical flavouring substances). Non-medicinal excipients listed on verified carton packaging.",
+    targetSystem: "Multisystem Cellular Metabolism & Vitality",
+    targetComponents: [
+      "Energy Metabolism & ATP Production",
+      "Innate & Adaptive Immune Function",
+      "Cellular Antioxidant Defense",
+      "Tissue Growth & Maintenance",
+    ],
+    supportStatements: [
+      "B-complex vitamins support mitochondrial cellular respiration and efficient nutrient conversion into energy.",
+      "Vitamins A, C, E, and Zinc contribute to normal immune function and mucosal barrier integrity.",
+      "Essential trace minerals serve as essential co-factors for primary antioxidant enzyme pathways.",
+      "Liquid oral syrup ensures rapid gastrointestinal absorption and high patient compliance.",
+    ],
+    activesMapping: [
+      { name: "B-Complex Matrix", marker: "B1, B2, B3, B5, B6, B12 & Folic Acid" },
+      { name: "Antioxidant Trio", marker: "Vitamins A (100%), C (100%) & E (100% RDA)" },
+      { name: "Essential Trace Minerals", marker: "Zinc, Iodine, Copper, Selenium, Molybdenum & Chromium" },
+      { name: "L-Lysine & Choline", marker: "Lysine HCl (37.5 mg) & Choline Bitartrate (10 mg)" },
+    ],
+    usage:
+      "Recommended Usage: One teaspoonful (5 ml) daily or as directed by the Healthcare Professional.",
+    storage:
+      "Store in a cool, dry & dark place, below 25°C. Protect from direct sunlight, heat & moisture. Keep bottle tightly closed. Keep out of reach of children.",
+    cautions:
+      "NOT FOR MEDICINAL USE. Health supplement. Not to be used as a substitute for a varied diet. Not to exceed the recommended daily usage. In case of accidental overdose, contact a physician.",
+  },
   "nervify-forte": {
     slug: "nervify-forte",
     positioning:

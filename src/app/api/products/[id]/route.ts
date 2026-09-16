@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product from "@/models/Product";
+import Enquiry from "@/models/Enquiry";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { getSession } from "@/lib/auth/session";
 import { productUpdateSchema } from "@/lib/validations/product";
@@ -23,7 +24,7 @@ export async function GET(
     const isObjectId = mongoose.Types.ObjectId.isValid(id);
     const query = isObjectId ? { _id: id } : { slug: id };
 
-    const product = await Product.findOne(query).lean();
+    const product: any = await Product.findOne(query).lean();
 
     if (!product) {
       return NextResponse.json(
@@ -32,7 +33,8 @@ export async function GET(
       );
     }
 
-    if (!isAdmin && !product.published) {
+    const isPublished = product.status === "published" || product.published === true;
+    if (!isAdmin && !isPublished) {
       return NextResponse.json(
         { success: false, error: { message: "Product not found" } },
         { status: 404 }
@@ -46,10 +48,20 @@ export async function GET(
           id: product._id.toString(),
           name: product.name,
           slug: product.slug,
+          brand: product.brand || "CELIFE",
+          productType: product.productType || "Health Supplement",
           subtitle: product.subtitle || "",
           category: product.category,
+          categoryId: product.categoryId ? product.categoryId.toString() : null,
           shortDescription: product.shortDescription,
           description: product.description,
+          fullDescription: product.fullDescription || product.description || "",
+          packSize: product.packSize || "",
+          flavour: product.flavour || "",
+          netVolume: product.netVolume || "",
+          sugarStatement: product.sugarStatement || "",
+          ageStatement: product.ageStatement || "",
+          productClassification: product.productClassification || "",
           formulation: product.formulation || "",
           form: product.form || "",
           packaging: product.packaging || "",
@@ -57,11 +69,28 @@ export async function GET(
           usageAdvice: product.usageAdvice || "",
           keyFocus: product.keyFocus || [],
           highlights: product.highlights || [],
+          productTags: product.productTags || [],
+          composition: product.composition || [],
+          nutrition: product.nutrition || {},
+          otherIngredients: product.otherIngredients || [],
+          recommendedUsage: product.recommendedUsage || product.usageAdvice || "",
+          storageInstructions: product.storageInstructions || [],
+          warnings: product.warnings || [],
           image: product.image,
+          images: Array.isArray(product.images) && product.images.length > 0
+            ? product.images
+            : [{ url: product.image, alt: product.name, type: "main", order: 1 }],
           gallery: product.gallery || [],
-          featured: product.featured,
-          published: product.published,
-          order: product.order,
+          status: product.status || (product.published ? "published" : "draft"),
+          featured: product.featured ?? product.isFeatured ?? false,
+          isFeatured: product.isFeatured ?? product.featured ?? false,
+          published: product.published ?? (product.status === "published"),
+          order: product.order ?? product.displayOrder ?? 0,
+          displayOrder: product.displayOrder ?? product.order ?? 0,
+          sourceType: product.sourceType || "Product packaging",
+          sourceNotes: product.sourceNotes || "",
+          contentVerified: product.contentVerified ?? true,
+          seo: product.seo || {},
           createdAt: product.createdAt,
           updatedAt: product.updatedAt,
         },
@@ -109,9 +138,29 @@ export async function PATCH(
       }
     }
 
+    // Synchronize status and published if either is sent
+    const updateData: Record<string, unknown> = { ...parsed };
+    if (parsed.status !== undefined && parsed.published === undefined) {
+      updateData.published = parsed.status === "published";
+    } else if (parsed.published !== undefined && parsed.status === undefined) {
+      updateData.status = parsed.published ? "published" : "draft";
+    }
+
+    if (parsed.isFeatured !== undefined && parsed.featured === undefined) {
+      updateData.featured = parsed.isFeatured;
+    } else if (parsed.featured !== undefined && parsed.isFeatured === undefined) {
+      updateData.isFeatured = parsed.featured;
+    }
+
+    if (parsed.displayOrder !== undefined && parsed.order === undefined) {
+      updateData.order = parsed.displayOrder;
+    } else if (parsed.order !== undefined && parsed.displayOrder === undefined) {
+      updateData.displayOrder = parsed.order;
+    }
+
     const updated = await Product.findByIdAndUpdate(
       id,
-      { $set: parsed },
+      { $set: updateData },
       { new: true, runValidators: true }
     ).lean();
 
@@ -158,14 +207,36 @@ export async function DELETE(
 
     await connectToDatabase();
 
-    const product = await Product.findByIdAndDelete(id);
-
+    const product = await Product.findById(id);
     if (!product) {
       return NextResponse.json(
         { success: false, error: { message: "Product not found" } },
         { status: 404 }
       );
     }
+
+    // Referential Integrity Check: Verify whether inquiries exist referencing this product
+    const enquiryCount = await Enquiry.countDocuments({
+      $or: [
+        { productId: product._id },
+        { product: product.name },
+        { product: product.slug },
+      ],
+    });
+
+    if (enquiryCount > 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            message: `Cannot permanently delete product "${product.name}" because ${enquiryCount} submitted customer enquiry record(s) reference it. Please unpublish or archive this product instead.`,
+          },
+        },
+        { status: 409 }
+      );
+    }
+
+    await Product.findByIdAndDelete(id);
 
     try {
       revalidatePath("/");
@@ -186,3 +257,4 @@ export async function DELETE(
     return handleApiError(error);
   }
 }
+

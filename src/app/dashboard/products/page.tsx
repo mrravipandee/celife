@@ -91,7 +91,8 @@ export default function ProductsListPage() {
       if (res.ok) {
         setProducts((prev) => prev.filter((p) => p.id !== id));
       } else {
-        alert("Failed to delete product");
+        const json = await res.json();
+        alert(json.error?.message || "Failed to delete product");
       }
     } catch {
       alert("Error deleting product");
@@ -111,8 +112,9 @@ export default function ProductsListPage() {
 
     const matchesStatus =
       selectedStatus === "all" ||
-      (selectedStatus === "published" && p.published) ||
-      (selectedStatus === "draft" && !p.published);
+      (selectedStatus === "published" && (p.status === "published" || (p.published && !p.status))) ||
+      (selectedStatus === "draft" && (p.status === "draft" || (!p.published && !p.status))) ||
+      (selectedStatus === "archived" && p.status === "archived");
 
     return matchesSearch && matchesCategory && matchesStatus;
   });
@@ -245,7 +247,7 @@ export default function ProductsListPage() {
                     <div className="flex items-center gap-3">
                       <div className="relative w-10 h-10 rounded-xs overflow-hidden border border-[#E1E8E2] bg-[#F6F8F5] shrink-0">
                         <Image
-                          src={p.image || "/images/products/nervify-forte.jpg"}
+                          src={p.image || p.images?.[0]?.url || "/images/products/nervify-forte.jpg"}
                           alt={p.name}
                           fill
                           className="object-cover"

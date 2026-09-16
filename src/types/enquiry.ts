@@ -42,6 +42,8 @@ export interface Inquiry {
   name: string;
   email: string;
   phone: string;
+  productId?: string;
+  productNameSnapshot?: string;
   product?: string;
   company?: string;
   projectType: ProjectType;

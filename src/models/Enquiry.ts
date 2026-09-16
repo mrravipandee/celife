@@ -14,6 +14,8 @@ export interface IEnquiry extends Document {
   name: string;
   email: string;
   phone: string;
+  productId?: mongoose.Types.ObjectId;
+  productNameSnapshot?: string;
   product?: string;
   company?: string;
   projectType: ProjectType;
@@ -45,6 +47,18 @@ const EnquirySchema: Schema = new Schema(
       type: String,
       required: true,
       trim: true,
+    },
+    productId: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required: false,
+      index: true,
+    },
+    productNameSnapshot: {
+      type: String,
+      required: false,
+      trim: true,
+      maxlength: 200,
     },
     product: {
       type: String,
