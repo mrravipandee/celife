@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import React from "react";
 import { Navbar } from "@/components/layout/Navbar";
-import { MobileMenu } from "@/components/layout/MobileMenu";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { CelifeHero } from "@/components/home/CelifeHero";
@@ -11,9 +10,10 @@ import { CelifeQualityTrust } from "@/components/home/CelifeQualityTrust";
 import { CelifePhilosophy } from "@/components/home/CelifePhilosophy";
 import { CelifeCTA } from "@/components/home/CelifeCTA";
 import { getPageContent } from "@/lib/services/page-content";
+import { getFeaturedProducts } from "@/lib/services/products";
 
-// Dynamic revalidation: Next.js revalidates on-demand when edited in CMS
-export const revalidate = 0;
+// Incremental Static Regeneration (ISR): cached for 300s, purged on-demand when CMS content updates
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getPageContent("homepage");
@@ -72,7 +72,10 @@ const jsonLd = {
 };
 
 export default async function Home() {
-  const pageData = await getPageContent("homepage");
+  const [pageData, featuredProducts] = await Promise.all([
+    getPageContent("homepage"),
+    getFeaturedProducts(),
+  ]);
   const sections = pageData.sections || {};
 
   return (
@@ -84,27 +87,26 @@ export default async function Home() {
 
       <SmoothScroll>
         <Navbar />
-        <MobileMenu />
 
-        <main className="bg-[#F8FAF6] text-[#171B18] relative min-h-screen">
+        <main className="bg-[var(--bone)] text-[var(--ink)] relative min-h-screen">
           {/* Section 1: Hero */}
           <CelifeHero content={sections.hero} />
 
-          {/* Section 2: Trust Pillars */}
+          {/* Section 2: Trust Statement Hairline Band */}
           <CelifeTrustStatement />
 
-          {/* Section 3: Therapeutic Categories */}
+          {/* Section 3: Therapeutic Focus (5/7 Asymmetric Split) */}
           {sections.qualityTrust?.enabled !== false && <CelifeQualityTrust />}
 
-          {/* Section 4: Featured Products */}
+          {/* Section 4: Featured Formulations */}
           {sections.featuredProducts?.enabled !== false && (
-            <CelifeFeaturedProducts />
+            <CelifeFeaturedProducts products={featuredProducts} />
           )}
 
-          {/* Section 5: Brand Philosophy */}
+          {/* Section 5: Brand Philosophy (Single Full-Bleed Forest Green Section) */}
           {sections.philosophy?.enabled !== false && <CelifePhilosophy />}
 
-          {/* Section 6: Product Enquiry CTA */}
+          {/* Section 6: Product Enquiry Close Block */}
           {sections.cta?.enabled !== false && <CelifeCTA />}
         </main>
 

@@ -1,182 +1,387 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Product } from "@/types/product";
-import { ArrowLeft, CheckCircle2, ShieldCheck, HelpCircle, Send } from "lucide-react";
+import { getFormulationDetail } from "@/data/product-formulation-details";
+import { SpecTable, CompositionTable } from "@/components/ui/SpecTable";
+import { ActiveNodeDiagram } from "@/components/products/ActiveNodeDiagram";
+import { ProductCard } from "@/components/products/ProductCard";
+import { Button } from "@/components/ui/Button";
+import { StickyMobileActionBar } from "@/components/products/StickyMobileActionBar";
+import { SectionDivider } from "@/components/ui/SectionDivider";
+import { ArrowLeft, FileText } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ProductDetailViewProps {
   product: Product;
+  relatedProducts?: Product[];
 }
 
-export function ProductDetailView({ product }: ProductDetailViewProps) {
+export function ProductDetailView({
+  product,
+  relatedProducts = [],
+}: ProductDetailViewProps) {
+  const detail = getFormulationDetail(product.slug);
+  const [selectedImage, setSelectedImage] = useState<string>(product.image);
+
+  const thumbnails = [
+    { label: "Pack View", src: product.image },
+    { label: "Formulation", src: product.image },
+    { label: "Specification", src: product.image },
+  ];
+
   return (
-    <div className="max-w-7xl mx-auto px-6 md:px-12 py-12 md:py-20">
-      {/* Breadcrumb row */}
-      <nav aria-label="Breadcrumbs" className="mb-8 flex items-center gap-2 text-xs font-sans text-[#52635A]">
-        <Link href="/" className="hover:text-[#123C2D] transition-colors">
-          Home
-        </Link>
-        <span className="text-[#81998D]">/</span>
-        <Link href="/products" className="hover:text-[#123C2D] transition-colors">
-          Products
-        </Link>
-        <span className="text-[#81998D]">/</span>
-        <span className="text-[#123C2D] font-medium">{product.name}</span>
-      </nav>
+    <div className="w-full bg-[var(--bone)] text-[var(--ink)]">
+      {/* Sticky Mobile Action Bar */}
+      <StickyMobileActionBar
+        productName={product.name}
+        productSlug={product.slug}
+        category={product.category}
+      />
 
-      {/* Back to Products link */}
-      <div className="mb-8">
-        <Link
-          href="/products"
-          className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.16em] font-sans font-semibold text-[#123C2D] hover:text-[#294F3D] transition-colors"
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 pt-32 pb-20 md:pt-36 md:pb-28">
+        {/* Breadcrumb Navigation */}
+        <nav
+          aria-label="Breadcrumbs"
+          className="mb-8 flex items-center gap-2 text-xs font-sans text-[var(--sage)]"
         >
-          <ArrowLeft size={14} />
-          <span>Back to Product Catalogue</span>
-        </Link>
-      </div>
+          <Link href="/" className="hover:text-[var(--forest)] transition-colors">
+            Home
+          </Link>
+          <span className="text-[var(--line)] font-bold">/</span>
+          <Link href="/products" className="hover:text-[var(--forest)] transition-colors">
+            Products
+          </Link>
+          <span className="text-[var(--line)] font-bold">/</span>
+          <span className="text-[var(--sage)]">{product.category}</span>
+          <span className="text-[var(--line)] font-bold">/</span>
+          <span className="text-[var(--forest)] font-medium">{product.name}</span>
+        </nav>
 
-      {/* Main PDP Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-        {/* Left: Product Imagery Showcase */}
-        <div className="lg:col-span-6 space-y-6">
-          <div className="relative aspect-[4/3] w-full bg-[#F4F5EF] border border-[#123C2D]/10 rounded-xs overflow-hidden shadow-sm">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover object-center"
-            />
+        {/* Back Link */}
+        <div className="mb-10">
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-sans font-semibold text-[var(--forest)] hover:text-[var(--forest-700)] transition-colors"
+          >
+            <ArrowLeft size={13} strokeWidth={2} />
+            <span>Back to Product Catalogue</span>
+          </Link>
+        </div>
 
-            {/* Subtle Brand Tag Badge */}
-            <div className="absolute top-4 left-4 z-10">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 text-xs uppercase tracking-[0.18em] font-sans font-medium bg-white/95 backdrop-blur-xs text-[#123C2D] border border-[#123C2D]/10 rounded-xs shadow-xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#ED1C24]" />
+        {/* 1. Product Hero (6/6 Asymmetric Split) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Column (6 cols): Product Image on Bone Plinth + Thumbnails */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="bg-[var(--paper)] border border-[var(--line)] rounded-[6px] p-4 sm:p-6 shadow-xs">
+              <div className="relative aspect-[4/3] sm:aspect-[1/1] w-full rounded-[4px] overflow-hidden bg-[var(--bone)]/50">
+                <Image
+                  src={selectedImage}
+                  alt={product.name}
+                  fill
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover object-center transition-opacity duration-300"
+                />
+              </div>
+            </div>
+
+            {/* Thumbnail States Below Image */}
+            <div className="grid grid-cols-3 gap-3">
+              {thumbnails.map((thumb, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setSelectedImage(thumb.src)}
+                  className={cn(
+                    "relative aspect-[4/3] rounded-[4px] overflow-hidden border p-1 bg-[var(--paper)] transition-all cursor-pointer",
+                    selectedImage === thumb.src
+                      ? "border-[var(--forest)] ring-1 ring-[var(--forest)]"
+                      : "border-[var(--line)] hover:border-[var(--sage)]"
+                  )}
+                >
+                  <div className="relative w-full h-full bg-[var(--bone)]/40 rounded-[2px] overflow-hidden">
+                    <Image
+                      src={thumb.src}
+                      alt={`${product.name} thumbnail ${idx + 1}`}
+                      fill
+                      sizes="120px"
+                      className="object-cover object-center"
+                    />
+                  </div>
+                  <span className="sr-only">{thumb.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column (6 cols): Sticky Formulation Specs & Primary Conversion */}
+          <div className="lg:col-span-6 lg:sticky lg:top-32 space-y-6">
+            {/* Category Eyebrow with Single Clay Dot */}
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)] shrink-0" />
+              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
                 {product.category}
               </span>
             </div>
-          </div>
 
-          {/* Clean Quality Assurance Pillars */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-2">
-            <div className="p-3.5 bg-white border border-[#123C2D]/8 rounded-xs text-center">
-              <span className="text-[10px] uppercase tracking-[0.16em] text-[#52635A] block font-medium">Form</span>
-              <span className="text-xs font-sans font-semibold text-[#171B18] mt-0.5 block">{product.form}</span>
+            {/* Product Title */}
+            <h1 className="text-3xl sm:text-4xl lg:text-[48px] font-serif font-bold text-[var(--ink)] tracking-tight leading-[1.08]">
+              {product.name}
+            </h1>
+
+            {/* One-Line Positioning Statement */}
+            <p className="text-sm sm:text-base font-sans text-[var(--ink)]/80 leading-[1.65] max-w-[60ch]">
+              {detail.positioning}
+            </p>
+
+            {/* Hairline Spec Table */}
+            <SpecTable
+              caption={`${product.name} technical specifications`}
+              rows={detail.specs}
+            />
+
+            {/* Primary & Tertiary Conversion Actions */}
+            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+              <Button
+                variant="primary"
+                href={`/enquire?product=${product.slug}`}
+                showArrow
+                className="py-4 px-6 text-center"
+              >
+                Enquire About This Formulation
+              </Button>
+
+              <button
+                type="button"
+                onClick={() => window.print()}
+                className="inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--forest)] hover:text-[var(--forest-700)] border-b border-[var(--forest)] py-1 transition-colors cursor-pointer"
+              >
+                <FileText size={14} />
+                <span>Download Specification Sheet →</span>
+              </button>
             </div>
-            <div className="p-3.5 bg-white border border-[#123C2D]/8 rounded-xs text-center">
-              <span className="text-[10px] uppercase tracking-[0.16em] text-[#52635A] block font-medium">Packaging</span>
-              <span className="text-xs font-sans font-semibold text-[#171B18] mt-0.5 block">{product.packaging.split("(")[0].trim()}</span>
-            </div>
-            <div className="col-span-2 sm:col-span-1 p-3.5 bg-white border border-[#123C2D]/8 rounded-xs text-center">
-              <span className="text-[10px] uppercase tracking-[0.16em] text-[#52635A] block font-medium">Quality Focus</span>
-              <span className="text-xs font-sans font-semibold text-[#123C2D] mt-0.5 block">Evidence-Guided</span>
-            </div>
+
+            {/* Practitioner Advisory Footnote */}
+            <p className="text-[12px] font-sans text-[var(--sage)] leading-relaxed pt-1">
+              For professional evaluation and use under the guidance of a qualified healthcare practitioner.
+            </p>
           </div>
         </div>
 
-        {/* Right: Product Specifications & Enquiry Flow */}
-        <div className="lg:col-span-6 space-y-8">
-          <div>
-            <span className="text-xs uppercase tracking-[0.24em] text-[#A87560] font-sans font-bold block mb-2">
-              Celife Product Information
-            </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#171B18] tracking-tight leading-[1.12]">
-              {product.name}
-            </h1>
-            <p className="text-sm font-sans font-medium text-[#52635A] mt-2 leading-snug">
-              {product.subtitle}
-            </p>
-          </div>
+        {/* Section Divider */}
+        <div className="my-16 md:my-24">
+          <SectionDivider />
+        </div>
 
-          {/* Primary Short Description */}
-          <div className="border-t border-b border-[#123C2D]/10 py-5">
-            <p className="text-sm sm:text-base font-sans text-[#171B18]/85 leading-relaxed">
-              {product.description}
-            </p>
-          </div>
-
-          {/* Targeted Key Focus Points */}
-          {product.keyFocus && product.keyFocus.length > 0 && (
-            <div className="space-y-3">
-              <h2 className="text-xs uppercase tracking-[0.18em] font-sans font-bold text-[#123C2D]">
-                Targeted Wellness Profile
-              </h2>
-              <ul className="space-y-2.5">
-                {product.keyFocus.map((focusItem, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm font-sans text-[#171B18]/90 leading-snug">
-                    <CheckCircle2 size={16} className="text-[#123C2D] mt-0.5 shrink-0" />
-                    <span>{focusItem}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Formulation & Usage Specifications */}
-          <div className="space-y-4 bg-white border border-[#123C2D]/10 rounded-xs p-6 shadow-xs">
-            <h3 className="text-xs uppercase tracking-[0.18em] font-sans font-bold text-[#123C2D] flex items-center gap-2">
-              <ShieldCheck size={16} className="text-[#123C2D]" />
-              Formulation & Presentation
-            </h3>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-sans">
-              <div>
-                <span className="text-[#52635A] block uppercase tracking-wider text-[10px]">Formulation Matrix:</span>
-                <p className="text-[#171B18] font-medium mt-0.5">{product.formulation}</p>
-              </div>
-              <div>
-                <span className="text-[#52635A] block uppercase tracking-wider text-[10px]">Packaging Details:</span>
-                <p className="text-[#171B18] font-medium mt-0.5">{product.packaging}</p>
-              </div>
-            </div>
-
-            {product.usageAdvice && (
-              <div className="pt-3 border-t border-[#123C2D]/8 text-xs font-sans">
-                <span className="text-[#52635A] block uppercase tracking-wider text-[10px]">Usage & Storage:</span>
-                <p className="text-[#171B18] mt-0.5 text-xs text-[#52635A]">{product.usageAdvice}</p>
-              </div>
-            )}
-          </div>
-
-          {/* Strong Primary Enquiry CTA Section */}
-          <div className="p-6 md:p-8 bg-[#123C2D] text-white rounded-xs space-y-4 shadow-xl">
-            <div className="space-y-1.5">
+        {/* 2. Formulation Overview (7/5 Asymmetric Split) */}
+        <section className="py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+            {/* Left 7 cols: About this formulation */}
+            <div className="lg:col-span-7 space-y-5">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
-                <span className="text-[10px] uppercase tracking-[0.24em] font-sans font-semibold text-[#C4D5C7]">
-                  Product Enquiry & Information
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)]" />
+                <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+                  Scientific Background
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight">
-                Enquire About {product.name}
+
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[var(--ink)] tracking-tight">
+                About this formulation
               </h2>
-              <p className="text-xs font-sans text-white/75 leading-relaxed max-w-md">
-                Looking for detailed distribution inquiries, wholesale requirements, or technical product documentation? Submit an enquiry directly to our healthcare team.
+
+              <div className="space-y-4 text-sm sm:text-base font-sans text-[var(--ink)]/80 leading-[1.7] max-w-[65ch]">
+                {detail.overviewParagraphs.map((para, i) => (
+                  <p key={i}>{para}</p>
+                ))}
+              </div>
+            </div>
+
+            {/* Right 5 cols: Pull-Quote Card in Hairline Box */}
+            <div className="lg:col-span-5">
+              <div className="border border-[var(--line)] rounded-[6px] bg-[var(--paper)] p-7 sm:p-9 space-y-4 shadow-xs">
+                <span className="text-[10px] uppercase tracking-[0.18em] font-bold text-[var(--sage)] block">
+                  Core Rationale
+                </span>
+                <blockquote className="text-lg sm:text-xl font-serif font-semibold text-[var(--forest)] leading-relaxed italic border-l-2 border-[var(--forest)] pl-4">
+                  &ldquo;{detail.pullQuote}&rdquo;
+                </blockquote>
+                <div className="pt-2 text-[11px] uppercase tracking-[0.12em] font-sans text-[var(--sage)]">
+                  Celife Health Solutions · Mumbai Formulation Standard
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section Divider */}
+        <div className="my-16 md:my-24">
+          <SectionDivider />
+        </div>
+
+        {/* 3. Active Composition Table (Real Semantic Table) */}
+        <section className="py-8 space-y-6">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)]" />
+              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+                Composition
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[var(--ink)] tracking-tight">
+              Active Bioactive Markers & Specifications
+            </h2>
+            <p className="text-xs sm:text-sm font-sans text-[var(--sage)] max-w-[65ch]">
+              Standardized quantitative active assay per single administration unit.
+            </p>
+          </div>
+
+          <CompositionTable
+            caption={`${product.name} complete bioactive formulation breakdown`}
+            rows={detail.composition}
+            footnote={detail.excipientFootnote}
+          />
+        </section>
+
+        {/* Section Divider */}
+        <div className="my-16 md:my-24">
+          <SectionDivider />
+        </div>
+
+        {/* 4. Targeted Action: Geometric SVG Node Diagram */}
+        <section className="py-8">
+          <ActiveNodeDiagram
+            productName={product.name}
+            actives={detail.activesMapping}
+            targetSystem={detail.targetSystem}
+            targetComponents={detail.targetComponents}
+            supportStatements={detail.supportStatements}
+          />
+        </section>
+
+        {/* Section Divider */}
+        <div className="my-16 md:my-24">
+          <SectionDivider />
+        </div>
+
+        {/* 5. Usage, Storage & Cautions (3-Column Hairline Panel) */}
+        <section className="py-8 space-y-6">
+          <div className="space-y-2">
+            <h3 className="text-xl sm:text-2xl font-serif font-bold text-[var(--ink)] tracking-tight">
+              Usage & Administration Parameters
+            </h3>
+            <p className="text-xs sm:text-sm font-sans text-[var(--sage)]">
+              Factual, practitioner-guided parameters for safe and effective administration.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 border border-[var(--line)] rounded-[6px] bg-[var(--paper)] overflow-hidden">
+            {/* Column 1: Suggested Use */}
+            <div className="p-6 sm:p-7 border-b md:border-b-0 md:border-r border-[var(--line)] space-y-2.5">
+              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--forest)] block">
+                Suggested Use
+              </span>
+              <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
+                {detail.usage}
               </p>
             </div>
 
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-              <Link
-                href={`/enquire?product=${product.slug}`}
-                className="inline-flex items-center justify-center gap-2.5 px-7 py-4 text-xs uppercase tracking-[0.2em] font-semibold bg-white text-[#123C2D] hover:bg-[#F4F5EF] transition-all rounded-xs shadow-md cursor-pointer"
-              >
-                <span>Enquire Now</span>
-                <Send size={13} className="text-[#123C2D]" />
-              </Link>
+            {/* Column 2: Storage */}
+            <div className="p-6 sm:p-7 border-b md:border-b-0 md:border-r border-[var(--line)] space-y-2.5">
+              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--forest)] block">
+                Storage Environment
+              </span>
+              <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
+                {detail.storage}
+              </p>
+            </div>
 
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 px-5 py-4 text-xs uppercase tracking-[0.16em] font-medium text-white/85 border border-white/20 hover:border-white hover:text-white transition-colors rounded-xs cursor-pointer"
-              >
-                <HelpCircle size={14} />
-                <span>General Questions</span>
-              </Link>
+            {/* Column 3: Cautions */}
+            <div className="p-6 sm:p-7 space-y-2.5 bg-[var(--bone)]/30">
+              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-bold text-[var(--clay)] block">
+                Professional Cautions
+              </span>
+              <p className="text-xs sm:text-sm font-sans text-[var(--ink)]/85 leading-relaxed">
+                {detail.cautions}
+              </p>
             </div>
           </div>
+        </section>
+
+        {/* Section Divider */}
+        {relatedProducts.length > 0 && (
+          <>
+            <div className="my-16 md:my-24">
+              <SectionDivider />
+            </div>
+
+            {/* 6. Related Formulations */}
+            <section className="py-8 space-y-8">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                <div className="space-y-2">
+                  <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+                    Other Formulations
+                  </span>
+                  <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[var(--ink)] tracking-tight">
+                    Related Therapeutic Portfolios
+                  </h3>
+                </div>
+                <Link
+                  href="/products"
+                  className="text-xs uppercase tracking-[0.14em] font-semibold text-[var(--forest)] hover:underline"
+                >
+                  View All Formulations →
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {relatedProducts.map((rel) => (
+                  <ProductCard key={rel.id} product={rel} />
+                ))}
+              </div>
+            </section>
+          </>
+        )}
+
+        {/* Section Divider */}
+        <div className="my-16 md:my-24">
+          <SectionDivider />
         </div>
+
+        {/* 7. Product-Specific Enquiry Close Block */}
+        <section className="py-4">
+          <div className="border border-[var(--line)] rounded-[6px] bg-[var(--paper)] p-8 sm:p-12 lg:p-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+            <div className="space-y-3 max-w-xl">
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)]" />
+                <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+                  Direct Formulation Desk
+                </span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[var(--ink)] tracking-tight">
+                Enquire about {product.name}
+              </h2>
+
+              <p className="text-sm sm:text-base font-sans text-[var(--ink)]/80 leading-relaxed max-w-[55ch]">
+                Submit your inquiry regarding clinic availability, batch certificates of analysis (CoA), or institutional supply. {product.name} is pre-selected on the enquiry form.
+              </p>
+            </div>
+
+            <div className="shrink-0">
+              <Button
+                variant="primary"
+                href={`/enquire?product=${product.slug}`}
+                showArrow
+                className="py-4 px-7"
+              >
+                Submit Formulation Enquiry
+              </Button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );

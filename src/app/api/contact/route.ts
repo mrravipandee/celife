@@ -7,7 +7,16 @@ import { handleApiError } from "@/lib/error";
 
 export async function POST(req: Request) {
   try {
-    // 1. IP-based rate limit against form spam
+    // 1. Guard against unbounded request bodies (max 50KB)
+    const contentLength = req.headers.get("content-length");
+    if (contentLength && parseInt(contentLength, 10) > 50 * 1024) {
+      return NextResponse.json(
+        { success: false, error: { message: "Payload exceeds 50KB limit." } },
+        { status: 413 }
+      );
+    }
+
+    // 2. IP-based rate limit against form spam
     const ip = await getClientIp();
     const rateLimitKey = `rate-limit:contact:${ip}`;
     const limitCheck = await checkRateLimit(rateLimitKey, 5, 10 * 60 * 1000);
@@ -23,8 +32,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. Parse request body safely
-    let body: unknown;
+    // 3. Parse request body safely
+    let body: Record<string, unknown>;
     try {
       body = await req.json();
     } catch {
@@ -39,7 +48,19 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Server-side validation
+    // 4. Anti-bot honeypot check: silently discard bot spam
+    if (body && (body._hp || body.honeypot || body.website_url)) {
+      return NextResponse.json(
+        {
+          success: true,
+          data: { id: "bot-discarded" },
+          message: "Message sent successfully",
+        },
+        { status: 201 }
+      );
+    }
+
+    // 5. Server-side validation
     const parsed = ContactFormSchema.parse(body);
 
     await connectToDatabase();

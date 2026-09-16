@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { Product } from "@/types/product";
 import { getFeaturedProducts } from "@/lib/services/products";
 import { ProductCard } from "@/components/products/ProductCard";
 import { ArrowRight } from "lucide-react";
@@ -10,51 +11,52 @@ interface CelifeFeaturedProductsProps {
     heading?: string;
     description?: string;
   };
+  products?: Product[];
 }
 
-export async function CelifeFeaturedProducts({ content }: CelifeFeaturedProductsProps) {
-  const featured = await getFeaturedProducts();
+export async function CelifeFeaturedProducts({ content, products }: CelifeFeaturedProductsProps) {
+  const featured = products || (await getFeaturedProducts());
   const displayProducts = featured.slice(0, 3);
 
-  const eyebrow = content?.eyebrow || "Featured Formulations";
-  const heading = content?.heading || "Curated Healthcare & Wellness Solutions";
+  const eyebrow = content?.eyebrow || "FORMULATION PORTFOLIO";
+  const heading = content?.heading || "Targeted Formulations Crafted for Vitality";
   const description =
     content?.description ||
-    "Explore our core product portfolio formulated for neuro-vitality, joint mobility, and systemic wellness.";
+    "Every Celife product is engineered with standardized bioactives to support specific physiological domains — verified for consistency and batch purity.";
 
   return (
-    <section className="py-20 md:py-28 bg-[#F8FAF6]">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
+    <section className="py-20 md:py-28 lg:py-32 bg-[var(--bone)]">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
           <div className="max-w-2xl space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
-              <span className="text-xs uppercase tracking-[0.24em] font-sans font-semibold text-[#123C2D]">
+            <div className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)] shrink-0" />
+              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
                 {eyebrow}
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#171B18] tracking-tight leading-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-serif font-bold text-[var(--ink)] tracking-tight leading-[1.12]">
               {heading}
             </h2>
 
-            <p className="text-sm sm:text-base font-sans text-[#52635A] leading-relaxed">
+            <p className="text-sm sm:text-base font-sans text-[var(--ink)]/80 leading-relaxed max-w-[65ch]">
               {description}
             </p>
           </div>
 
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] font-semibold text-[#123C2D] hover:text-[#294F3D] transition-colors pb-1 border-b border-[#123C2D]/30 hover:border-[#123C2D] shrink-0 cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-semibold text-[var(--forest)] hover:text-[var(--forest-700)] transition-colors border-b border-[var(--forest)] pb-0.5 shrink-0"
           >
-            <span>View All Formulations</span>
+            <span>View Catalogue</span>
             <ArrowRight size={13} />
           </Link>
         </div>
 
-        {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+        {/* 3-up Product Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-8">
           {displayProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

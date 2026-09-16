@@ -10,7 +10,8 @@ import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { Check, ShieldCheck, Microscope, HeartHandshake, Send } from "lucide-react";
 import { getPageContent, defaultAboutPageContent } from "@/lib/services/page-content";
 
-export const revalidate = 0;
+// Incremental Static Regeneration (ISR): cached for 300s, purged on-demand when CMS updates
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getPageContent("about");

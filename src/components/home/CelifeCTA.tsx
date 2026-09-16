@@ -1,6 +1,5 @@
 import React from "react";
-import Link from "next/link";
-import { Send, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 interface CelifeCTAProps {
   content?: {
@@ -8,64 +7,42 @@ interface CelifeCTAProps {
     description?: string;
     primaryCtaLabel?: string;
     primaryCtaLink?: string;
-    secondaryCtaLabel?: string;
-    secondaryCtaLink?: string;
   };
 }
 
 export function CelifeCTA({ content }: CelifeCTAProps) {
   const heading =
-    content?.heading || "Partner With Celife Health Solutions";
+    content?.heading || "Requesting formulation data or distribution terms?";
   const description =
     content?.description ||
-    "Whether you are a healthcare practitioner, pharmacy retailer, or institutional distributor — enquire today to request comprehensive formulation data sheets and availability.";
-  const primaryCtaLabel =
-    content?.primaryCtaLabel || "Submit Product Enquiry";
-  const primaryCtaLink = content?.primaryCtaLink || "/enquire";
-  const secondaryCtaLabel =
-    content?.secondaryCtaLabel || "View Full Catalogue";
-  const secondaryCtaLink = content?.secondaryCtaLink || "/products";
+    "Our product desk responds to practitioner, pharmacy and distributor enquiries within two working days.";
 
   return (
-    <section className="py-16 md:py-24 bg-[#123C2D] text-white relative overflow-hidden">
-      {/* Subtle radial ambient background accent */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#81998D]/15 rounded-full blur-[120px]"
-      />
+    <section className="py-20 md:py-28 bg-[var(--bone)]">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
+        <div className="border border-[var(--line)] rounded-[6px] bg-[var(--paper)] p-8 sm:p-12 lg:p-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+          <div className="space-y-3 max-w-xl">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)]" />
+              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+                Direct Desk Communication
+              </span>
+            </div>
 
-      <div className="max-w-5xl mx-auto px-6 md:px-12 text-center relative z-10 space-y-6">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/10 border border-white/15 rounded-xs">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#ED1C24]" />
-          <span className="text-[10px] uppercase tracking-[0.24em] font-sans font-semibold text-[#C4D5C7]">
-            Product Enquiry & Distribution Desk
-          </span>
-        </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[var(--ink)] tracking-tight leading-tight">
+              {heading}
+            </h2>
 
-        <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white tracking-tight leading-[1.1]">
-          {heading}
-        </h2>
+            <p className="text-sm sm:text-base font-sans text-[var(--ink)]/80 leading-relaxed max-w-[55ch]">
+              {description}
+            </p>
+          </div>
 
-        <p className="text-sm sm:text-base font-sans text-white/75 leading-relaxed max-w-2xl mx-auto">
-          {description}
-        </p>
-
-        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            href={primaryCtaLink}
-            className="w-full sm:w-auto px-8 py-4 bg-white text-[#123C2D] hover:bg-[#F4F5EF] text-xs uppercase tracking-[0.2em] font-semibold rounded-xs shadow-lg transition-all flex items-center justify-center gap-2.5 cursor-pointer"
-          >
-            <span>{primaryCtaLabel}</span>
-            <Send size={13} />
-          </Link>
-
-          <Link
-            href={secondaryCtaLink}
-            className="w-full sm:w-auto px-8 py-4 bg-transparent text-white border border-white/30 hover:border-white text-xs uppercase tracking-[0.2em] font-semibold rounded-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>{secondaryCtaLabel}</span>
-            <ArrowRight size={13} />
-          </Link>
+          <div className="shrink-0">
+            <Button variant="primary" href="/enquire" showArrow>
+              Submit a Product Enquiry
+            </Button>
+          </div>
         </div>
       </div>
     </section>

@@ -1,16 +1,16 @@
 import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getProductBySlug } from "@/lib/services/products";
+import { getProductBySlug, getProducts } from "@/lib/services/products";
 import { productsData } from "@/data/products";
 import { constructMetadata } from "@/config/seo";
 import { Navbar } from "@/components/layout/Navbar";
-import { MobileMenu } from "@/components/layout/MobileMenu";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { ProductDetailView } from "@/components/products/ProductDetailView";
 
-export const revalidate = 0;
+// Incremental Static Regeneration (ISR): cached for 300s, purged on-demand when CMS updates
+export const revalidate = 300;
 
 interface ProductDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -42,19 +42,23 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { slug } = await params;
-  const product = await getProductBySlug(slug);
+  const [product, allProducts] = await Promise.all([
+    getProductBySlug(slug),
+    getProducts(),
+  ]);
 
   if (!product) {
     notFound();
   }
 
+  const relatedProducts = allProducts.filter((p) => p.slug !== product.slug).slice(0, 3);
+
   return (
     <SmoothScroll>
       <Navbar />
-      <MobileMenu />
 
-      <main className="bg-[#F8FAF6] text-[#171B18] min-h-screen pt-24 pb-16">
-        <ProductDetailView product={product} />
+      <main className="bg-[var(--bone)] text-[var(--ink)] min-h-screen">
+        <ProductDetailView product={product} relatedProducts={relatedProducts} />
       </main>
 
       <Footer />

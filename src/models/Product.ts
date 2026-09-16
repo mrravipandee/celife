@@ -60,6 +60,11 @@ const ProductSchema = new Schema<IProduct>(
   { timestamps: true }
 );
 
+// Compound indexes for high-frequency catalogue and PDP queries
+ProductSchema.index({ published: 1, featured: 1, order: 1, createdAt: -1 });
+ProductSchema.index({ published: 1, category: 1, order: 1, createdAt: -1 });
+ProductSchema.index({ slug: 1, published: 1 });
+
 const Product =
   mongoose.models.Product ||
   mongoose.model<IProduct>("Product", ProductSchema);

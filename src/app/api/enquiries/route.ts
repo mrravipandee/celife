@@ -33,7 +33,21 @@ interface LeanEnquiry {
 // POST /api/enquiries - Public Form Submission (Rate Limited)
 export async function POST(req: Request) {
   try {
-    // 1. Enforce IP-based rate limit to protect against form spam
+    // 1. Guard against unbounded request bodies (max 50KB)
+    const contentLength = req.headers.get("content-length");
+    if (contentLength && parseInt(contentLength, 10) > 50 * 1024) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            message: "Payload exceeds 50KB limit.",
+          },
+        },
+        { status: 413 }
+      );
+    }
+
+    // 2. Enforce IP-based rate limit to protect against form spam
     const ip = await getClientIp();
     const rateLimitKey = `rate-limit:enquiry:${ip}`;
     const limitCheck = await checkRateLimit(rateLimitKey, 5, 10 * 60 * 1000); // 5 submissions per 10 mins
@@ -49,8 +63,8 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. Parse request body
-    let payload: unknown;
+    // 3. Parse request body
+    let payload: Record<string, unknown>;
     try {
       payload = await req.json();
     } catch {
@@ -65,12 +79,24 @@ export async function POST(req: Request) {
       );
     }
 
-    // 3. Strict schema validation (rejects unknown fields via Zod strict schemas)
+    // 4. Anti-bot honeypot check: discard silent spam without touching MongoDB
+    if (payload && (payload._hp || payload.honeypot || payload.website_url)) {
+      return NextResponse.json(
+        {
+          success: true,
+          data: { id: "bot-discarded" },
+          message: "Enquiry submitted successfully",
+        },
+        { status: 201 }
+      );
+    }
+
+    // 5. Strict schema validation (rejects unknown fields via Zod strict schemas)
     const parsed = createEnquirySchema.parse(payload);
 
     await connectToDatabase();
 
-    // 4. Save enquiry (assigns status = "new" implicitly via mongoose default)
+    // 6. Save enquiry (assigns status = "new" implicitly via mongoose default)
     const enquiry = await Enquiry.create({
       name: parsed.name,
       email: parsed.email,
@@ -162,6 +188,7 @@ export async function GET(req: Request) {
     const [total, enquiries] = await Promise.all([
       Enquiry.countDocuments(query),
       Enquiry.find(query)
+        .select("name email phone product company projectType location projectStage businessStatus message status createdAt updatedAt")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)

@@ -1,31 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  /* Celife Healthcare & Wellness Brand Palette */
-  --color-primary: #123c2d;
-  --color-forest: #123c2d;
-  --color-olive: #294f3d;
-  --color-sage: #81998d;
-  --color-eucalyptus: #6f8f80;
-  --color-ivory: #f4f5ef;
-  --color-pale-sage: #c4d5c7;
-  --color-soft-white: #f8faf6;
-  --color-primary-text: #171b18;
-  --color-muted-text: #52635a;
-  --color-copper: #a87560;
-  --color-celife-red: #ed1c24;
+  /* Celife Editorial Healthcare & B2B Brand Tokens */
+  --color-ink: var(--ink);
+  --color-forest: var(--forest);
+  --color-forest-700: var(--forest-700);
+  --color-sage: var(--sage);
+  --color-bone: var(--bone);
+  --color-paper: var(--paper);
+  --color-line: var(--line);
+  --color-clay: var(--clay);
 
-  /* Subtle accent variants */
-  --color-forest-50: rgba(18, 60, 45, 0.05);
-  --color-forest-100: rgba(18, 60, 45, 0.1);
-  --color-forest-200: rgba(18, 60, 45, 0.2);
-  --color-forest-500: rgba(18, 60, 45, 0.5);
-  --color-forest-800: rgba(18, 60, 45, 0.8);
-  
-  --color-gold: #a87560;
-  --color-black: #171b18;
-  --color-white: #ffffff;
-  
+  /* Preserved aliases for backwards compatibility */
+  --color-primary: var(--forest);
+  --color-olive: var(--forest-700);
+  --color-soft-white: var(--bone);
+  --color-primary-text: var(--ink);
+  --color-muted-text: var(--sage);
+  --color-celife-red: var(--clay);
+
   /* Brand Typography */
   --font-serif: var(--font-cormorant), Cormorant Garamond, Georgia, serif;
   --font-sans: var(--font-manrope), Manrope, system-ui, sans-serif;
@@ -98,8 +91,24 @@
 }
 
 :root {
-  --background: #f8faf6;
-  --foreground: #171b18;
+  /* Core Brand Tokens */
+  --ink:        #0F1A16;   /* near-black green, body text and headings */
+  --forest:     #143A2B;   /* primary brand green — structure and buttons */
+  --forest-700: #1C4C39;   /* hover / raised surface on dark */
+  --sage:       #6E8B7C;   /* muted supporting text on dark, dividers */
+  --bone:       #F7F5EF;   /* page background, warm off-white, plinths */
+  --paper:      #FFFFFF;   /* card and table surfaces */
+  --line:       #E3DFD4;   /* hairline borders — 1px, structural divider */
+  --clay:       #B2542F;   /* terracotta accent — maximum 3 times per page */
+
+  /* Surface & Component Mappings */
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --border:     var(--line);
+  --card:       var(--paper);
+
+  /* Single elevation token for scrolled sticky header */
+  --shadow-header: 0 1px 12px rgba(15, 26, 22, 0.04);
 }
 
 /* Base resets & behavior */

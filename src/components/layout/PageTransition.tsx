@@ -40,11 +40,11 @@ export function PageTransition({ children }: PageTransitionProps) {
         className="fixed top-0 left-0 right-0 h-[2px] bg-primary z-[60] pointer-events-none shadow-[0_0_10px_rgba(201,162,74,0.8)]"
       />
 
-      {/* Route Content Transition (<500ms total) */}
-      <AnimatePresence mode="wait">
+      {/* Route Content Transition (<500ms total) - initial={false} ensures first SSR paint is immediate and visible */}
+      <AnimatePresence mode="wait" initial={false}>
         <motion.div
           key={pathname}
-          initial={{ opacity: 0, y: 15 }}
+          initial={false}
           animate={{
             opacity: 1,
             y: 0,
@@ -52,8 +52,8 @@ export function PageTransition({ children }: PageTransitionProps) {
           }}
           exit={{
             opacity: 0,
-            y: -20,
-            transition: { duration: 0.2, ease: "easeIn" },
+            y: -10,
+            transition: { duration: 0.15, ease: "easeIn" },
           }}
           className="w-full min-h-screen"
         >

@@ -2,13 +2,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Lenis from "lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-// Guarded global ScrollTrigger registration to ensure it runs once in browser environment
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 interface LenisContextValue {
   lenis: Lenis | null;
@@ -22,8 +15,8 @@ export interface SmoothScrollProps {
 
 /**
  * SmoothScroll
- * Integrates Lenis smooth scrolling with GSAP ticker and ScrollTrigger.
- * Drives Lenis updates through GSAP's ticker and notifies ScrollTrigger on scroll.
+ * Lightweight Lenis smooth scrolling driven by native requestAnimationFrame.
+ * Synchronizes with ScrollTrigger dynamically if registered on window.
  */
 export function SmoothScroll({ children }: SmoothScrollProps) {
   const [lenisInstance, setLenisInstance] = useState<Lenis | null>(null);
@@ -42,24 +35,29 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       setLenisInstance(lenis);
     });
 
-    // Call ScrollTrigger.update on every Lenis scroll event
-    const handleScroll = () => {
-      ScrollTrigger.update();
-    };
-    lenis.on("scroll", handleScroll);
+    // Dynamic ScrollTrigger synchronization if available without static bundle bloat
+    let handleScroll: (() => void) | null = null;
+    const globalAny = window as unknown as { ScrollTrigger?: { update: () => void } };
+    if (globalAny.ScrollTrigger) {
+      handleScroll = () => {
+        globalAny.ScrollTrigger?.update();
+      };
+      lenis.on("scroll", handleScroll);
+    }
 
-    // Drive Lenis from gsap.ticker instead of its own requestAnimationFrame loop
-    const updateTicker = (time: number) => {
-      lenis.raf(time * 1000);
+    // Drive Lenis from native requestAnimationFrame
+    let rafId: number;
+    const raf = (time: number) => {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
     };
-    gsap.ticker.add(updateTicker);
-
-    // Set lagSmoothing(0) to prevent jumpy catches after heavy tasks
-    gsap.ticker.lagSmoothing(0);
+    rafId = requestAnimationFrame(raf);
 
     return () => {
-      lenis.off("scroll", handleScroll);
-      gsap.ticker.remove(updateTicker);
+      if (handleScroll) {
+        lenis.off("scroll", handleScroll);
+      }
+      cancelAnimationFrame(rafId);
       lenis.destroy();
       setLenisInstance(null);
     };

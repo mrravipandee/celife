@@ -116,7 +116,7 @@ export async function getPublicSettings(): Promise<PublicSettings> {
       },
     };
   } catch (error) {
-    console.error("Error loading public settings, using defaults:", error);
+    console.warn("Public settings notice, using defaults:", (error as Error)?.message || error);
     return defaults;
   }
 }

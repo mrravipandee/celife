@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { connectToDatabase } from "@/lib/mongodb";
 import PageContent from "@/models/PageContent";
 
@@ -123,63 +124,65 @@ export const defaultAboutPageContent = {
   },
 };
 
-export async function getPageContent(pageKey: "homepage" | "about" | "quality") {
-  try {
-    await connectToDatabase();
-    const doc = await PageContent.findOne({ pageKey }).lean();
+export const getPageContent = cache(
+  async (pageKey: "homepage" | "about" | "quality") => {
+    try {
+      await connectToDatabase();
+      const doc = await PageContent.findOne({ pageKey }).lean();
 
-    if (pageKey === "homepage") {
-      if (!doc || !doc.sections) {
+      if (pageKey === "homepage") {
+        if (!doc || !doc.sections) {
+          return {
+            sections: defaultHomepageContent,
+            seo: doc?.seo || {},
+            published: doc ? doc.published : true,
+          };
+        }
         return {
-          sections: defaultHomepageContent,
-          seo: doc?.seo || {},
-          published: doc ? doc.published : true,
+          sections: {
+            hero: { ...defaultHomepageContent.hero, ...doc.sections.hero },
+            featuredProducts: { ...defaultHomepageContent.featuredProducts, ...doc.sections.featuredProducts },
+            philosophy: { ...defaultHomepageContent.philosophy, ...doc.sections.philosophy },
+            qualityTrust: { ...defaultHomepageContent.qualityTrust, ...doc.sections.qualityTrust },
+            cta: { ...defaultHomepageContent.cta, ...doc.sections.cta },
+          },
+          seo: doc.seo || {},
+          published: doc.published,
         };
       }
-      return {
-        sections: {
-          hero: { ...defaultHomepageContent.hero, ...doc.sections.hero },
-          featuredProducts: { ...defaultHomepageContent.featuredProducts, ...doc.sections.featuredProducts },
-          philosophy: { ...defaultHomepageContent.philosophy, ...doc.sections.philosophy },
-          qualityTrust: { ...defaultHomepageContent.qualityTrust, ...doc.sections.qualityTrust },
-          cta: { ...defaultHomepageContent.cta, ...doc.sections.cta },
-        },
-        seo: doc.seo || {},
-        published: doc.published,
-      };
-    }
 
-    if (pageKey === "about") {
-      if (!doc || !doc.sections) {
+      if (pageKey === "about") {
+        if (!doc || !doc.sections) {
+          return {
+            sections: defaultAboutPageContent,
+            seo: doc?.seo || {},
+            published: doc ? doc.published : true,
+          };
+        }
         return {
-          sections: defaultAboutPageContent,
-          seo: doc?.seo || {},
-          published: doc ? doc.published : true,
+          sections: {
+            hero: { ...defaultAboutPageContent.hero, ...doc.sections.hero },
+            narrative: { ...defaultAboutPageContent.narrative, ...doc.sections.narrative },
+            principles: { ...defaultAboutPageContent.principles, ...doc.sections.principles },
+            cta: { ...defaultAboutPageContent.cta, ...doc.sections.cta },
+          },
+          seo: doc.seo || {},
+          published: doc.published,
         };
       }
-      return {
-        sections: {
-          hero: { ...defaultAboutPageContent.hero, ...doc.sections.hero },
-          narrative: { ...defaultAboutPageContent.narrative, ...doc.sections.narrative },
-          principles: { ...defaultAboutPageContent.principles, ...doc.sections.principles },
-          cta: { ...defaultAboutPageContent.cta, ...doc.sections.cta },
-        },
-        seo: doc.seo || {},
-        published: doc.published,
-      };
-    }
 
-    return {
-      sections: doc?.sections || {},
-      seo: doc?.seo || {},
-      published: doc ? doc.published : true,
-    };
-  } catch (error) {
-    console.error(`Error loading page content for ${pageKey}:`, error);
-    // Return sensible fallback
-    if (pageKey === "homepage") {
-      return { sections: defaultHomepageContent, seo: {}, published: true };
+      return {
+        sections: doc?.sections || {},
+        seo: doc?.seo || {},
+        published: doc ? doc.published : true,
+      };
+    } catch (error) {
+      console.warn(`Page content notice (${pageKey}), using fallback:`, (error as Error)?.message || error);
+      // Return sensible fallback
+      if (pageKey === "homepage") {
+        return { sections: defaultHomepageContent, seo: {}, published: true };
+      }
+      return { sections: defaultAboutPageContent, seo: {}, published: true };
     }
-    return { sections: defaultAboutPageContent, seo: {}, published: true };
   }
-}
+);

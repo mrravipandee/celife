@@ -7,14 +7,14 @@ import "./globals.css";
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "600", "700"],
   display: "swap",
 });
 
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600"],
   display: "swap",
 });
 
@@ -23,7 +23,7 @@ export const metadata: Metadata = constructMetadata();
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${cormorant.variable} ${manrope.variable}`}>
-      <body className="antialiased min-h-screen bg-[#F8FAF6] text-[#171B18] selection:bg-[#123C2D] selection:text-white">
+      <body className="antialiased min-h-screen bg-[var(--bone)] text-[var(--ink)] selection:bg-[var(--forest)] selection:text-white font-sans">
         <PageTransition>{children}</PageTransition>
       </body>
     </html>

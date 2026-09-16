@@ -67,7 +67,7 @@ function serializeBlog(doc: RawBlogDoc): BlogItem {
     excerpt: doc.excerpt,
     content: doc.content,
     coverImage: {
-      url: doc.coverImage?.url || "/images/hero/hotel-lobby.jpg",
+      url: doc.coverImage?.url || "/images/hero/celife-wellness-hero.jpg",
       alt: doc.coverImage?.alt || doc.title,
       publicId: doc.coverImage?.publicId,
     },
@@ -102,8 +102,8 @@ Real clarity comes from deep operational diagnostics on the floor, not in boardr
 Focus on labor cost optimization, waste reduction, and guest retention.
     `,
     coverImage: {
-      url: "/images/hero/hotel-lobby.jpg",
-      alt: "Luxury Hotel Lobby",
+      url: "/images/hero/celife-wellness-hero.jpg",
+      alt: "Celife Wellness Formulations",
     },
     category: "Building & Growth",
     tags: ["Operations", "Strategy", "Growth"],
@@ -125,8 +125,8 @@ Behind every successful resort or restaurant chain is a series of unseen, calcul
 Break down your P&L line by line before making sweeping changes.
     `,
     coverImage: {
-      url: "/images/services/fine-dining.jpg",
-      alt: "Fine Dining Restaurant",
+      url: "/images/hero/celife-wellness-hero.jpg",
+      alt: "Celife Formulations",
     },
     category: "Mindset & Decisions",
     tags: ["Leadership", "Problem Solving"],
@@ -165,8 +165,8 @@ The unvarnished truth about managing cash flow, retaining top culinary talent, a
 Networking without actionable insights is just noise; here is how we build true peer accountability.
     `,
     coverImage: {
-      url: "/images/hero/hotel-lobby.jpg",
-      alt: "Luxury Hotel",
+      url: "/images/hero/celife-wellness-hero.jpg",
+      alt: "Celife Community",
     },
     category: "Squads & Community",
     tags: ["Community", "Networking"],
@@ -185,8 +185,8 @@ Networking without actionable insights is just noise; here is how we build true 
 Key steps for a flawless luxury resort launch.
     `,
     coverImage: {
-      url: "/images/services/fine-dining.jpg",
-      alt: "Resort Launch",
+      url: "/images/hero/celife-wellness-hero.jpg",
+      alt: "Celife Operations",
     },
     category: "Operations",
     tags: ["Pre-Opening", "Hotels"],

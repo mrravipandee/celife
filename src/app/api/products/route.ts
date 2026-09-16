@@ -113,7 +113,14 @@ export async function GET(req: Request) {
         data: formatted,
         count: formatted.length,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: {
+          "Cache-Control": isAdmin
+            ? "private, no-cache, no-store, must-revalidate"
+            : "public, s-maxage=60, stale-while-revalidate=300",
+        },
+      }
     );
   } catch (error) {
     return handleApiError(error);

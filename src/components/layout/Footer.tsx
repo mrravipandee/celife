@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { CelifeLogo } from "@/components/ui/CelifeLogo";
-import { Mail, Phone, MapPin, Send, ArrowUpRight } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUpRight } from "lucide-react";
 import { PublicSettings } from "@/lib/services/settings";
 
 interface FooterProps {
@@ -14,7 +14,7 @@ export function Footer({ settings }: FooterProps) {
   const brandName = settings?.brand?.companyName || "Celife Health Solutions";
   const footerDesc =
     settings?.footer?.description ||
-    "Celife Health Solutions is a dedicated healthcare, nutraceutical, and herbal wellness brand creating evidence-guided botanical and nutritional formulations to support human vitality.";
+    "Celife Health Solutions develops evidence-informed nutraceutical and botanical formulations for neurological vitality, joint mobility, and systemic wellness — supplied direct to healthcare practitioners, pharmacies, and distributors.";
   const address = settings?.contact?.address || "Mumbai, Maharashtra, India";
   const email = settings?.contact?.email || "enquiry@celifehealth.com";
   const phone = settings?.contact?.phone || "+91 98200 12345";
@@ -23,127 +23,101 @@ export function Footer({ settings }: FooterProps) {
     `© ${new Date().getFullYear()} ${brandName}. All rights reserved.`;
   const disclaimer =
     settings?.footer?.disclaimer ||
-    "Disclaimer: Information provided on this website is for professional and general educational purposes. Products are nutraceutical and dietary formulations not intended to diagnose, treat, cure, or prevent any medical condition. Always consult your qualified healthcare practitioner regarding health advice.";
+    "Regulatory Notice: Information provided on this website is for professional evaluation and general educational purposes only. Formulations are dietary and botanical nutraceuticals, manufactured to standardized specifications, and are not intended to diagnose, treat, cure, or prevent any disease. Healthcare practitioners should evaluate suitability for their patients.";
 
   return (
-    <footer className="bg-[#123C2D] text-white relative overflow-hidden border-t border-[#294F3D]">
-      {/* Top Banner & Quick Enquiry Strip */}
-      <div className="border-b border-white/10 bg-[#0E3125] py-10 md:py-14 px-6 md:px-12">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-1 max-w-xl">
-            <span className="text-[10px] uppercase tracking-[0.24em] text-[#C4D5C7] font-sans font-semibold">
-              Healthcare Solutions & Advisory
-            </span>
-            <h3 className="text-xl md:text-2xl font-serif font-bold text-white tracking-tight">
-              Have specific product or wholesale distribution questions?
-            </h3>
-            <p className="text-xs text-white/70 font-sans leading-relaxed">
-              Our clinical inquiry desk is available to assist healthcare practitioners, pharmacies, and distributors.
-            </p>
-          </div>
-
-          <Link
-            href="/enquire"
-            className="px-7 py-3.5 bg-white text-[#123C2D] hover:bg-[#F4F5EF] text-xs uppercase tracking-[0.2em] font-semibold rounded-xs transition-colors flex items-center gap-2.5 shrink-0 shadow-md"
-          >
-            <span>Submit Product Enquiry</span>
-            <Send size={13} />
-          </Link>
-        </div>
-      </div>
-
-      {/* Main Footer Navigation Grid */}
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-14 md:py-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 items-start">
+    <footer className="bg-[var(--forest)] text-white relative overflow-hidden border-t border-[var(--forest-700)]">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-16 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Brand Col */}
-          <div className="lg:col-span-5 space-y-5">
+          <div className="lg:col-span-5 space-y-4">
             <Link href="/" className="inline-block">
               <CelifeLogo variant="light" />
             </Link>
 
-            <p className="text-xs sm:text-sm font-sans text-white/75 leading-relaxed max-w-md">
+            <p className="text-sm font-sans text-white/80 leading-relaxed max-w-[45ch]">
               {footerDesc}
             </p>
 
-            <div className="pt-2 flex flex-col space-y-2 text-xs font-sans text-white/70">
+            <div className="pt-2 flex flex-col space-y-2 text-xs font-sans text-[var(--sage)]">
               <div className="flex items-center gap-2.5">
-                <MapPin size={14} className="text-[#81998D] shrink-0" />
-                <span>{address}</span>
+                <MapPin size={14} className="text-[var(--sage)] shrink-0" />
+                <span className="text-white/90">{address}</span>
               </div>
               <div className="flex items-center gap-2.5">
-                <Mail size={14} className="text-[#81998D] shrink-0" />
-                <a href={`mailto:${email}`} className="hover:text-white transition-colors">
+                <Mail size={14} className="text-[var(--sage)] shrink-0" />
+                <a href={`mailto:${email}`} className="text-white/90 hover:text-white transition-colors">
                   {email}
                 </a>
               </div>
               <div className="flex items-center gap-2.5">
-                <Phone size={14} className="text-[#81998D] shrink-0" />
-                <a href={`tel:${phone.replace(/\s+/g, "")}`} className="hover:text-white transition-colors">
+                <Phone size={14} className="text-[var(--sage)] shrink-0" />
+                <a href={`tel:${phone.replace(/\s+/g, "")}`} className="text-white/90 hover:text-white transition-colors">
                   {phone}
                 </a>
               </div>
             </div>
           </div>
 
-          {/* Formulations / Categories Col */}
+          {/* Formulations Col */}
           <div className="lg:col-span-4 space-y-4">
-            <h4 className="text-xs uppercase tracking-[0.2em] font-sans font-bold text-[#C4D5C7]">
-              Product Formulations
+            <h4 className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+              Formulation Portfolios
             </h4>
             <ul className="space-y-2.5 text-xs font-sans">
               <li>
                 <Link
                   href="/products/nervify-forte"
-                  className="text-white/80 hover:text-white transition-colors flex items-center justify-between group"
+                  className="text-white/85 hover:text-white transition-colors flex items-center justify-between group"
                 >
-                  <span>Nervify Forte (Neuro-Vitality)</span>
-                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span>Nervify Forte · Neuro-Vitality</span>
+                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--sage)]" />
                 </Link>
               </li>
               <li>
                 <Link
                   href="/products/orthocare-active"
-                  className="text-white/80 hover:text-white transition-colors flex items-center justify-between group"
+                  className="text-white/85 hover:text-white transition-colors flex items-center justify-between group"
                 >
-                  <span>OrthoCare Active (Joint & Mobility)</span>
-                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span>OrthoCare Active · Joint & Mobility</span>
+                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--sage)]" />
                 </Link>
               </li>
               <li>
                 <Link
                   href="/products/livcleanse-synergy"
-                  className="text-white/80 hover:text-white transition-colors flex items-center justify-between group"
+                  className="text-white/85 hover:text-white transition-colors flex items-center justify-between group"
                 >
-                  <span>LivCleanse Synergy (Hepatic Health)</span>
-                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span>LivCleanse Synergy · Hepatic & Digestive</span>
+                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--sage)]" />
                 </Link>
               </li>
               <li>
                 <Link
                   href="/products/immunoshield-daily"
-                  className="text-white/80 hover:text-white transition-colors flex items-center justify-between group"
+                  className="text-white/85 hover:text-white transition-colors flex items-center justify-between group"
                 >
-                  <span>ImmunoShield Daily (Antioxidant)</span>
-                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span>ImmunoShield Daily · Immunity Matrix</span>
+                  <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-[var(--sage)]" />
                 </Link>
               </li>
               <li className="pt-2">
                 <Link
                   href="/products"
-                  className="text-xs font-semibold text-[#C4D5C7] hover:underline"
+                  className="text-xs font-semibold uppercase tracking-[0.12em] text-[var(--sage)] hover:text-white transition-colors"
                 >
-                  View Complete Product Catalogue &rarr;
+                  View Complete Catalogue →
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Quick Navigation Col */}
+          {/* Institutional & Support Col */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-xs uppercase tracking-[0.2em] font-sans font-bold text-[#C4D5C7]">
-              Company & Enquiries
+            <h4 className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+              Institutional & Desk
             </h4>
-            <ul className="space-y-2.5 text-xs font-sans text-white/80">
+            <ul className="space-y-2.5 text-xs font-sans text-white/85">
               <li>
                 <Link href="/" className="hover:text-white transition-colors">
                   Home
@@ -156,7 +130,7 @@ export function Footer({ settings }: FooterProps) {
               </li>
               <li>
                 <Link href="/about" className="hover:text-white transition-colors">
-                  About Celife
+                  Quality Standards & Story
                 </Link>
               </li>
               <li>
@@ -166,7 +140,7 @@ export function Footer({ settings }: FooterProps) {
               </li>
               <li>
                 <Link href="/contact" className="hover:text-white transition-colors">
-                  Contact & Support
+                  Distribution & Contact
                 </Link>
               </li>
             </ul>
@@ -174,19 +148,19 @@ export function Footer({ settings }: FooterProps) {
         </div>
 
         {/* Disclaimer & Copyright */}
-        <div className="mt-14 pt-8 border-t border-white/10 space-y-4">
-          <p className="text-[11px] font-sans text-white/50 leading-relaxed max-w-4xl">
+        <div className="mt-14 pt-8 border-t border-[var(--forest-700)] space-y-4">
+          <p className="text-[12px] font-sans text-[var(--sage)] leading-relaxed max-w-[85ch]">
             {disclaimer}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans text-white/50">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-sans text-[var(--sage)] pt-2">
             <span>{copyright}</span>
             <div className="flex items-center gap-6">
               <Link href="/contact" className="hover:text-white transition-colors">
-                Privacy Policy
+                Practitioner Terms
               </Link>
               <Link href="/contact" className="hover:text-white transition-colors">
-                Terms of Use
+                Privacy
               </Link>
               <Link href="/login" className="hover:text-white transition-colors">
                 Staff Portal

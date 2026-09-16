@@ -1,98 +1,101 @@
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, Activity, Dna, FlaskConical } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function CelifeQualityTrust() {
-  const categories = [
+  const systems = [
     {
-      icon: Dna,
       title: "Neurological Wellness",
-      desc: "Neuro-cellular nourishment and vitality co-nutrients.",
-      sample: "Nervify Forte",
+      desc: "Targeted neuro-cellular nourishment, peripheral nerve support, and healthy signaling co-factors.",
+      product: "Nervify Forte",
       href: "/products/nervify-forte",
     },
     {
-      icon: Activity,
       title: "Joint & Mobility",
-      desc: "Musculoskeletal flexibility and structural cartilage support.",
-      sample: "OrthoCare Active",
+      desc: "Musculoskeletal flexibility, synovial fluid maintenance, and connective cartilage resilience.",
+      product: "OrthoCare Active",
       href: "/products/orthocare-active",
     },
     {
-      icon: FlaskConical,
       title: "Hepatic & Digestive",
-      desc: "Botanical liver filtration and gentle digestive equilibrium.",
-      sample: "LivCleanse Synergy",
+      desc: "Standardised bitter botanicals supporting endogenous liver filtration and digestive equilibrium.",
+      product: "LivCleanse Synergy",
       href: "/products/livcleanse-synergy",
     },
     {
-      icon: ShieldCheck,
       title: "Immunity & Resilience",
-      desc: "Essential trace mineral defense and cellular protection.",
-      sample: "ImmunoShield Daily",
+      desc: "Chelated trace minerals and bioflavonoid polyphenols for steady everyday cellular defense.",
+      product: "ImmunoShield Daily",
       href: "/products/immunoshield-daily",
     },
   ];
 
   return (
-    <section className="py-20 md:py-28 bg-[#F8FAF6]">
-      <div className="max-w-7xl mx-auto px-6 md:px-12">
-        {/* Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3 mb-14 md:mb-18">
-          <div className="flex items-center justify-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
-            <span className="text-xs uppercase tracking-[0.24em] font-sans font-semibold text-[#123C2D]">
-              Therapeutic Focus
-            </span>
+    <section className="py-20 md:py-28 lg:py-32 bg-[var(--paper)] border-b border-[var(--line)]">
+      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+          {/* Left Column: 5-cols Sticky on Desktop */}
+          <div className="lg:col-span-5 lg:sticky lg:top-32 space-y-5">
+            <div className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)] shrink-0" />
+              <span className="text-[11px] uppercase tracking-[0.16em] font-sans font-semibold text-[var(--sage)]">
+                Therapeutic Focus
+              </span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-serif font-bold text-[var(--ink)] tracking-tight leading-[1.12]">
+              Four systems. Four formulations.
+            </h2>
+
+            <p className="text-base font-sans text-[var(--ink)]/80 leading-[1.65] max-w-[45ch]">
+              Each Celife formulation targets a defined physiological system with a calibrated actives profile — no broad-spectrum multivitamins, no filler ingredients.
+            </p>
+
+            <div className="pt-2">
+              <Link
+                href="/products"
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-semibold text-[var(--forest)] hover:text-[var(--forest-700)] transition-colors border-b border-[var(--forest)] pb-0.5"
+              >
+                <span>Browse All Formulations</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#171B18] tracking-tight">
-            Targeted Wellness Categories
-          </h2>
-
-          <p className="text-sm font-sans text-[#52635A] leading-relaxed">
-            Every Celife formulation addresses specific human wellness requirements with calibrated nutrient delivery.
-          </p>
-        </div>
-
-        {/* Category Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map((cat, idx) => {
-            const Icon = cat.icon;
-            return (
-              <div
+          {/* Right Column: 7-cols Stacked Hairline List */}
+          <div className="lg:col-span-7 border-t border-[var(--line)]">
+            {systems.map((sys, idx) => (
+              <Link
                 key={idx}
-                className="bg-white border border-[#123C2D]/10 rounded-xs p-6 flex flex-col justify-between space-y-6 hover:border-[#123C2D]/30 transition-all hover:shadow-md group"
+                href={sys.href}
+                className="group block py-6 sm:py-7 px-4 sm:px-6 border-b border-[var(--line)] transition-all duration-200 hover:bg-[var(--bone)] cursor-pointer"
               >
-                <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-xs bg-[#123C2D]/8 text-[#123C2D] flex items-center justify-center">
-                    <Icon size={22} className="text-[#123C2D]" />
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-2 max-w-[50ch]">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-xl sm:text-2xl font-serif font-bold text-[var(--ink)] group-hover:text-[var(--forest)] transition-colors">
+                        {sys.title}
+                      </h3>
+                      <span className="text-[11px] font-sans uppercase tracking-[0.12em] font-medium text-[var(--forest)] bg-[var(--paper)] border border-[var(--line)] px-2.5 py-0.5 rounded-[4px]">
+                        {sys.product}
+                      </span>
+                    </div>
+
+                    <p className="text-xs sm:text-sm font-sans text-[var(--sage)] leading-relaxed">
+                      {sys.desc}
+                    </p>
                   </div>
 
-                  <h3 className="text-lg font-serif font-bold text-[#171B18] group-hover:text-[#123C2D] transition-colors">
-                    {cat.title}
-                  </h3>
-
-                  <p className="text-xs font-sans text-[#52635A] leading-relaxed">
-                    {cat.desc}
-                  </p>
+                  <div className="pt-1 text-[var(--sage)] group-hover:text-[var(--forest)] transition-colors">
+                    <ArrowRight
+                      size={18}
+                      className="transition-transform duration-200 group-hover:translate-x-1.5"
+                    />
+                  </div>
                 </div>
-
-                <div className="pt-4 border-t border-[#123C2D]/8">
-                  <span className="text-[10px] uppercase tracking-wider text-[#52635A] block">
-                    Featured:
-                  </span>
-                  <Link
-                    href={cat.href}
-                    className="text-xs font-sans font-semibold text-[#123C2D] hover:underline flex items-center justify-between mt-0.5"
-                  >
-                    <span>{cat.sample}</span>
-                    <ArrowRight size={12} />
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </section>

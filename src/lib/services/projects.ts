@@ -49,20 +49,35 @@ function serializeProject(doc: RawProjectDoc): ProjectType {
 }
 
 export const getProjects = cache(async (): Promise<ProjectType[]> => {
-  await connectToDatabase();
-  const docs = await Project.find({}).sort({ createdAt: -1 }).lean();
-  return docs.map(serializeProject);
+  try {
+    await connectToDatabase();
+    const docs = await Project.find({}).sort({ createdAt: -1 }).lean();
+    return docs.map(serializeProject);
+  } catch (error) {
+    console.warn("getProjects notice, using fallback:", (error as Error)?.message || error);
+    return [];
+  }
 });
 
 export const getFeaturedProjects = cache(async (): Promise<ProjectType[]> => {
-  await connectToDatabase();
-  const docs = await Project.find({ featured: true }).sort({ createdAt: -1 }).lean();
-  return docs.map(serializeProject);
+  try {
+    await connectToDatabase();
+    const docs = await Project.find({ featured: true }).sort({ createdAt: -1 }).lean();
+    return docs.map(serializeProject);
+  } catch (error) {
+    console.warn("getFeaturedProjects notice, using fallback:", (error as Error)?.message || error);
+    return [];
+  }
 });
 
 export const getProjectBySlug = cache(async (slug: string): Promise<ProjectType | null> => {
-  await connectToDatabase();
-  const doc = await Project.findOne({ slug }).lean();
-  if (!doc) return null;
-  return serializeProject(doc);
+  try {
+    await connectToDatabase();
+    const doc = await Project.findOne({ slug }).lean();
+    if (!doc) return null;
+    return serializeProject(doc);
+  } catch (error) {
+    console.warn("getProjectBySlug notice, using fallback:", (error as Error)?.message || error);
+    return null;
+  }
 });

@@ -2,7 +2,6 @@ import React from "react";
 import type { Metadata } from "next";
 import { constructMetadata } from "@/config/seo";
 import { Navbar } from "@/components/layout/Navbar";
-import { MobileMenu } from "@/components/layout/MobileMenu";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { getProducts, getProductCategories } from "@/lib/services/products";
@@ -10,7 +9,8 @@ import { ProductCard } from "@/components/products/ProductCard";
 import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 
-export const revalidate = 0;
+// Incremental Static Regeneration (ISR): cached for 300s, purged on-demand when CMS content updates
+export const revalidate = 300;
 
 export const metadata: Metadata = constructMetadata({
   title: "Product Catalogue | Celife Health Solutions",
@@ -39,9 +39,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   return (
     <SmoothScroll>
       <Navbar />
-      <MobileMenu />
 
-      <main className="bg-[#F8FAF6] text-[#171B18] min-h-screen pt-28 pb-20">
+      <main className="bg-[var(--bone)] text-[var(--ink)] min-h-screen pt-28 pb-20">
         {/* Editorial Page Header */}
         <section className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-16">
           <div className="max-w-3xl space-y-4">

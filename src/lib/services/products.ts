@@ -1,14 +1,20 @@
+import { cache } from "react";
 import { connectToDatabase } from "@/lib/mongodb";
 import Product, { IProduct } from "@/models/Product";
 import ProductCategory, { IProductCategory } from "@/models/ProductCategory";
 import { productsData } from "@/data/products";
 import { Product as ProductType } from "@/types/product";
 
+// Process-level cache flag to avoid calling countDocuments() on every incoming request
+let isProductsSeeded = false;
+
 /**
  * Ensures initial Celife products and categories are seeded into MongoDB
- * if the collections are currently empty.
+ * if the collections are currently empty. Guarded by isProductsSeeded flag.
  */
 export async function ensureDefaultProductsSeeded() {
+  if (isProductsSeeded) return;
+
   try {
     await connectToDatabase();
     const count = await Product.countDocuments();
@@ -46,6 +52,7 @@ export async function ensureDefaultProductsSeeded() {
       ];
       await ProductCategory.insertMany(categories);
     }
+    isProductsSeeded = true;
   } catch (error) {
     // Non-blocking in serverless/build environments
     console.error("Product seeding notice:", error);
@@ -75,7 +82,7 @@ function transformProduct(doc: IProduct): ProductType {
   };
 }
 
-export async function getProducts(category?: string): Promise<ProductType[]> {
+export const getProducts = cache(async (category?: string): Promise<ProductType[]> => {
   try {
     await connectToDatabase();
     await ensureDefaultProductsSeeded();
@@ -93,7 +100,7 @@ export async function getProducts(category?: string): Promise<ProductType[]> {
       return (products as unknown as IProduct[]).map(transformProduct);
     }
   } catch (error) {
-    console.error("getProducts database fallback:", error);
+    console.warn("getProducts notice, using fallback:", (error as Error)?.message || error);
   }
 
   // Fallback to static data
@@ -103,9 +110,9 @@ export async function getProducts(category?: string): Promise<ProductType[]> {
   return productsData.filter(
     (p) => p.category.toLowerCase() === category.toLowerCase()
   );
-}
+});
 
-export async function getProductBySlug(slug: string): Promise<ProductType | null> {
+export const getProductBySlug = cache(async (slug: string): Promise<ProductType | null> => {
   try {
     await connectToDatabase();
     await ensureDefaultProductsSeeded();
@@ -115,15 +122,15 @@ export async function getProductBySlug(slug: string): Promise<ProductType | null
       return transformProduct(product as unknown as IProduct);
     }
   } catch (error) {
-    console.error("getProductBySlug database fallback:", error);
+    console.warn("getProductBySlug notice, using fallback:", (error as Error)?.message || error);
   }
 
   // Fallback to static data
   const fallback = productsData.find((p) => p.slug === slug);
   return fallback || null;
-}
+});
 
-export async function getFeaturedProducts(): Promise<ProductType[]> {
+export const getFeaturedProducts = cache(async (): Promise<ProductType[]> => {
   try {
     await connectToDatabase();
     await ensureDefaultProductsSeeded();
@@ -136,13 +143,13 @@ export async function getFeaturedProducts(): Promise<ProductType[]> {
       return (products as unknown as IProduct[]).map(transformProduct);
     }
   } catch (error) {
-    console.error("getFeaturedProducts database fallback:", error);
+    console.warn("getFeaturedProducts notice, using fallback:", (error as Error)?.message || error);
   }
 
   return productsData.filter((p) => p.featured);
-}
+});
 
-export async function getProductCategories(): Promise<string[]> {
+export const getProductCategories = cache(async (): Promise<string[]> => {
   try {
     await connectToDatabase();
     await ensureDefaultProductsSeeded();
@@ -160,9 +167,9 @@ export async function getProductCategories(): Promise<string[]> {
       return distinct;
     }
   } catch (error) {
-    console.error("getProductCategories database fallback:", error);
+    console.warn("getProductCategories notice, using fallback:", (error as Error)?.message || error);
   }
 
   const set = new Set(productsData.map((p) => p.category));
   return Array.from(set);
-}
+});

@@ -106,6 +106,7 @@ const EnquirySchema: Schema = new Schema(
 // Optimize sorting by date, filtering by status, and looking up email
 EnquirySchema.index({ status: 1 });
 EnquirySchema.index({ createdAt: -1 });
+EnquirySchema.index({ status: 1, createdAt: -1 });
 EnquirySchema.index({ email: 1 });
 
 const Enquiry = mongoose.models.Enquiry || mongoose.model<IEnquiry>("Enquiry", EnquirySchema);
