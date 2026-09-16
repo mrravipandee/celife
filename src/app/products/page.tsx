@@ -42,7 +42,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
       <main className="bg-[var(--bone)] text-[var(--ink)] min-h-screen pt-28 pb-20">
         {/* Editorial Page Header */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 py-10 md:py-16">
+        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-10 md:py-16">
           <div className="max-w-3xl space-y-4">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
@@ -85,7 +85,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </section>
 
         {/* Product Cards Grid */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 pb-16">
+        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pb-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {productsList.map((product) => (
               <ProductCard key={product.id} product={product} />
@@ -108,7 +108,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </section>
 
         {/* Bottom Editorial Enquiry Callout */}
-        <section className="max-w-7xl mx-auto px-6 md:px-12 pt-6">
+        <section className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-6">
           <div className="bg-[#123C2D] text-white rounded-xs p-8 md:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 shadow-xl">
             <div className="space-y-2 max-w-xl">
               <div className="flex items-center gap-2">

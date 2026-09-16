@@ -17,7 +17,7 @@ export function SectionDivider({
           viewBox="0 0 1200 8"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full max-w-[1200px] h-2 text-[var(--line)]"
+          className="w-full max-w-[1380px] h-2 text-[var(--line)]"
           preserveAspectRatio="none"
           aria-hidden="true"
         >
@@ -33,7 +33,7 @@ export function SectionDivider({
   }
 
   return (
-    <div className={cn("w-full max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20", className)}>
+    <div className={cn("w-full max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12", className)}>
       <div className="w-full h-[1px] bg-[var(--line)]" aria-hidden="true" />
     </div>
   );

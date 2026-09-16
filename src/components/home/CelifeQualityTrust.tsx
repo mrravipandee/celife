@@ -32,8 +32,8 @@ export function CelifeQualityTrust() {
 
   return (
     <section className="py-20 md:py-28 lg:py-32 bg-[var(--paper)] border-b border-[var(--line)]">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 xl:gap-16 items-start">
           {/* Left Column: 5-cols Sticky on Desktop */}
           <div className="lg:col-span-5 lg:sticky lg:top-32 space-y-5">
             <div className="flex items-center gap-2.5">
@@ -43,11 +43,11 @@ export function CelifeQualityTrust() {
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-serif font-bold text-[var(--ink)] tracking-tight leading-[1.12]">
+            <h2 className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[50px] font-serif font-bold text-[var(--ink)] tracking-tight leading-[1.12]">
               Four systems. Four formulations.
             </h2>
 
-            <p className="text-base font-sans text-[var(--ink)]/80 leading-[1.65] max-w-[45ch]">
+            <p className="text-base font-sans text-[var(--ink)]/80 leading-[1.65] max-w-[52ch]">
               Each Celife formulation targets a defined physiological system with a calibrated actives profile — no broad-spectrum multivitamins, no filler ingredients.
             </p>
 
@@ -68,10 +68,10 @@ export function CelifeQualityTrust() {
               <Link
                 key={idx}
                 href={sys.href}
-                className="group block py-6 sm:py-7 px-4 sm:px-6 border-b border-[var(--line)] transition-all duration-200 hover:bg-[var(--bone)] cursor-pointer"
+                className="group block py-6 sm:py-7 px-4 sm:px-6 lg:px-8 border-b border-[var(--line)] transition-all duration-200 hover:bg-[var(--bone)] cursor-pointer"
               >
                 <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-2 max-w-[50ch]">
+                  <div className="space-y-2 max-w-[56ch]">
                     <div className="flex items-center gap-3">
                       <h3 className="text-xl sm:text-2xl font-serif font-bold text-[var(--ink)] group-hover:text-[var(--forest)] transition-colors">
                         {sys.title}

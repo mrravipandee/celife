@@ -26,7 +26,7 @@ export async function CelifeFeaturedProducts({ content, products }: CelifeFeatur
 
   return (
     <section className="py-20 md:py-28 lg:py-32 bg-[var(--bone)]">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
           <div className="max-w-2xl space-y-3">
@@ -37,7 +37,7 @@ export async function CelifeFeaturedProducts({ content, products }: CelifeFeatur
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-[44px] font-serif font-bold text-[var(--ink)] tracking-tight leading-[1.12]">
+            <h2 className="text-3xl sm:text-4xl lg:text-[44px] xl:text-[48px] font-serif font-bold text-[var(--ink)] tracking-tight leading-[1.12]">
               {heading}
             </h2>
 
@@ -56,7 +56,7 @@ export async function CelifeFeaturedProducts({ content, products }: CelifeFeatur
         </div>
 
         {/* 3-up Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-8 xl:gap-10">
           {displayProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

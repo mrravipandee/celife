@@ -19,8 +19,8 @@ export function CelifeCTA({ content }: CelifeCTAProps) {
 
   return (
     <section className="py-20 md:py-28 bg-[var(--bone)]">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20">
-        <div className="border border-[var(--line)] rounded-[6px] bg-[var(--paper)] p-8 sm:p-12 lg:p-14 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+        <div className="border border-[var(--line)] rounded-[6px] bg-[var(--paper)] p-8 sm:p-12 lg:p-14 xl:p-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="space-y-3 max-w-xl">
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)]" />

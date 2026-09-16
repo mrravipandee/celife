@@ -33,8 +33,8 @@ export function CelifePhilosophy({ content }: CelifePhilosophyProps) {
         className="-left-24 -top-24 w-[450px] sm:w-[600px] h-[750px] text-[var(--sage)] opacity-10"
       />
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 relative z-10">
-        <div className="max-w-3xl space-y-7">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 relative z-10">
+        <div className="max-w-4xl space-y-7">
           {/* Eyebrow */}
           <div className="flex items-center gap-2.5">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)] shrink-0" />

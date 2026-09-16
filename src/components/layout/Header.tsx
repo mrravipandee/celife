@@ -57,7 +57,7 @@ export function Header() {
             : "bg-transparent border-b border-transparent py-5 md:py-6"
         )}
       >
-        <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 flex items-center justify-between">
+        <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex items-center justify-between">
           {/* Brand Logo */}
           <Link
             href="/"

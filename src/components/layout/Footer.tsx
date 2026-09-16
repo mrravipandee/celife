@@ -27,7 +27,7 @@ export function Footer({ settings }: FooterProps) {
 
   return (
     <footer className="bg-[var(--forest)] text-white relative overflow-hidden border-t border-[var(--forest-700)]">
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-16 md:py-20">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-16 md:py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           {/* Brand Col */}
           <div className="lg:col-span-5 space-y-4">

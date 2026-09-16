@@ -41,7 +41,7 @@ export function ProductDetailView({
         category={product.category}
       />
 
-      <div className="max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 pt-32 pb-20 md:pt-36 md:pb-28">
+      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 pt-32 pb-20 md:pt-36 md:pb-28">
         {/* Breadcrumb Navigation */}
         <nav
           aria-label="Breadcrumbs"
