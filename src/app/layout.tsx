@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Inter, Manrope, Poppins } from "next/font/google";
 import { constructMetadata } from "@/config/seo";
 import { PageTransition } from "@/components/layout/PageTransition";
@@ -31,7 +31,14 @@ const poppins = Poppins({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#123C2D",
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = constructMetadata();
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

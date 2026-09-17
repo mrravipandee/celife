@@ -5,73 +5,114 @@ export function constructMetadata({
   title = siteConfig.title,
   description = siteConfig.description,
   image = siteConfig.ogImage,
+  canonical,
+  keywords = siteConfig.keywords,
   noIndex = false,
 }: {
   title?: string;
   description?: string;
   image?: string;
+  canonical?: string;
+  keywords?: string[] | string;
   noIndex?: boolean;
 } = {}): Metadata {
+  const metaTitle = title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`;
+  const canonicalUrl = canonical
+    ? canonical.startsWith("http")
+      ? canonical
+      : `${siteConfig.url}${canonical.startsWith("/") ? "" : "/"}${canonical}`
+    : siteConfig.url;
+
+  const imageUrl = image.startsWith("http") ? image : `${siteConfig.url}${image.startsWith("/") ? "" : "/"}${image}`;
+
   return {
     title: {
       default: title,
       template: `%s | ${siteConfig.name}`,
     },
     description,
+    keywords: Array.isArray(keywords) ? keywords : [keywords],
+    authors: [{ name: "Celife Health Solutions Pvt. Ltd.", url: siteConfig.url }],
+    creator: siteConfig.name,
+    publisher: "Celife Health Solutions Pvt. Ltd.",
+    category: "Healthcare, Herbal Wellness & Nutraceuticals",
+    metadataBase: new URL(siteConfig.url),
+    alternates: {
+      canonical: canonicalUrl,
+    },
     openGraph: {
-      title,
+      title: metaTitle,
       description,
-      url: siteConfig.url,
+      url: canonicalUrl,
       siteName: siteConfig.name,
+      locale: "en_US",
+      type: "website",
       images: [
         {
-          url: image,
+          url: imageUrl,
           width: 1200,
           height: 630,
-          alt: "Celife Health Solutions | Wellness & Healthcare",
+          alt: `${siteConfig.name} — Evidence-Guided Botanical & Nutraceutical Formulations`,
+          type: "image/jpeg",
         },
       ],
-      type: "website",
     },
     twitter: {
       card: "summary_large_image",
-      title,
+      title: metaTitle,
       description,
-      images: [image],
+      images: [imageUrl],
+      creator: "@celifehealth",
+      site: "@celifehealth",
     },
     icons: {
-      icon: "/favicon.ico",
+      icon: [
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon.png", type: "image/png", sizes: "32x32" },
+        { url: "/icon.png", type: "image/png", sizes: "512x512" },
+      ],
+      apple: [
+        { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      ],
       shortcut: "/favicon.ico",
     },
-    metadataBase: new URL(siteConfig.url),
-    ...(noIndex && {
-      robots: {
-        index: false,
-        follow: false,
+    manifest: "/site.webmanifest",
+    robots: {
+      index: !noIndex,
+      follow: !noIndex,
+      googleBot: {
+        index: !noIndex,
+        follow: !noIndex,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
-    }),
+    },
   };
 }
 
 export function getOrganizationJsonLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": siteConfig.name,
-    "url": siteConfig.url,
-    "logo": `${siteConfig.url}/images/general/celife-logo.png`,
-    "description": siteConfig.description,
-    "address": {
+    "@type": "MedicalBusiness",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: `${siteConfig.url}/celife-brand.png`,
+    image: `${siteConfig.url}/og-image.jpg`,
+    description: siteConfig.description,
+    address: {
       "@type": "PostalAddress",
-      "addressLocality": "Mumbai",
-      "addressCountry": "IN",
+      addressLocality: "Mumbai",
+      addressRegion: "Maharashtra",
+      addressCountry: "IN",
     },
-    "contactPoint": {
+    contactPoint: {
       "@type": "ContactPoint",
-      "telephone": siteConfig.contact.phone,
-      "contactType": "customer service",
-      "email": siteConfig.contact.email,
+      telephone: siteConfig.contact.phone,
+      contactType: "customer service",
+      email: siteConfig.contact.email,
     },
-    "sameAs": [siteConfig.socials.linkedin, siteConfig.socials.instagram],
+    sameAs: [siteConfig.socials.linkedin, siteConfig.socials.instagram, siteConfig.socials.twitter].filter(Boolean),
   };
 }
+
