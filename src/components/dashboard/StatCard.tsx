@@ -43,7 +43,7 @@ export function StatCard({ label, value, change, index }: StatCardProps) {
       </span>
       
       <div className="space-y-1 mt-auto">
-        <h4 className="text-3xl font-serif text-[#17201B] tracking-tight font-bold">
+        <h4 className="text-3xl font-bold text-[#17201B] tracking-tight">
           {value}
         </h4>
         <div className="flex items-center gap-1.5">

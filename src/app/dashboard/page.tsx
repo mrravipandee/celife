@@ -189,7 +189,7 @@ export default function DashboardOverviewPage() {
               Celife Health Solutions CMS
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-[#17201B] tracking-tight mt-1">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#17201B] tracking-tight mt-1">
             Website Content & Catalogue Overview
           </h1>
           <p className="text-xs sm:text-sm text-[#68756D] font-sans mt-1">
@@ -250,7 +250,7 @@ export default function DashboardOverviewPage() {
         <div className="lg:col-span-7 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 space-y-4 shadow-2xs">
           <div className="flex items-center justify-between pb-3 border-b border-[#E1E8E2]">
             <div>
-              <h2 className="text-base font-serif font-bold text-[#17201B]">
+              <h2 className="text-base font-bold text-[#17201B]">
                 Recent Product Enquiries
               </h2>
               <span className="text-xs text-[#68756D] font-sans">
@@ -328,7 +328,7 @@ export default function DashboardOverviewPage() {
         <div className="lg:col-span-5 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs p-6 space-y-4 shadow-2xs">
           <div className="flex items-center justify-between pb-3 border-b border-[#E1E8E2]">
             <div>
-              <h2 className="text-base font-serif font-bold text-[#17201B]">
+              <h2 className="text-base font-bold text-[#17201B]">
                 Catalogue Formulations
               </h2>
               <span className="text-xs text-[#68756D] font-sans">
@@ -356,7 +356,7 @@ export default function DashboardOverviewPage() {
                   className="p-3 bg-[#F6F8F5] hover:bg-[#F0F4F0] rounded-xs border border-[#E1E8E2] flex items-center justify-between gap-3 transition-colors"
                 >
                   <div className="min-w-0">
-                    <strong className="text-sm font-serif font-bold text-[#17201B] block truncate">
+                    <strong className="text-sm font-bold text-[#17201B] block truncate">
                       {p.name}
                     </strong>
                     <span className="text-xs text-[#68756D] block truncate font-sans">
@@ -394,7 +394,7 @@ export default function DashboardOverviewPage() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#2F7D54]" />
-            <h3 className="text-sm font-serif font-bold text-[#123C2D]">
+            <h3 className="text-sm font-bold text-[#123C2D]">
               Public Website Sync Active
             </h3>
           </div>

@@ -15,6 +15,7 @@ import {
   Settings,
   ExternalLink,
 } from "lucide-react";
+import Image from "next/image";
 
 export interface NavigationItem {
   label: string;
@@ -88,19 +89,8 @@ export function Sidebar({ className, onLinkClick }: SidebarProps) {
           onClick={onLinkClick}
           className="group flex items-center justify-between"
         >
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
-              <span className="text-lg font-serif font-bold text-[#17201B] tracking-tight">
-                Celife
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-[#123C2D] bg-[#F0F4F0] border border-[#E1E8E2] px-1.5 py-0.5 rounded-xs font-sans font-semibold">
-                CMS
-              </span>
-            </div>
-            <span className="text-[11px] text-[#68756D] font-sans mt-1 block font-medium">
-              Health Solutions Admin
-            </span>
+          <div className="flex items-center">
+            <Image src="/celife-brand.png" alt="Logo" width={180} height={60} className="w-auto h-11 object-contain" />
           </div>
           <ExternalLink
             size={14}

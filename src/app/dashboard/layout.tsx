@@ -22,7 +22,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F8F5] text-[#17201B] antialiased font-sans">
+    <div className="dashboard-root min-h-screen bg-[#F6F8F5] text-[#17201B] antialiased">
       <DashboardShell>{children}</DashboardShell>
     </div>
   );

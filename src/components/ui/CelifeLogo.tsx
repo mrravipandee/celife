@@ -13,18 +13,18 @@ export function CelifeLogo({
   variant = "dark",
 }: CelifeLogoProps) {
   const isLight = variant === "light";
+  const logoSrc = isLight ? "/celife-brand-light.png" : "/celife-brand.png";
 
   return (
     <div className={cn("relative flex items-center shrink-0 select-none", className)}>
       <Image
-        src="/celife.png"
+        src={logoSrc}
         alt="Celife Health Solutions"
-        width={135}
-        height={45}
+        width={200}
+        height={66}
         priority
         className={cn(
-          "h-8 sm:h-9 w-auto object-contain transition-opacity duration-200",
-          isLight && "brightness-0 invert opacity-95"
+          "h-11 sm:h-12 md:h-[50px] w-auto object-contain transition-opacity duration-200"
         )}
       />
     </div>

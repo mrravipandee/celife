@@ -3,20 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { CelifeLogo } from "@/components/ui/CelifeLogo";
-import { BotanicalMandala } from "@/components/ui/BotanicalMandala";
-import {
-  Mail,
-  Phone,
-  MapPin,
-  ArrowUpRight,
-  ShieldCheck,
-  Sparkles,
-  FileCheck2,
-  Building2,
-  Clock,
-  ArrowUp,
-  ExternalLink,
-} from "lucide-react";
+import { Mail, Phone, MapPin, ArrowUp, ArrowRight } from "lucide-react";
 import { PublicSettings } from "@/lib/services/settings";
 
 interface FooterProps {
@@ -27,7 +14,7 @@ export function Footer({ settings }: FooterProps) {
   const brandName = settings?.brand?.companyName || "Celife Health Solutions";
   const footerDesc =
     settings?.footer?.description ||
-    "Celife Health Solutions develops evidence-informed nutraceutical and botanical formulations for neurological vitality, joint mobility, and systemic wellness — supplied direct to healthcare practitioners, pharmacies, and distributors.";
+    "Dedicated healthcare and botanical formulations engineered to verified clinical specifications for neurological vitality, joint mobility, and systemic wellness.";
   const address = settings?.contact?.address || "Mumbai, Maharashtra, India";
   const email = settings?.contact?.email || "enquiry@celifehealth.com";
   const phone = settings?.contact?.phone || "+91 98200 12345";
@@ -36,7 +23,7 @@ export function Footer({ settings }: FooterProps) {
     `© ${new Date().getFullYear()} ${brandName} Pvt. Ltd. All rights reserved.`;
   const disclaimer =
     settings?.footer?.disclaimer ||
-    "Regulatory Notice: Information provided on this website is for professional evaluation and general educational purposes only. Formulations are dietary and botanical nutraceuticals, manufactured to standardized specifications, and are not intended to diagnose, treat, cure, or prevent any disease. Healthcare practitioners should evaluate suitability for their patients.";
+    "Regulatory Notice: Information provided on this website is for professional evaluation and general educational purposes only. Formulations are dietary and botanical nutraceuticals, manufactured to standardized specifications, and are not intended to diagnose, treat, cure, or prevent any disease.";
 
   const scrollToTop = () => {
     if (typeof window !== "undefined") {
@@ -45,122 +32,43 @@ export function Footer({ settings }: FooterProps) {
   };
 
   return (
-    <footer className="bg-gradient-to-b from-[#092218] via-[#061911] to-[#040e0a] text-white relative overflow-hidden border-t border-[var(--forest-700)]">
-      {/* Ambient background depth & Botanical watermarks */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 -left-24 w-96 h-96 sm:w-[480px] sm:h-[480px] text-white opacity-[0.035] select-none"
-      >
-        <BotanicalMandala />
-      </div>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-32 -right-32 w-[520px] h-[520px] text-white opacity-[0.025] select-none"
-      >
-        <BotanicalMandala />
-      </div>
-      <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px bg-gradient-to-r from-transparent via-emerald-400/20 to-transparent" />
-
-      <div className="max-w-[1380px] mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 relative z-10">
-        {/* 1. High-Trust Quality & Certification Strip */}
-        <div className="py-8 md:py-10 border-b border-white/10 grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-md bg-white/[0.05] border border-white/10 text-emerald-400 shrink-0">
-              <ShieldCheck size={18} />
-            </div>
-            <div>
-              <h5 className="text-xs font-semibold tracking-wide text-white uppercase font-sans">
-                GMP & ISO Controlled
-              </h5>
-              <p className="text-[11px] text-white/60 font-sans mt-0.5 leading-snug">
-                Standardized cleanroom extraction & batch controls
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-md bg-white/[0.05] border border-white/10 text-emerald-400 shrink-0">
-              <Sparkles size={18} />
-            </div>
-            <div>
-              <h5 className="text-xs font-semibold tracking-wide text-white uppercase font-sans">
-                Ayurvedic Pharmacopoeia
-              </h5>
-              <p className="text-[11px] text-white/60 font-sans mt-0.5 leading-snug">
-                Botanical wisdom unified with modern pharmacokinetics
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-md bg-white/[0.05] border border-white/10 text-emerald-400 shrink-0">
-              <FileCheck2 size={18} />
-            </div>
-            <div>
-              <h5 className="text-xs font-semibold tracking-wide text-white uppercase font-sans">
-                Batch-Tested CoAs
-              </h5>
-              <p className="text-[11px] text-white/60 font-sans mt-0.5 leading-snug">
-                Screened for heavy metals & microbial purity
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <div className="p-2 rounded-md bg-white/[0.05] border border-white/10 text-emerald-400 shrink-0">
-              <Building2 size={18} />
-            </div>
-            <div>
-              <h5 className="text-xs font-semibold tracking-wide text-white uppercase font-sans">
-                Direct Institutional Supply
-              </h5>
-              <p className="text-[11px] text-white/60 font-sans mt-0.5 leading-snug">
-                Direct to verified clinics, pharmacies & partners
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* 2. Main 4-Column Structured Content */}
-        <div className="py-14 md:py-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          {/* Col 1: Brand, Description & Contact Details */}
-          <div className="lg:col-span-4 space-y-5">
+    <footer className="bg-[#0A1C14] text-white border-t border-[#1C3E2D] relative select-none">
+      <div className="max-w-[1380px] mx-auto px-5 sm:px-8 lg:px-12">
+        {/* Main Footer Columns */}
+        <div className="py-12 sm:py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12">
+          
+          {/* Column 1: Brand & Contact Info (5 cols) */}
+          <div className="sm:col-span-2 lg:col-span-5 space-y-5">
             <Link href="/" className="inline-block">
               <CelifeLogo variant="light" />
             </Link>
 
-            <p className="text-xs sm:text-sm font-sans text-white/75 leading-relaxed max-w-[42ch]">
+            <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light max-w-md">
               {footerDesc}
             </p>
 
-            {/* Live Operational Status Pill */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/20 text-[11px] text-emerald-300 font-sans">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              <span>Product Desk Open · Mon–Fri 09:00–18:00 IST</span>
-            </div>
-
-            <div className="pt-2 flex flex-col space-y-2.5 text-xs font-sans text-white/70">
+            {/* Direct, clean contact details with simple native icons */}
+            <div className="space-y-2.5 pt-2 text-xs sm:text-sm text-white/80">
               <div className="flex items-center gap-2.5">
-                <MapPin size={14} className="text-emerald-400 shrink-0" />
-                <span className="text-white/90">{address}</span>
+                <MapPin size={15} className="text-[#8FB39E] shrink-0" />
+                <span>{address}</span>
               </div>
+
               <div className="flex items-center gap-2.5">
-                <Mail size={14} className="text-emerald-400 shrink-0" />
+                <Mail size={15} className="text-[#8FB39E] shrink-0" />
                 <a
                   href={`mailto:${email}`}
-                  className="text-white/90 hover:text-white hover:underline underline-offset-2 transition-colors"
+                  className="hover:text-white transition-colors"
                 >
                   {email}
                 </a>
               </div>
+
               <div className="flex items-center gap-2.5">
-                <Phone size={14} className="text-emerald-400 shrink-0" />
+                <Phone size={15} className="text-[#8FB39E] shrink-0" />
                 <a
                   href={`tel:${phone.replace(/\s+/g, "")}`}
-                  className="text-white/90 hover:text-white hover:underline underline-offset-2 transition-colors"
+                  className="hover:text-white transition-colors"
                 >
                   {phone}
                 </a>
@@ -168,214 +76,150 @@ export function Footer({ settings }: FooterProps) {
             </div>
           </div>
 
-          {/* Col 2: Formulation Portfolios */}
+          {/* Column 2: Formulations (3 cols) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-[11px] uppercase tracking-[0.18em] font-sans font-semibold text-emerald-300/90">
-              Formulation Portfolios
+            <h4 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
+              Formulations
             </h4>
-            <ul className="space-y-3 text-xs font-sans">
+
+            <ul className="space-y-2.5 text-xs sm:text-sm text-white/75 font-light">
               <li>
-                <Link
-                  href="/products/nervify-forte"
-                  className="group flex flex-col hover:text-white transition-colors"
-                >
-                  <div className="flex items-center justify-between text-white/90 group-hover:text-white font-medium">
-                    <span>Nervify Forte</span>
-                    <ArrowUpRight
-                      size={13}
-                      className="opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-emerald-400"
-                    />
-                  </div>
-                  <span className="text-[11px] text-white/50 group-hover:text-white/70 transition-colors">
-                    Neuro-Vitality & Peripheral Nerve Care
-                  </span>
+                <Link href="/products/nervify-forte" className="hover:text-white transition-colors block py-0.5">
+                  Nervify Forte
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/products/orthocare-active"
-                  className="group flex flex-col hover:text-white transition-colors"
-                >
-                  <div className="flex items-center justify-between text-white/90 group-hover:text-white font-medium">
-                    <span>OrthoCare Active</span>
-                    <ArrowUpRight
-                      size={13}
-                      className="opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-emerald-400"
-                    />
-                  </div>
-                  <span className="text-[11px] text-white/50 group-hover:text-white/70 transition-colors">
-                    Joint Flexibility & Cartilage Cushion
-                  </span>
+                <Link href="/products/orthocare-active" className="hover:text-white transition-colors block py-0.5">
+                  OrthoCare Active
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/products/livcleanse-synergy"
-                  className="group flex flex-col hover:text-white transition-colors"
-                >
-                  <div className="flex items-center justify-between text-white/90 group-hover:text-white font-medium">
-                    <span>LivCleanse Synergy</span>
-                    <ArrowUpRight
-                      size={13}
-                      className="opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-emerald-400"
-                    />
-                  </div>
-                  <span className="text-[11px] text-white/50 group-hover:text-white/70 transition-colors">
-                    Hepatic Detox & Digestive Resilience
-                  </span>
+                <Link href="/products/livcleanse-synergy" className="hover:text-white transition-colors block py-0.5">
+                  LivCleanse Synergy
                 </Link>
               </li>
-
               <li>
-                <Link
-                  href="/products/immunoshield-daily"
-                  className="group flex flex-col hover:text-white transition-colors"
-                >
-                  <div className="flex items-center justify-between text-white/90 group-hover:text-white font-medium">
-                    <span>ImmunoShield Daily</span>
-                    <ArrowUpRight
-                      size={13}
-                      className="opacity-40 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-emerald-400"
-                    />
-                  </div>
-                  <span className="text-[11px] text-white/50 group-hover:text-white/70 transition-colors">
-                    Systemic Immunity Matrix & Antioxidant Defense
-                  </span>
+                <Link href="/products/immunoshield-daily" className="hover:text-white transition-colors block py-0.5">
+                  ImmunoShield Daily
                 </Link>
               </li>
-
-              <li className="pt-2">
+              <li>
+                <Link href="/products/vitafiv-syrup" className="hover:text-white transition-colors block py-0.5">
+                  Vitafiv Syrup
+                </Link>
+              </li>
+              <li className="pt-1.5">
                 <Link
                   href="/products"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-400 hover:text-emerald-300 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs text-[#8FB39E] hover:text-white font-medium transition-colors"
                 >
-                  <span>Explore Full Formulations</span>
-                  <ArrowUpRight size={13} />
+                  <span>View Full Catalogue</span>
+                  <ArrowRight size={12} />
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Institutional & Standards */}
+          {/* Column 3: Company (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-[11px] uppercase tracking-[0.18em] font-sans font-semibold text-emerald-300/90">
-              Institutional & Desk
+            <h4 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
+              Company
             </h4>
-            <ul className="space-y-2.5 text-xs font-sans text-white/80">
+
+            <ul className="space-y-2.5 text-xs sm:text-sm text-white/75 font-light">
               <li>
-                <Link href="/" className="hover:text-white transition-colors">
-                  Home
+                <Link href="/about" className="hover:text-white transition-colors block py-0.5">
+                  About Celife
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="hover:text-white transition-colors">
-                  Product Catalogue
+                <Link href="/about" className="hover:text-white transition-colors block py-0.5">
+                  Quality Standards
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-white transition-colors">
-                  Quality Standards & Story
+                <Link href="/enquire" className="hover:text-white transition-colors block py-0.5">
+                  Product Enquiry
                 </Link>
               </li>
               <li>
-                <Link href="/enquire" className="hover:text-white transition-colors">
-                  Product Enquiry Desk
+                <Link href="/contact" className="hover:text-white transition-colors block py-0.5">
+                  Institutional Supply
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-white transition-colors">
-                  Distribution & Supply
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="hover:text-white transition-colors">
-                  Botanical Research Base
+                <Link href="/login" className="hover:text-white transition-colors block py-0.5">
+                  Staff Login
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 4: Attention-Grabbing Practitioner Fast-Desk Card */}
-          <div className="lg:col-span-3">
-            <div className="relative rounded-[8px] bg-white/[0.04] border border-white/12 p-6 backdrop-blur-md overflow-hidden group hover:border-emerald-500/40 transition-all duration-300 shadow-xl">
-              {/* Subtle accent glow */}
-              <div className="absolute -top-10 -right-10 w-28 h-28 bg-emerald-500/15 rounded-full blur-xl pointer-events-none group-hover:bg-emerald-500/25 transition-all" />
+          {/* Column 4: Compliance & Quality (2 cols) */}
+          <div className="lg:col-span-2 space-y-4">
+            <h4 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
+              Standards
+            </h4>
 
-              <div className="space-y-3 relative z-10">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)]" />
-                  <span className="text-[10px] uppercase tracking-[0.16em] font-sans font-semibold text-emerald-300">
-                    Direct Institutional Desk
-                  </span>
-                </div>
+            <div className="space-y-2 text-xs text-white/70 font-light leading-relaxed">
+              <p>
+                Manufactured in certified GMP and ISO 9001:2015 cleanroom facilities.
+              </p>
+              <p className="text-[11px] text-white/50">
+                Batch-level Certificate of Analysis (CoA) available upon practitioner request.
+              </p>
+            </div>
 
-                <h5 className="text-base font-serif font-semibold text-white tracking-tight leading-snug">
-                  Healthcare Practitioner or Distributor?
-                </h5>
-
-                <p className="text-xs font-sans text-white/70 leading-relaxed">
-                  Request batch CoA dossiers, clinic sample allotments, or trade partnership terms directly.
-                </p>
-
-                <div className="pt-2">
-                  <Link
-                    href="/enquire"
-                    className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-[4px] bg-[var(--bone)] text-[var(--forest)] font-sans font-semibold text-xs tracking-wider uppercase hover:bg-white hover:shadow-lg transition-all"
-                  >
-                    <span>Submit Product Enquiry</span>
-                    <ArrowUpRight size={14} />
-                  </Link>
-                </div>
-
-                <div className="flex items-center gap-1.5 text-[11px] text-white/50 pt-1">
-                  <Clock size={12} className="text-emerald-400" />
-                  <span>Desk responds within two working days</span>
-                </div>
-              </div>
+            <div className="pt-2 flex flex-wrap gap-1.5">
+              <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-xs bg-white/5 border border-white/10 text-[#8FB39E]">
+                GMP Certified
+              </span>
+              <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-xs bg-white/5 border border-white/10 text-[#8FB39E]">
+                ISO 9001
+              </span>
+              <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-xs bg-white/5 border border-white/10 text-[#8FB39E]">
+                FSSAI Aligned
+              </span>
             </div>
           </div>
+
         </div>
 
-        {/* 3. Regulatory Disclaimer */}
-        <div className="pt-8 border-t border-white/10 space-y-3">
-          <div className="flex items-center gap-2">
-            <span className="text-[10px] uppercase font-mono tracking-widest px-2 py-0.5 rounded bg-white/[0.05] border border-white/10 text-emerald-300">
-              Statutory Compliance
-            </span>
-          </div>
-          <p className="text-[11px] sm:text-[12px] font-sans text-white/55 leading-relaxed max-w-[95ch]">
+        {/* Regulatory Notice Banner */}
+        <div className="py-5 border-t border-white/10">
+          <p className="text-[11px] text-white/50 leading-relaxed max-w-4xl font-light">
             {disclaimer}
           </p>
         </div>
 
-        {/* 4. Bottom Utility & Copyright Bar */}
-        <div className="py-8 mt-6 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs font-sans text-white/60">
-          <span>{copyright}</span>
+        {/* Bottom Utility Bar */}
+        <div className="py-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/60 font-light">
+          <span className="text-center sm:text-left">{copyright}</span>
 
-          <div className="flex flex-wrap items-center gap-6 text-white/70">
-            <Link href="/contact" className="hover:text-white transition-colors">
-              Practitioner Terms
+          <div className="flex flex-wrap items-center justify-center gap-5 sm:gap-6">
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms of Service
             </Link>
-            <Link href="/contact" className="hover:text-white transition-colors">
+            <Link href="/privacy" className="hover:text-white transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/login" className="hover:text-white transition-colors">
-              Staff Portal
+            <Link href="/refund" className="hover:text-white transition-colors">
+              Refund Policy
             </Link>
+
+            {/* Simple, real Back to top button */}
             <button
               onClick={scrollToTop}
-              className="inline-flex items-center gap-1 text-white/70 hover:text-emerald-300 transition-colors ml-2 cursor-pointer"
+              className="inline-flex items-center gap-1 hover:text-white transition-colors cursor-pointer text-xs font-normal"
               aria-label="Scroll back to top"
             >
               <span>Back to top</span>
-              <ArrowUp size={13} />
+              <ArrowUp size={13} className="text-[#8FB39E]" />
             </button>
           </div>
         </div>
+
       </div>
     </footer>
   );
 }
-

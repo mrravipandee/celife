@@ -355,26 +355,26 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
   const { title, breadcrumb } = getRouteDetails();
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between w-full h-[70px] bg-[#FFFFFF] border-b border-[#E1E8E2] px-4 md:px-8 select-none">
-      
+    <header className="sticky top-0 z-40 flex items-center justify-between w-full h-[80px] bg-[#FFFFFF] border-b border-[#E1E8E2] px-4 md:px-8 select-none">
+
       {/* ==========================================
           DESKTOP LAYOUT (visible on md screens up)
          ========================================== */}
       <div className="hidden md:flex items-center justify-between w-full relative">
-        
+
         {/* Left: Title & Breadcrumbs */}
         <div className="flex flex-col justify-center">
           <span className="text-xs uppercase tracking-[0.12em] text-[#68756D] font-sans font-medium mb-0.5">
             {breadcrumb}
           </span>
-          <h1 className="text-xl font-serif font-bold tracking-tight text-[#17201B]">
+          <h1 className="text-xl font-bold tracking-tight text-[#17201B]">
             {title}
           </h1>
         </div>
 
         {/* Right Actions Block */}
         <div className="flex items-center gap-4 lg:gap-6">
-          
+
           {/* Global Search Interface Box */}
           <div ref={searchContainerRef} className="relative group z-50">
             <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#68756D] group-focus-within:text-[#123C2D] transition-colors">
@@ -439,11 +439,10 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                                     setSearchQuery("");
                                   }}
                                   onMouseEnter={() => setSelectedSearchIndex(overallIdx)}
-                                  className={`w-full text-left px-2.5 py-2 rounded-xs flex flex-col gap-0.5 border outline-none transition-colors cursor-pointer ${
-                                    active
-                                      ? "bg-[#F0F4F0] border-[#E1E8E2] text-[#17201B]"
-                                      : "border-transparent text-[#17201B] hover:bg-[#F6F8F5]"
-                                  }`}
+                                  className={`w-full text-left px-2.5 py-2 rounded-xs flex flex-col gap-0.5 border outline-none transition-colors cursor-pointer ${active
+                                    ? "bg-[#F0F4F0] border-[#E1E8E2] text-[#17201B]"
+                                    : "border-transparent text-[#17201B] hover:bg-[#F6F8F5]"
+                                    }`}
                                 >
                                   <span className="text-xs font-semibold truncate">{item.title}</span>
                                   {item.subtitle && (
@@ -478,9 +477,8 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
               type="button"
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
               aria-label="View notifications"
-              className={`relative p-2 rounded-xs transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#123C2D]/50 ${
-                isNotificationsOpen ? "text-[#123C2D] bg-[#F0F4F0]" : "text-[#68756D] hover:text-[#17201B] hover:bg-[#F6F8F5]"
-              }`}
+              className={`relative p-2 rounded-xs transition-colors cursor-pointer outline-none focus-visible:ring-1 focus-visible:ring-[#123C2D]/50 ${isNotificationsOpen ? "text-[#123C2D] bg-[#F0F4F0]" : "text-[#68756D] hover:text-[#17201B] hover:bg-[#F6F8F5]"
+                }`}
             >
               <Bell size={16} />
             </button>
@@ -536,7 +534,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: prefersReduced ? 1 : 0.95 }}
                   transition={{ duration: prefersReduced ? 0.05 : 0.15, ease: "easeOut" }}
-                  className="absolute right-0 mt-2 w-56 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs shadow-xl p-2 select-none z-50 text-left font-sans"
+                  className="absolute right-0 mt-2 w-56 bg-[#FFFFFF] border border-[#E1E8E2] rounded-xs shadow-xl p-2 select-none z-50 text-left font-sans mt-[110px]"
                 >
                   {/* Account Header info */}
                   <div className="px-3 py-2 border-b border-[#E1E8E2] mb-1.5">
@@ -594,14 +592,14 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
         {/* Center: Brand Logo */}
         <div className="flex items-center gap-1.5 select-none">
           <span className="w-2 h-2 rounded-full bg-[#ED1C24]" />
-          <span className="font-serif tracking-wider font-bold text-[#17201B] text-base">
+          <span className="tracking-wider font-bold text-[#17201B] text-base">
             CELIFE
           </span>
         </div>
 
         {/* Right: Search, Notifications & Profile Avatar */}
         <div className="flex items-center gap-1.5">
-          
+
           {/* Mobile Search Button */}
           <button
             type="button"
@@ -618,13 +616,12 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
               type="button"
               onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
               aria-label="View notifications"
-              className={`p-2 rounded-xs transition-colors cursor-pointer outline-none ${
-                isNotificationsOpen ? "text-[#123C2D] bg-[#F0F4F0]" : "text-[#68756D] hover:text-[#17201B] hover:bg-[#F6F8F5]"
-              }`}
+              className={`p-2 rounded-xs transition-colors cursor-pointer outline-none ${isNotificationsOpen ? "text-[#123C2D] bg-[#F0F4F0]" : "text-[#68756D] hover:text-[#17201B] hover:bg-[#F6F8F5]"
+                }`}
             >
               <Bell size={16} />
             </button>
-            
+
             {/* Popover content rendered on mobile */}
             <AnimatePresence>
               {isNotificationsOpen && (
@@ -731,7 +728,7 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
               >
                 <ArrowLeft size={18} />
               </button>
-              
+
               <div className="relative flex-grow">
                 <span className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-[#68756D]">
                   <Search size={14} />

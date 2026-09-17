@@ -21,7 +21,10 @@
 
   /* Brand Typography */
   --font-serif: var(--font-cormorant), Cormorant Garamond, Georgia, serif;
-  --font-sans: var(--font-manrope), Manrope, system-ui, sans-serif;
+  --font-sans: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  --font-poppins: var(--font-poppins), 'Poppins', system-ui, sans-serif;
+  --font-inter: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-cormorant: var(--font-cormorant), Cormorant Garamond, Georgia, serif;
   
   /* Custom Animation Durations */
   --animate-fade-in: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -293,4 +296,38 @@ a, button {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ==========================================================================
+   Typography: Poppins Font (Site & Dashboard), Cormorant Garamond for Quotes
+   ========================================================================== */
+body {
+  font-family: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+/* All headings, buttons, links, inputs, and general text use Poppins */
+:is(h1, h2, h3, h4, h5, h6, p, span, a, button, input, textarea, select, label, table, th, td, strong, b) {
+  font-family: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+/* Retain editorial serif font (Cormorant Garamond) ONLY for quotes / testimonials */
+:is(blockquote, blockquote *, .quote, .quote *, .quote-text, .quote-text *, .pull-quote, .pull-quote *, [data-quote], [data-quote] *, q, q *) {
+  font-family: var(--font-cormorant), 'Cormorant Garamond', Georgia, serif !important;
+}
+
+/* Dashboard Root container ensures Poppins everywhere */
+.dashboard-root {
+  --font-serif: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
+  font-family: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif;
+}
+
+.dashboard-root .font-serif,
+.dashboard-root .font-sans {
+  font-family: var(--font-poppins), 'Poppins', system-ui, -apple-system, sans-serif !important;
+}
+
+/* Monospace fonts for order IDs, codes */
+.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
 }

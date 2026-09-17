@@ -82,7 +82,7 @@ export function RecentInquiries({ inquiries }: RecentInquiriesProps) {
     <div className="bg-white border border-[#E1E8E2] p-6 rounded-lg space-y-6 select-none flex flex-col justify-between shadow-xs">
       {/* Header section */}
       <div className="flex items-center justify-between border-b border-[#E1E8E2] pb-4">
-        <h3 className="text-base font-serif font-bold text-[#17201B]">
+        <h3 className="text-base font-bold text-[#17201B]">
           Recent Enquiries
         </h3>
         <Link

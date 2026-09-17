@@ -4,11 +4,10 @@ import React, { useMemo, useRef, useEffect, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 
-// ─── Custom Shader for Refracted Luxury Background Plane ─────────────────────
+// ─── Custom Shader for Refracted Botanical Background ─────────────────────────
 
 const VertexShader = `
 varying vec2 vUv;
-
 void main() {
   vUv = uv;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
@@ -26,7 +25,6 @@ uniform float uHoverActive;
 varying vec2 vUv;
 
 void main() {
-  // Correct aspect ratio for object-fit: cover representation in WebGL
   vec2 ratio = vec2(
     min((uResolution.x / uResolution.y) / (uImageResolution.x / uImageResolution.y), 1.0),
     min((uResolution.y / uResolution.x) / (uImageResolution.y / uImageResolution.x), 1.0)
@@ -36,23 +34,25 @@ void main() {
     vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
   );
 
-  // Subtle interactive refraction following cursor
+  // Smoother, more fluid refraction (like liquid herbal extract)
   vec2 mouseDelta = uv - uMouse;
   float dist = length(mouseDelta);
   
-  // Refined wave: soft, restrained ripples with fast exponential falloff
-  float wave = sin(dist * 20.0 - uTime * 2.8) * exp(-dist * 5.0) * uHoverActive;
-  
-  // Ambient calm breathing wave
-  float ambient = sin(uv.y * 5.0 + uTime * 0.5) * cos(uv.x * 5.0 + uTime * 0.4) * 0.002;
+  // Slower, deeper waves for a calming effect
+  float wave = sin(dist * 15.0 - uTime * 1.8) * exp(-dist * 4.0) * uHoverActive;
+  float ambient = sin(uv.y * 4.0 + uTime * 0.4) * cos(uv.x * 4.0 + uTime * 0.3) * 0.003;
 
-  vec2 displacedUv = uv + (normalize(mouseDelta + 0.0001) * wave * 0.011) + vec2(ambient);
+  vec2 displacedUv = uv + (normalize(mouseDelta + 0.0001) * wave * 0.012) + vec2(ambient);
   
   vec4 color = texture2D(uTexture, displacedUv);
   
-  // Subtle warm gold glint along ripple crests
-  float glint = clamp(wave * 0.25, 0.0, 0.12);
-  color.rgb += vec3(0.79, 0.64, 0.29) * glint;
+  // CHANGED: Warm Amber/Copper glint instead of Gold
+  float glint = clamp(wave * 0.2, 0.0, 0.1);
+  color.rgb += vec3(0.83, 0.64, 0.45) * glint;
+
+  // ADDED: Soft vignette to focus attention on the center text
+  float vignette = 1.0 - smoothstep(0.3, 1.2, length(vUv - 0.5));
+  color.rgb *= mix(0.85, 1.0, vignette);
 
   gl_FragColor = color;
 }
@@ -63,13 +63,13 @@ function BackgroundPlane({ mouseRef, hoverRef }: { mouseRef: React.RefObject<THR
   const materialRef = useRef<THREE.ShaderMaterial>(null);
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
 
-  // Compute exact viewport dimensions at mesh depth (z = -1) with bleed
   const targetVp = viewport.getCurrentViewport(camera, [0, 0, -1]);
   const meshScale: [number, number, number] = [targetVp.width * 1.08, targetVp.height * 1.08, 1];
 
   useEffect(() => {
     const loader = new THREE.TextureLoader();
-    loader.load("/images/hero/hotel-lobby.jpg", (tex) => {
+    // CHANGED: Brand aligned image
+    loader.load("/images/hero/botanical-extract.jpg", (tex) => {
       tex.minFilter = THREE.LinearFilter;
       tex.generateMipmaps = false;
       setTexture(tex);
@@ -85,20 +85,15 @@ function BackgroundPlane({ mouseRef, hoverRef }: { mouseRef: React.RefObject<THR
       uImageResolution: { value: new THREE.Vector2(1920, 1080) },
       uHoverActive: { value: 0 },
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
   useEffect(() => {
-    if (materialRef.current && texture) {
-      materialRef.current.uniforms.uTexture.value = texture;
-    }
+    if (materialRef.current && texture) materialRef.current.uniforms.uTexture.value = texture;
   }, [texture]);
 
   useEffect(() => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.uResolution.value.set(size.width, size.height);
-    }
+    if (materialRef.current) materialRef.current.uniforms.uResolution.value.set(size.width, size.height);
   }, [size]);
 
   useFrame((_, delta) => {
@@ -106,18 +101,13 @@ function BackgroundPlane({ mouseRef, hoverRef }: { mouseRef: React.RefObject<THR
     materialRef.current.uniforms.uTime.value += delta;
 
     if (mouseRef.current) {
-      // Smoothly interpolate mouse uniform
       const currentMouse = materialRef.current.uniforms.uMouse.value as THREE.Vector2;
-      currentMouse.lerp(mouseRef.current, 0.06);
+      currentMouse.lerp(mouseRef.current, 0.05); // Slower interpolation for calm feel
     }
 
     if (hoverRef.current !== undefined && hoverRef.current !== null) {
       const currentHover = materialRef.current.uniforms.uHoverActive.value as number;
-      materialRef.current.uniforms.uHoverActive.value = THREE.MathUtils.lerp(
-        currentHover,
-        hoverRef.current,
-        0.05
-      );
+      materialRef.current.uniforms.uHoverActive.value = THREE.MathUtils.lerp(currentHover, hoverRef.current, 0.04);
     }
   });
 
@@ -135,17 +125,16 @@ function BackgroundPlane({ mouseRef, hoverRef }: { mouseRef: React.RefObject<THR
   );
 }
 
-// ─── Floating Gold Particles (Restrained Luxury) ──────────────────────────────
+// ─── Botanical Pollen Particles (Restrained & Organic) ────────────────────────
 
-function GoldParticles({ mouseRef }: { mouseRef: React.RefObject<THREE.Vector2> }) {
+function BotanicalParticles({ mouseRef }: { mouseRef: React.RefObject<THREE.Vector2> }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const particleCount = 1200;
+  const particleCount = 800; // Reduced slightly for elegance
 
   const [positions, speeds] = useMemo(() => {
     const pos = new Float32Array(particleCount * 3);
     const spd = new Float32Array(particleCount);
 
-    // Deterministic pseudo-random generation to maintain purity during render
     let seed = 42;
     const prng = () => {
       seed = (seed * 16807) % 2147483647;
@@ -153,10 +142,10 @@ function GoldParticles({ mouseRef }: { mouseRef: React.RefObject<THREE.Vector2> 
     };
 
     for (let i = 0; i < particleCount; i++) {
-      pos[i * 3] = (prng() - 0.5) * 16;     // x range: -8 to 8
-      pos[i * 3 + 1] = (prng() - 0.5) * 12; // y range: -6 to 6
-      pos[i * 3 + 2] = (prng() - 0.5) * 4;  // z range: -2 to 2
-      spd[i] = 0.15 + prng() * 0.35;         // slow upward/downward drift rate
+      pos[i * 3] = (prng() - 0.5) * 16;
+      pos[i * 3 + 1] = (prng() - 0.5) * 12;
+      pos[i * 3 + 2] = (prng() - 0.5) * 4;
+      spd[i] = 0.1 + prng() * 0.2; // Slower drift
     }
     return [pos, spd];
   }, [particleCount]);
@@ -167,38 +156,35 @@ function GoldParticles({ mouseRef }: { mouseRef: React.RefObject<THREE.Vector2> 
     const posAttr = geometry.attributes.position as THREE.BufferAttribute;
     const array = posAttr.array as Float32Array;
 
-    // Slow ambient upward drift
+    // Organic swirling drift (like pollen in a gentle breeze)
+    const time = performance.now() * 0.0001;
     for (let i = 0; i < particleCount; i++) {
       const idx = i * 3 + 1;
-      array[idx] += speeds[i] * delta * 0.35;
-      if (array[idx] > 6) {
-        array[idx] = -6;
-      }
+      array[idx] += speeds[i] * delta * 0.2;
+      array[idx * 3] += Math.sin(time + i) * delta * 0.05; // Subtle x-axis sway
+      if (array[idx] > 6) array[idx] = -6;
     }
     posAttr.needsUpdate = true;
 
-    // Subtle parallax tilt following cursor
     if (mouseRef.current) {
-      const targetRotX = (mouseRef.current.y - 0.5) * 0.08;
-      const targetRotY = (mouseRef.current.x - 0.5) * 0.1;
-      pointsRef.current.rotation.x = THREE.MathUtils.lerp(pointsRef.current.rotation.x, targetRotX, 0.04);
-      pointsRef.current.rotation.y = THREE.MathUtils.lerp(pointsRef.current.rotation.y, targetRotY, 0.04);
+      const targetRotX = (mouseRef.current.y - 0.5) * 0.05; // Reduced parallax intensity
+      const targetRotY = (mouseRef.current.x - 0.5) * 0.07;
+      pointsRef.current.rotation.x = THREE.MathUtils.lerp(pointsRef.current.rotation.x, targetRotX, 0.03);
+      pointsRef.current.rotation.y = THREE.MathUtils.lerp(pointsRef.current.rotation.y, targetRotY, 0.03);
     }
   });
 
   return (
     <points ref={pointsRef} position={[0, 0, 0]}>
       <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={0.038}
-        color="#c9a24a"
+        size={0.045}
+        // CHANGED: Soft Amber/Sage color instead of Gold
+        color="#D4A373"
         transparent
-        opacity={0.65}
+        opacity={0.4} // Softer opacity
         blending={THREE.AdditiveBlending}
         depthWrite={false}
       />
@@ -211,21 +197,19 @@ function GoldParticles({ mouseRef }: { mouseRef: React.RefObject<THREE.Vector2> 
 function CameraController({ mouseRef }: { mouseRef: React.RefObject<THREE.Vector2> }) {
   useFrame((state) => {
     const time = state.clock.getElapsedTime();
-    // Ambient breathing oscillation
-    const breathingY = Math.sin(time * 0.5) * 0.06;
-    const breathingX = Math.cos(time * 0.35) * 0.04;
+    // Slower breathing for a calming Ayurvedic effect
+    const breathingY = Math.sin(time * 0.3) * 0.05;
+    const breathingX = Math.cos(time * 0.2) * 0.03;
 
     if (mouseRef.current) {
-      // Max 3 degrees (~0.052 rad) parallax
-      const targetX = (mouseRef.current.x - 0.5) * 0.35 + breathingX;
-      const targetY = -(mouseRef.current.y - 0.5) * 0.25 + breathingY;
+      const targetX = (mouseRef.current.x - 0.5) * 0.25 + breathingX;
+      const targetY = -(mouseRef.current.y - 0.5) * 0.2 + breathingY;
 
-      state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, targetX, 0.04);
-      state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, targetY, 0.04);
+      state.camera.position.x = THREE.MathUtils.lerp(state.camera.position.x, targetX, 0.03);
+      state.camera.position.y = THREE.MathUtils.lerp(state.camera.position.y, targetY, 0.03);
       state.camera.lookAt(0, 0, -1);
     }
   });
-
   return null;
 }
 
@@ -246,7 +230,6 @@ export function HeroScene({ isActive = true }: HeroSceneProps) {
       const rect = containerRef.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top) / rect.height;
-
       if (x >= 0 && x <= 1 && y >= 0 && y <= 1) {
         mouseRef.current.set(x, 1.0 - y);
         hoverRef.current = 1;
@@ -254,14 +237,9 @@ export function HeroScene({ isActive = true }: HeroSceneProps) {
         hoverRef.current = 0;
       }
     };
-
-    const handleMouseLeave = () => {
-      hoverRef.current = 0;
-    };
-
+    const handleMouseLeave = () => hoverRef.current = 0;
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
@@ -272,18 +250,14 @@ export function HeroScene({ isActive = true }: HeroSceneProps) {
     <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-none">
       <Canvas
         dpr={[1, 1.75]}
-        gl={{
-          antialias: false,
-          powerPreference: "high-performance",
-          alpha: true,
-        }}
+        gl={{ antialias: false, powerPreference: "high-performance", alpha: true }}
         camera={{ position: [0, 0, 3], fov: 45 }}
         frameloop={isActive ? "always" : "never"}
         className="w-full h-full"
       >
         <CameraController mouseRef={mouseRef} />
         <BackgroundPlane mouseRef={mouseRef} hoverRef={hoverRef} />
-        <GoldParticles mouseRef={mouseRef} />
+        <BotanicalParticles mouseRef={mouseRef} />
       </Canvas>
     </div>
   );

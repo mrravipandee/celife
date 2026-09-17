@@ -81,15 +81,17 @@ export function Philosophy() {
                 &ldquo;
               </span>
               {/* Word-by-word stagger on the main founder quote */}
-              <p className="text-2xl md:text-4xl font-serif text-white/95 leading-relaxed relative z-10 italic">
-                <WordStagger
-                  text="Exceptional hospitality is created through operational excellence, financial discipline, continuous innovation, and a consistent commitment to the guest experience."
-                  delay={0.1}
-                  staggerDelay={0.04}
-                  duration={0.7}
-                  threshold={0.15}
-                />
-              </p>
+              <blockquote className="quote relative z-10">
+                <p className="text-2xl md:text-4xl font-serif text-white/95 leading-relaxed italic">
+                  <WordStagger
+                    text="Exceptional hospitality is created through operational excellence, financial discipline, continuous innovation, and a consistent commitment to the guest experience."
+                    delay={0.1}
+                    staggerDelay={0.04}
+                    duration={0.7}
+                    threshold={0.15}
+                  />
+                </p>
+              </blockquote>
             </Reveal>
 
             {/* Split layout block */}
@@ -151,9 +153,11 @@ export function Philosophy() {
                 <span className="absolute -top-12 -left-6 text-9xl font-serif text-primary/10 select-none">
                   &ldquo;
                 </span>
-                <p className="text-2xl md:text-3xl font-serif text-white/80 leading-relaxed italic relative z-10 max-w-3xl">
-                  THEDCO helped us structure our restaurant operations, recruit the team and prepare the systems required for opening. Their practical involvement made the launch process much more organised.
-                </p>
+                <blockquote className="quote relative z-10">
+                  <p className="text-2xl md:text-3xl font-serif text-white/80 leading-relaxed italic max-w-3xl">
+                    THEDCO helped us structure our restaurant operations, recruit the team and prepare the systems required for opening. Their practical involvement made the launch process much more organised.
+                  </p>
+                </blockquote>
               </div>
             </ScrollReveal>
             <LineReveal className="bg-primary/45 w-12" delay={0.3} />

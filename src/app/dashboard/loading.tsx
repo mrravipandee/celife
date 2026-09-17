@@ -1,10 +1,6 @@
-import React from "react";
-import { LoadingState } from "@/components/ui/LoadingState";
+// src/app/loading.tsx
+import { Loader } from "@/components/ui/Loader";
 
-export default function DashboardLoading() {
-  return (
-    <div className="w-full py-4 animate-in fade-in duration-150">
-      <LoadingState variant="table" />
-    </div>
-  );
+export default function Loading() {
+  return <Loader variant="fullscreen" text="Preparing your botanical formulations..." />;
 }

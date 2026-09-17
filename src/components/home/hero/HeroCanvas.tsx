@@ -6,19 +6,22 @@ import Image from "next/image";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useIsDesktop } from "@/lib/hooks/use-is-desktop";
 
-// ─── Static Fallback Image ───────────────────────────────────────────────────
+// ─── Static Fallback Image (Brand Aligned) ──────────────────────────────────
 
 function FallbackImage() {
   return (
     <div className="absolute inset-0 z-0">
       <Image
-        src="/images/hero/hotel-lobby.jpg"
-        alt="THE DCO Luxury Hotel Lobby"
+        // CHANGED: Replaced hotel-lobby with a botanical/clinical image
+        src="/images/hero/botanical-extract.jpg"
+        alt="Celife Botanical Formulations"
         fill
         sizes="100vw"
         priority
-        className="object-cover"
+        className="object-cover brightness-105"
       />
+      {/* Soft overlay to ensure text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#FDFDFD]/80 via-transparent to-[#FDFDFD]/90" />
     </div>
   );
 }
@@ -74,7 +77,7 @@ function isWebGLAvailable(): boolean {
     const canvas = document.createElement("canvas");
     return Boolean(
       window.WebGLRenderingContext &&
-        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+      (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
     );
   } catch {
     return false;
@@ -83,7 +86,11 @@ function isWebGLAvailable(): boolean {
 
 // ─── Main HeroCanvas Component ───────────────────────────────────────────────
 
-export function HeroCanvas() {
+interface HeroCanvasProps {
+  children?: React.ReactNode; // ADDED: Allows text overlay
+}
+
+export function HeroCanvas({ children }: HeroCanvasProps) {
   const isDesktop = useIsDesktop();
   const preferReduced = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -92,48 +99,43 @@ export function HeroCanvas() {
   const [tabVisible, setTabVisible] = useState(true);
   const [webGLSupported] = useState(() => isWebGLAvailable());
 
-  // IntersectionObserver to pause rendering when hero is scrolled out of viewport
+  // ... (IntersectionObserver and Page Visibility API remain exactly the same) ...
   useEffect(() => {
     const el = containerRef.current;
     if (!el || !isDesktop || preferReduced) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setInView(entry.isIntersecting);
-      },
-      { threshold: 0 }
-    );
-
+    const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0 });
     observer.observe(el);
     return () => observer.disconnect();
   }, [isDesktop, preferReduced]);
 
-  // Page visibility API listener to pause rendering when tab is hidden
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      setTabVisible(document.visibilityState === "visible");
-    };
-
+    const handleVisibilityChange = () => setTabVisible(document.visibilityState === "visible");
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
   }, []);
 
-  // Fallback 1: Mobile/Tablet (<768px) -> Zero Three.js JS or WebGL requested
-  // Fallback 2: Reduced motion requested -> Render static image immediately
-  // Fallback 3: No WebGL support -> Render static image
-  if (!isDesktop || preferReduced || !webGLSupported) {
-    return <FallbackImage />;
-  }
-
   const isActive = inView && tabVisible;
+  const showFallback = !isDesktop || preferReduced || !webGLSupported;
 
   return (
-    <div ref={containerRef} className="absolute inset-0 z-0">
-      <WebGLErrorBoundary fallback={<FallbackImage />}>
-        <LazyHeroScene isActive={isActive} />
-      </WebGLErrorBoundary>
+    <div ref={containerRef} className="relative w-full min-h-[85vh] flex items-center overflow-hidden bg-[#FDFDFD]">
+      {/* Background Layer */}
+      <div className="absolute inset-0 z-0">
+        {showFallback ? (
+          <FallbackImage />
+        ) : (
+          <WebGLErrorBoundary fallback={<FallbackImage />}>
+            <LazyHeroScene isActive={isActive} />
+          </WebGLErrorBoundary>
+        )}
+      </div>
+
+      {/* Content Overlay Layer */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 py-20 pointer-events-none">
+        <div className="pointer-events-auto max-w-2xl">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
