@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
   reactCompiler: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [70, 75, 90],
     remotePatterns: [
       {
         protocol: "https",
