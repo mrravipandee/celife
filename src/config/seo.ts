@@ -18,9 +18,11 @@ export function constructMetadata({
 } = {}): Metadata {
   const metaTitle = title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`;
 
-  const baseUrl = siteConfig.url.includes("localhost")
-    ? "https://celife.vercel.app"
-    : siteConfig.url;
+  const baseUrl =
+    siteConfig.url.includes("localhost") || siteConfig.url.includes("-projects.vercel.app")
+      ? "https://celife.vercel.app"
+      : siteConfig.url;
+
 
   const canonicalUrl = canonical
     ? canonical.startsWith("http") && !canonical.includes("localhost")
