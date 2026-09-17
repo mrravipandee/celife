@@ -1,10 +1,27 @@
+const getProductionSiteUrl = () => {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
+    return envUrl.replace(/\/$/, "");
+  }
+  if (process.env.NEXT_PUBLIC_VERCEL_URL) {
+    return `https://${process.env.NEXT_PUBLIC_VERCEL_URL.replace(/\/$/, "")}`;
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL.replace(/\/$/, "")}`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`;
+  }
+  return "https://celife.vercel.app";
+};
+
 export const siteConfig = {
   name: "Celife Health Solutions",
   shortName: "Celife",
   title: "Celife Health Solutions | Evidence-Guided Botanical & Nutraceutical Formulations",
   description:
-    "Celife Health Solutions crafts precision botanical extracts, clinical herbal medicine, and standardized nutraceutical formulations. Engineered for neuro-cellular vitality, joint mobility, liver detoxification, and holistic wellness. GMP & ISO certified.",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "https://celifehealth.com",
+    "Celife Health Solutions crafts precision botanical extracts, clinical herbal medicine, and standardized nutraceutical formulations. Engineered for neuro-vitality, joint mobility, liver detoxification, and holistic wellness. GMP & ISO certified.",
+  url: getProductionSiteUrl(),
   ogImage: "/og-image.jpg",
   keywords: [
     "Celife Health Solutions",

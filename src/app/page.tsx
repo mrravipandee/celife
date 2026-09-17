@@ -10,8 +10,11 @@ import { CelifeQualityTrust } from "@/components/home/CelifeQualityTrust";
 import { CelifePhilosophy } from "@/components/home/CelifePhilosophy";
 import { CelifeCTA } from "@/components/home/CelifeCTA";
 import { constructMetadata } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 import { getPageContent } from "@/lib/services/page-content";
 import { getFeaturedProducts } from "@/lib/services/products";
+
+
 
 // Incremental Static Regeneration (ISR): cached for 300s, purged on-demand when CMS content updates
 export const revalidate = 300;
@@ -28,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
       seo.metaDescription ||
       "Celife Health Solutions crafts precision botanical extracts, clinical herbal medicine, and standardized nutraceutical formulations. Engineered for neuro-vitality, joint mobility, liver health, and cellular vitality.",
     image: seo.ogImage || "/og-image.jpg",
-    canonical: seo.canonicalUrl || "https://celifehealth.com",
+    canonical: seo.canonicalUrl || "/",
     keywords: [
       "Celife Health Solutions",
       "botanical formulations",
@@ -47,21 +50,21 @@ export async function generateMetadata(): Promise<Metadata> {
   });
 }
 
-
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "MedicalBusiness",
   name: "Celife Health Solutions",
   description:
     "Dedicated healthcare, nutraceutical, and herbal wellness brand creating evidence-guided botanical and nutritional formulations.",
-  url: "https://celifehealth.com",
-  logo: "https://celifehealth.com/images/general/celife-logo.png",
-  image: "https://celifehealth.com/images/hero/celife-wellness-hero.jpg",
+  url: siteConfig.url,
+  logo: `${siteConfig.url}/celife-brand.png`,
+  image: `${siteConfig.url}/og-image.jpg`,
   address: {
     "@type": "PostalAddress",
     addressRegion: "Maharashtra",
     addressCountry: "IN",
   },
+
   areaServed: {
     "@type": "Country",
     name: "India",

@@ -17,13 +17,20 @@ export function constructMetadata({
   noIndex?: boolean;
 } = {}): Metadata {
   const metaTitle = title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`;
-  const canonicalUrl = canonical
-    ? canonical.startsWith("http")
-      ? canonical
-      : `${siteConfig.url}${canonical.startsWith("/") ? "" : "/"}${canonical}`
+
+  const baseUrl = siteConfig.url.includes("localhost")
+    ? "https://celife.vercel.app"
     : siteConfig.url;
 
-  const imageUrl = image.startsWith("http") ? image : `${siteConfig.url}${image.startsWith("/") ? "" : "/"}${image}`;
+  const canonicalUrl = canonical
+    ? canonical.startsWith("http") && !canonical.includes("localhost")
+      ? canonical
+      : `${baseUrl}${canonical.startsWith("/") ? "" : "/"}${canonical}`
+    : baseUrl;
+
+  const absoluteImageUrl = image.startsWith("http") && !image.includes("localhost")
+    ? image
+    : `${baseUrl}${image.startsWith("/") ? "" : "/"}${image}`;
 
   return {
     title: {
@@ -32,11 +39,11 @@ export function constructMetadata({
     },
     description,
     keywords: Array.isArray(keywords) ? keywords : [keywords],
-    authors: [{ name: "Celife Health Solutions Pvt. Ltd.", url: siteConfig.url }],
+    authors: [{ name: "Celife Health Solutions Pvt. Ltd.", url: baseUrl }],
     creator: siteConfig.name,
     publisher: "Celife Health Solutions Pvt. Ltd.",
     category: "Healthcare, Herbal Wellness & Nutraceuticals",
-    metadataBase: new URL(siteConfig.url),
+    metadataBase: new URL(baseUrl),
     alternates: {
       canonical: canonicalUrl,
     },
@@ -49,7 +56,8 @@ export function constructMetadata({
       type: "website",
       images: [
         {
-          url: imageUrl,
+          url: absoluteImageUrl,
+          secureUrl: absoluteImageUrl,
           width: 1200,
           height: 630,
           alt: `${siteConfig.name} — Evidence-Guided Botanical & Nutraceutical Formulations`,
@@ -61,10 +69,11 @@ export function constructMetadata({
       card: "summary_large_image",
       title: metaTitle,
       description,
-      images: [imageUrl],
+      images: [absoluteImageUrl],
       creator: "@celifehealth",
       site: "@celifehealth",
     },
+
     icons: {
       icon: [
         { url: "/favicon.ico", sizes: "any" },
