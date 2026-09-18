@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Leaf, Loader2 } from "lucide-react";
+import { Leaf } from "lucide-react";
 
 interface LoaderProps {
   variant?: "fullscreen" | "inline";

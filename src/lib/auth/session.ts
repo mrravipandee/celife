@@ -9,7 +9,7 @@ export interface SessionUser {
   role: "admin" | "editor";
 }
 
-export const COOKIE_NAME = "thedco_session";
+export const COOKIE_NAME = "celife_session";
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 function getAuthSecret(): string {

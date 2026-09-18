@@ -106,7 +106,7 @@ interface CelifeHeroProps {
   };
 }
 
-export function CelifeHero({ content }: CelifeHeroProps) {
+export function CelifeHero({ content: _content }: CelifeHeroProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const orbitRef = useRef<HTMLDivElement>(null);
@@ -123,12 +123,47 @@ export function CelifeHero({ content }: CelifeHeroProps) {
   const curveSilhouetteRef = useRef<HTMLDivElement>(null);
 
   const [activeIdx, setActiveIdx] = useState(0);
+  const [loadSubsequentBottles, setLoadSubsequentBottles] = useState(false);
   const lenis = useLenis();
+
+  // Progressively load non-visible product bottles (1-4) on idle or scroll
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+    let idleId: number | null = null;
+
+    const triggerLoad = () => {
+      setLoadSubsequentBottles(true);
+    };
+
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      idleId = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
+        triggerLoad,
+        { timeout: 1200 }
+      );
+    } else {
+      timer = setTimeout(triggerLoad, 800);
+    }
+
+    const onUserScroll = () => {
+      triggerLoad();
+      window.removeEventListener("scroll", onUserScroll);
+    };
+    window.addEventListener("scroll", onUserScroll, { passive: true });
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      if (idleId !== null && "cancelIdleCallback" in window) {
+        (window as unknown as { cancelIdleCallback: (id: number) => void }).cancelIdleCallback(idleId);
+      }
+      window.removeEventListener("scroll", onUserScroll);
+    };
+  }, []);
 
   // Keep Lenis and ScrollTrigger in sync
   useEffect(() => {
     if (!lenis) return;
     const handleScroll = () => {
+      setLoadSubsequentBottles(true);
       ScrollTrigger.update();
     };
     lenis.on("scroll", handleScroll);
@@ -178,25 +213,35 @@ export function CelifeHero({ content }: CelifeHeroProps) {
           }
         });
 
-        // Subtle 2.5D Idle Float on Active Bottle Container
-        const floatTween = gsap.to(bottleWrapRef.current, {
-          y: -8,
-          duration: 3.2,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
+        // Respect prefers-reduced-motion
+        const prefersReduced =
+          typeof window !== "undefined" &&
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        // Dynamic shadow breathing
-        const shadowTween = gsap.to(shadowRef.current, {
-          scaleX: 1.08,
-          scaleY: 1.08,
-          opacity: 0.28,
-          duration: 3.2,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: -1,
-        });
+        let floatTween: gsap.core.Tween | null = null;
+        let shadowTween: gsap.core.Tween | null = null;
+
+        if (!prefersReduced) {
+          // Subtle 2.5D Idle Float on Active Bottle Container
+          floatTween = gsap.to(bottleWrapRef.current, {
+            y: -8,
+            duration: 3.2,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+          });
+
+          // Dynamic shadow breathing
+          shadowTween = gsap.to(shadowRef.current, {
+            scaleX: 1.08,
+            scaleY: 1.08,
+            opacity: 0.28,
+            duration: 3.2,
+            ease: "sine.inOut",
+            yoyo: true,
+            repeat: -1,
+          });
+        }
 
         // Master Timeline pinned over scroll track
         const tl = gsap.timeline({
@@ -387,8 +432,8 @@ export function CelifeHero({ content }: CelifeHeroProps) {
         tl.to({}, { duration: 0.35 });
 
         return () => {
-          floatTween.kill();
-          shadowTween.kill();
+          floatTween?.kill();
+          shadowTween?.kill();
         };
       });
 
@@ -521,7 +566,7 @@ export function CelifeHero({ content }: CelifeHeroProps) {
             alt="Celife Health Solutions Formulation Environment"
             fill
             priority
-            quality={90}
+            quality={75}
             sizes="100vw"
             className="object-cover object-center scale-[1.01]"
           />
@@ -616,10 +661,16 @@ export function CelifeHero({ content }: CelifeHeroProps) {
                         <span className="tabular-nums font-medium">{prod.volume}</span>
                       </div>
 
-                      {/* Bold Editorial Product Title */}
-                      <h1 className="hero-prod-title text-5xl sm:text-7xl lg:text-[76px] xl:text-[84px] font-bold text-[var(--ink)] tracking-tight leading-[0.95] drop-shadow-xs font-sans">
-                        {prod.name}
-                      </h1>
+                      {/* Bold Editorial Product Title (Single H1 for active primary product, semantic H2 for slides) */}
+                      {idx === 0 ? (
+                        <h1 className="hero-prod-title text-5xl sm:text-7xl lg:text-[76px] xl:text-[84px] font-bold text-[var(--ink)] tracking-tight leading-[0.95] drop-shadow-xs font-sans">
+                          {prod.name}
+                        </h1>
+                      ) : (
+                        <h2 className="hero-prod-title text-5xl sm:text-7xl lg:text-[76px] xl:text-[84px] font-bold text-[var(--ink)] tracking-tight leading-[0.95] drop-shadow-xs font-sans">
+                          {prod.name}
+                        </h2>
+                      )}
 
                       {/* Concise Clinical Description */}
                       <p className="hero-prod-desc text-base sm:text-lg lg:text-xl font-sans text-[var(--ink)]/80 leading-relaxed max-w-[48ch] font-normal">
@@ -784,14 +835,16 @@ export function CelifeHero({ content }: CelifeHeroProps) {
                         className="absolute inset-0 flex items-center justify-center will-change-transform"
                       >
                         <div className="relative w-full h-full">
-                          <Image
-                            src={prod.bottleImage}
-                            alt={`${prod.name} - ${prod.badge}`}
-                            fill
-                            priority={idx === 0}
-                            sizes="(max-width: 768px) 280px, (max-width: 1200px) 340px, 400px"
-                            className="object-contain object-bottom select-none pointer-events-none drop-shadow-[0_18px_26px_rgba(18,60,45,0.22)]"
-                          />
+                          {(idx === 0 || loadSubsequentBottles) && (
+                            <Image
+                              src={prod.bottleImage}
+                              alt={`${prod.name} - ${prod.badge}`}
+                              fill
+                              priority={idx === 0}
+                              sizes="(max-width: 768px) 280px, (max-width: 1200px) 340px, 400px"
+                              className="object-contain object-bottom select-none pointer-events-none drop-shadow-[0_18px_26px_rgba(18,60,45,0.22)]"
+                            />
+                          )}
                         </div>
                       </div>
                     ))}

@@ -12,9 +12,9 @@ import { BlogGrid } from "@/components/blog/BlogGrid";
 export const revalidate = 3600; // Revalidate hourly
 
 export const metadata: Metadata = constructMetadata({
-  title: "Hospitality Advisory Insights & Blog | THEDCO",
+  title: "Health & Wellness Insights | Celife Health Solutions",
   description:
-    "Read hospitality strategy insights, restaurant menu engineering cost guides, hotel pre-opening setup plans, and operational audit guides from THEDCO.",
+    "Explore herbal formulation research, wellness science, and nutritional health guidance from the team at Celife Health Solutions.",
 });
 
 export default async function BlogIndexPage() {

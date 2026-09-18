@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongodb";
-import Product from "@/models/Product";
+import Product, { IProduct } from "@/models/Product";
 import Enquiry from "@/models/Enquiry";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { getSession } from "@/lib/auth/session";
@@ -24,7 +24,7 @@ export async function GET(
     const isObjectId = mongoose.Types.ObjectId.isValid(id);
     const query = isObjectId ? { _id: id } : { slug: id };
 
-    const product: any = await Product.findOne(query).lean();
+    const product = await Product.findOne(query).lean<IProduct>();
 
     if (!product) {
       return NextResponse.json(

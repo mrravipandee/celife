@@ -29,7 +29,7 @@ interface SearchResultItem {
   id: string;
   title: string;
   subtitle?: string;
-  category: "Project" | "Blog" | "Case Study" | "Inquiry" | "Service";
+  category: "Product" | "Blog" | "Inquiry" | "Category";
   href: string;
 }
 
@@ -58,34 +58,37 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
   const [selectedSearchIndex, setSelectedSearchIndex] = useState(-1);
 
   // Popover DOM Refs for Click Outside
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const profileContainerRef = useRef<HTMLDivElement>(null);
   const notificationsContainerRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
-  // Mobile search state and refs
+  // Mobile Overlays
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const mobileProfileRef = useRef<HTMLDivElement>(null);
   const mobileNotificationsRef = useRef<HTMLDivElement>(null);
 
-  // 1. Fetch Session user profile on mount
+
+
+  // 1. Fetch Session Profile on mount
   useEffect(() => {
-    fetch("/api/auth/session")
-      .then((res) => {
-        if (res.ok) return res.json();
-        throw new Error();
-      })
-      .then((body) => {
-        if (body.success && body.data?.authenticated) {
-          setUser(body.data.user);
+    async function fetchSession() {
+      try {
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setUser(data.user);
+          }
         }
-      })
-      .catch(() => {
-        // Fallback silently if not loaded
-      });
+      } catch (err) {
+        console.error("Failed to load session profile in Topbar:", err);
+      }
+    }
+    fetchSession();
   }, []);
 
-  // Compute initials dynamically (e.g. "Ravi Pandey" -> "RP")
+  // Compute initials for avatar fallback
   const userInitials = React.useMemo(() => {
     if (!user?.name) return "AD";
     const parts = user.name.trim().split(/\s+/);
@@ -127,51 +130,44 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
       try {
         const query = searchQuery.trim().toLowerCase();
 
-        // Query endpoints concurrently
-        const [blogsRes, caseStudiesRes, enquiriesRes, projectsRes, servicesRes] = await Promise.all([
+        // Query active Celife endpoints concurrently
+        const [blogsRes, enquiriesRes, productsRes, categoriesRes] = await Promise.all([
           fetch(`/api/blogs?search=${encodeURIComponent(query)}&limit=4`).then((r) => r.json().catch(() => ({ success: false }))),
-          fetch(`/api/case-studies?search=${encodeURIComponent(query)}&limit=4`).then((r) => r.json().catch(() => ({ success: false }))),
           fetch(`/api/enquiries?search=${encodeURIComponent(query)}&limit=4`).then((r) => r.json().catch(() => ({ success: false }))),
-          fetch("/api/projects").then((r) => r.json().catch(() => ({ success: false }))),
-          fetch("/api/services").then((r) => r.json().catch(() => ({ success: false }))),
+          fetch(`/api/products?search=${encodeURIComponent(query)}&limit=4`).then((r) => r.json().catch(() => ({ success: false }))),
+          fetch("/api/categories").then((r) => r.json().catch(() => ({ success: false }))),
         ]);
 
         const items: SearchResultItem[] = [];
 
-        // 1. Projects client-side filter
-        if (projectsRes.success && Array.isArray(projectsRes.data)) {
-          const matchedProjects = projectsRes.data
-            .filter((p: { title: string; category?: string }) =>
-              p.title.toLowerCase().includes(query) ||
-              (p.category && p.category.toLowerCase().includes(query))
-            )
-            .slice(0, 3);
-          matchedProjects.forEach((p: { id: string; title: string; category?: string }) => {
+        // 1. Products matches
+        if (productsRes.success && Array.isArray(productsRes.data)) {
+          productsRes.data.slice(0, 4).forEach((p: { id: string; name: string; category?: string; subtitle?: string }) => {
             items.push({
               id: p.id,
-              title: p.title,
-              subtitle: p.category || "Project Details",
-              category: "Project",
-              href: `/dashboard/projects/${p.id}`,
+              title: p.name,
+              subtitle: p.subtitle || p.category || "Product Formulation",
+              category: "Product",
+              href: `/dashboard/products/${p.id}/edit`,
             });
           });
         }
 
-        // 2. Services client-side filter
-        if (servicesRes.success && Array.isArray(servicesRes.data)) {
-          const matchedServices = servicesRes.data
-            .filter((s: { name: string; category?: string }) =>
-              s.name.toLowerCase().includes(query) ||
-              (s.category && s.category.toLowerCase().includes(query))
+        // 2. Categories matches
+        if (categoriesRes.success && Array.isArray(categoriesRes.data)) {
+          const matchedCategories = categoriesRes.data
+            .filter((c: { name: string; description?: string }) =>
+              c.name.toLowerCase().includes(query) ||
+              (c.description && c.description.toLowerCase().includes(query))
             )
             .slice(0, 3);
-          matchedServices.forEach((s: { id: string; name: string; category?: string }) => {
+          matchedCategories.forEach((c: { id: string; name: string; description?: string }) => {
             items.push({
-              id: s.id,
-              title: s.name,
-              subtitle: s.category || "Hospitality Service",
-              category: "Service",
-              href: `/dashboard/services/${s.id}`,
+              id: c.id,
+              title: c.name,
+              subtitle: c.description || "Product Category",
+              category: "Category",
+              href: "/dashboard/categories",
             });
           });
         }
@@ -189,26 +185,13 @@ export function Topbar({ onMenuToggle }: TopbarProps) {
           });
         }
 
-        // 4. Case Studies matches
-        if (caseStudiesRes.success && Array.isArray(caseStudiesRes.data)) {
-          caseStudiesRes.data.forEach((cs: { id: string; title: string; propertyType?: string }) => {
-            items.push({
-              id: cs.id,
-              title: cs.title,
-              subtitle: cs.propertyType || "Case Study",
-              category: "Case Study",
-              href: `/dashboard/case-studies/${cs.id}/edit`,
-            });
-          });
-        }
-
-        // 5. Inquiries matches
+        // 4. Inquiries matches
         if (enquiriesRes.success && Array.isArray(enquiriesRes.data)) {
-          enquiriesRes.data.forEach((e: { id: string; name: string; company?: string }) => {
+          enquiriesRes.data.forEach((e: { id: string; name: string; company?: string; subject?: string }) => {
             items.push({
               id: e.id,
               title: `Inquiry from ${e.name}`,
-              subtitle: e.company || "Consultation Request",
+              subtitle: e.subject || e.company || "Product Enquiry",
               category: "Inquiry",
               href: "/dashboard/inquiries",
             });

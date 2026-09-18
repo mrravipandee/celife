@@ -1,28 +1,28 @@
 import { MetadataRoute } from "next";
-import { getProjects } from "@/lib/services/projects";
+import { getProducts } from "@/lib/services/products";
 import { siteConfig } from "@/config/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
 
-  const staticRoutes = ["", "/about", "/services/consulting-services", "/services/hospitality-audit", "/projects", "/contact"].map((route) => ({
+  const staticRoutes = ["", "/about", "/products", "/contact", "/enquire", "/blog"].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
-    changeFrequency: "monthly" as const,
+    changeFrequency: "weekly" as const,
     priority: route === "" ? 1.0 : 0.8,
   }));
 
   try {
-    const projects = await getProjects();
-    const projectRoutes = projects.map((project) => ({
-      url: `${baseUrl}/projects/${project.slug}`,
-      lastModified: project.updatedAt ? new Date(project.updatedAt) : new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
+    const products = await getProducts();
+    const productRoutes = products.map((product) => ({
+      url: `${baseUrl}/products/${product.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
     }));
-    return [...staticRoutes, ...projectRoutes];
+    return [...staticRoutes, ...productRoutes];
   } catch (error) {
-    console.error("Sitemap compilation project fetch failure:", error);
+    console.error("Sitemap compilation product fetch failure:", error);
     return staticRoutes;
   }
 }

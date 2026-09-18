@@ -118,14 +118,14 @@ export async function uploadImageToCloudinary(
     );
   }
 
-  const folder = options.folder || "thedco/blogs";
+  const folder = options.folder || "celife/blogs";
 
   return new Promise((resolve, reject) => {
     const uploadStream = cloudinary.uploader.upload_stream(
       {
         folder,
         public_id: options.publicId,
-        tags: options.tags || ["blog-cover", "thedco"],
+        tags: options.tags || ["blog-cover", "celife"],
         resource_type: "image",
         overwrite: true,
         // Auto-optimize delivery quality & format when accessed

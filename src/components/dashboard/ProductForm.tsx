@@ -12,10 +12,6 @@ import {
   Upload,
   ArrowLeft,
   Image as ImageIcon,
-  HelpCircle,
-  Layers,
-  Sparkles,
-  ShieldAlert,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -238,7 +234,11 @@ export function ProductForm({ initialData, productId, isEditing }: ProductFormPr
     }));
   };
 
-  const updateCompositionRow = (idx: number, field: keyof CompositionItem, val: any) => {
+  const updateCompositionRow = <K extends keyof CompositionItem>(
+    idx: number,
+    field: K,
+    val: CompositionItem[K]
+  ) => {
     setFormData((prev) => {
       const next = [...prev.composition];
       next[idx] = { ...next[idx], [field]: val };

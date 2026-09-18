@@ -235,7 +235,7 @@ const ProductSchema = new Schema<IProduct>(
 );
 
 // Pre-save middleware to keep published <-> status, featured <-> isFeatured, order <-> displayOrder in sync
-ProductSchema.pre("save", function (this: any) {
+ProductSchema.pre("save", function (this: IProduct & mongoose.Document) {
   if (this.isModified("status")) {
     this.published = this.status === "published";
   } else if (this.isModified("published")) {
@@ -273,7 +273,7 @@ ProductSchema.index({ status: 1, category: 1, displayOrder: 1, createdAt: -1 });
 ProductSchema.index({ categoryId: 1, status: 1 });
 if (mongoose.models && mongoose.models.Product) {
   if (!mongoose.models.Product.schema.paths["composition"]) {
-    delete (mongoose.models as any).Product;
+    delete (mongoose.models as Record<string, unknown>).Product;
   }
 }
 

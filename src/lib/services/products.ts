@@ -288,7 +288,7 @@ export async function ensureDefaultProductsSeeded() {
   }
 }
 
-function transformProduct(doc: any): ProductType {
+function transformProduct(doc: IProduct): ProductType {
   const images = Array.isArray(doc.images) && doc.images.length > 0
     ? doc.images
     : [{ url: doc.image, alt: doc.name, type: "main", order: 1 }];
@@ -357,7 +357,7 @@ export const getProducts = cache(async (category?: string): Promise<ProductType[
 
     const products = await Product.find(query)
       .sort({ displayOrder: 1, order: 1, createdAt: -1 })
-      .lean();
+      .lean<IProduct[]>();
 
     if (products.length > 0) {
       return products.map(transformProduct);
@@ -384,7 +384,7 @@ export const getProductBySlug = cache(async (slug: string): Promise<ProductType 
     const product = await Product.findOne({
       slug,
       $or: [{ status: "published" }, { published: true }],
-    }).lean();
+    }).lean<IProduct>();
 
     if (product) {
       return transformProduct(product);
@@ -409,7 +409,7 @@ export const getFeaturedProducts = cache(async (): Promise<ProductType[]> => {
       $and: [{ $or: [{ featured: true }, { isFeatured: true }] }],
     })
       .sort({ displayOrder: 1, order: 1, createdAt: -1 })
-      .lean();
+      .lean<IProduct[]>();
 
     if (products.length > 0) {
       return products.map(transformProduct);

@@ -49,15 +49,15 @@ export async function generateMetadata({ params }: BlogDetailPageProps): Promise
     }
 
     return constructMetadata({
-      title: `${blog.title} | THEDCO Insights`,
+      title: `${blog.title} | Celife Health Solutions`,
       description: blog.excerpt,
       image: blog.coverImage.url,
     });
   } catch (error) {
     console.error("Failed to generate blog metadata:", error);
     return constructMetadata({
-      title: "Insights Article | THEDCO",
-      description: "Read premium hospitality advisory articles.",
+      title: "Health & Wellness Article | Celife Health Solutions",
+      description: "Read herbal wellness and nutritional health articles.",
     });
   }
 }

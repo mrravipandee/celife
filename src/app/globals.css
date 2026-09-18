@@ -98,7 +98,7 @@
   --ink:        #0F1A16;   /* near-black green, body text and headings */
   --forest:     #143A2B;   /* primary brand green — structure and buttons */
   --forest-700: #1C4C39;   /* hover / raised surface on dark */
-  --sage:       #6E8B7C;   /* muted supporting text on dark, dividers */
+  --sage:       #466756;   /* muted supporting text, calibrated for WCAG AA 4.5:1 contrast */
   --bone:       #F7F5EF;   /* page background, warm off-white, plinths */
   --paper:      #FFFFFF;   /* card and table surfaces */
   --line:       #E3DFD4;   /* hairline borders — 1px, structural divider */

@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const sessionCookie = req.cookies.get("thedco_session");
+  const sessionCookie = req.cookies.get("celife_session");
 
   // Protect /dashboard routes
   if (pathname.startsWith("/dashboard")) {

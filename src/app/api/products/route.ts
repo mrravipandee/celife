@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { connectToDatabase } from "@/lib/mongodb";
-import Product from "@/models/Product";
+import Product, { IProduct } from "@/models/Product";
 import { ensureDefaultProductsSeeded } from "@/lib/services/products";
 import { requireAuth } from "@/lib/auth/require-auth";
 import { getSession } from "@/lib/auth/session";
@@ -10,30 +10,6 @@ import { handleApiError } from "@/lib/error";
 
 function escapeRegex(text: string): string {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-}
-
-interface LeanProduct {
-  _id: { toString(): string };
-  name: string;
-  slug: string;
-  subtitle?: string;
-  category: string;
-  shortDescription: string;
-  description: string;
-  formulation?: string;
-  form?: string;
-  packaging?: string;
-  wellnessFocus?: string;
-  usageAdvice?: string;
-  keyFocus?: string[];
-  highlights?: Array<{ label: string; value: string }>;
-  image: string;
-  gallery?: string[];
-  featured: boolean;
-  published: boolean;
-  order: number;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 // GET /api/products
@@ -61,25 +37,21 @@ export async function GET(req: Request) {
     }
 
     if (categoryParam && categoryParam !== "all") {
-      query.category = new RegExp(`^${escapeRegex(categoryParam)}$`, "i");
+      query.category = { $regex: new RegExp(`^${escapeRegex(categoryParam)}$`, "i") };
     }
 
-    if (featuredParam !== null) {
-      query.$or = [{ featured: featuredParam === "true" }, { isFeatured: featuredParam === "true" }];
+    if (featuredParam === "true") {
+      query.featured = true;
     }
 
     if (searchParam) {
-      const escaped = escapeRegex(searchParam.trim().substring(0, 50));
-      if (escaped) {
-        const regex = new RegExp(escaped, "i");
-        query.$or = [
-          { name: regex },
-          { subtitle: regex },
-          { shortDescription: regex },
-          { formulation: regex },
-          { wellnessFocus: regex },
-        ];
-      }
+      const escaped = escapeRegex(searchParam);
+      query.$or = [
+        { name: { $regex: escaped, $options: "i" } },
+        { shortDescription: { $regex: escaped, $options: "i" } },
+        { category: { $regex: escaped, $options: "i" } },
+        { subtitle: { $regex: escaped, $options: "i" } },
+      ];
     }
 
     await connectToDatabase();
@@ -87,9 +59,9 @@ export async function GET(req: Request) {
 
     const products = await Product.find(query)
       .sort({ displayOrder: 1, order: 1, createdAt: -1 })
-      .lean();
+      .lean<IProduct[]>();
 
-    const formatted = products.map((p: any) => ({
+    const formatted = products.map((p) => ({
       id: p._id.toString(),
       name: p.name,
       slug: p.slug,

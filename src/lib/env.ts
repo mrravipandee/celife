@@ -15,9 +15,9 @@ const envSchema = z.object({
 const isBuildTime = process.env.NEXT_PHASE === "phase-production-build";
 
 const fallbackEnv = {
-  MONGODB_URI: "mongodb://localhost:27017/thedco_fallback",
+  MONGODB_URI: "mongodb://localhost:27017/celife_fallback",
   AUTH_SECRET: "placeholder-secret-for-build-time-safety",
-  NEXT_PUBLIC_SITE_URL: "https://thedco.com",
+  NEXT_PUBLIC_SITE_URL: "https://celifehealth.com",
 };
 
 const parsed = envSchema.safeParse({

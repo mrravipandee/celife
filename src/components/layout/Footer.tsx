@@ -78,9 +78,9 @@ export function Footer({ settings }: FooterProps) {
 
           {/* Column 2: Formulations (3 cols) */}
           <div className="lg:col-span-3 space-y-4">
-            <h4 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
+            <h3 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
               Formulations
-            </h4>
+            </h3>
 
             <ul className="space-y-2.5 text-xs sm:text-sm text-white/75 font-light">
               <li>
@@ -122,9 +122,9 @@ export function Footer({ settings }: FooterProps) {
 
           {/* Column 3: Company (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
+            <h3 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
               Company
-            </h4>
+            </h3>
 
             <ul className="space-y-2.5 text-xs sm:text-sm text-white/75 font-light">
               <li>
@@ -157,9 +157,9 @@ export function Footer({ settings }: FooterProps) {
 
           {/* Column 4: Compliance & Quality (2 cols) */}
           <div className="lg:col-span-2 space-y-4">
-            <h4 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
+            <h3 className="text-xs uppercase tracking-[0.16em] font-semibold text-[#8FB39E]">
               Standards
-            </h4>
+            </h3>
 
             <div className="space-y-2 text-xs text-white/70 font-light leading-relaxed">
               <p>

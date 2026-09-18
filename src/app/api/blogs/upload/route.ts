@@ -61,8 +61,8 @@ export async function POST(req: Request) {
 
     // 4. Upload buffer to Cloudinary in dedicated folder
     const uploadResult = await uploadImageToCloudinary(buffer, {
-      folder: "thedco/blogs",
-      tags: ["blog", "cover", "thedco"],
+      folder: "celife/blogs",
+      tags: ["blog", "cover", "celife"],
     });
 
     return NextResponse.json(

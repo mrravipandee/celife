@@ -2,8 +2,8 @@ import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProductBySlug, getProducts } from "@/lib/services/products";
-import { productsData } from "@/data/products";
 import { constructMetadata } from "@/config/seo";
+import { siteConfig } from "@/config/site";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
@@ -29,19 +29,20 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 
   if (!product) {
     return constructMetadata({
-      title: "Product Not Found | Celife",
+      title: "Product Not Found",
       description: "The requested Celife product information could not be found.",
     });
   }
 
-  const title = product.seo?.metaTitle || `${product.name} | Celife Health Solutions`;
-  const description = product.seo?.metaDescription || `${product.name} - ${product.shortDescription}`;
+  const title = product.seo?.metaTitle || `${product.name} ${product.packSize ? `(${product.packSize})` : ""}`;
+  const description = product.seo?.metaDescription || product.shortDescription || product.description;
   const image = product.images?.[0]?.url || product.image;
 
   return constructMetadata({
     title,
     description,
     image,
+    canonical: `/products/${product.slug}`,
   });
 }
 
@@ -58,15 +59,48 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   const relatedProducts = allProducts.filter((p) => p.slug !== product.slug).slice(0, 3);
 
+  const primaryImageUrl = product.images?.[0]?.url || product.image;
+  const absoluteImageUrl = primaryImageUrl?.startsWith("http")
+    ? primaryImageUrl
+    : `${siteConfig.url}${primaryImageUrl?.startsWith("/") ? "" : "/"}${primaryImageUrl || ""}`;
+
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.shortDescription || product.description,
+    image: absoluteImageUrl,
+    category: product.category,
+    brand: {
+      "@type": "Brand",
+      name: product.brand || "CELIFE",
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${siteConfig.url}/enquire?product=${product.slug}`,
+      priceCurrency: "INR",
+      price: "0",
+      priceValidUntil: "2027-12-31",
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  };
+
   return (
-    <SmoothScroll>
-      <Navbar />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <SmoothScroll>
+        <Navbar />
 
-      <main className="bg-[var(--bone)] text-[var(--ink)] min-h-screen">
-        <ProductDetailView product={product} relatedProducts={relatedProducts} />
-      </main>
+        <main className="bg-[var(--bone)] text-[var(--ink)] min-h-screen">
+          <ProductDetailView product={product} relatedProducts={relatedProducts} />
+        </main>
 
-      <Footer />
-    </SmoothScroll>
+        <Footer />
+      </SmoothScroll>
+    </>
   );
 }

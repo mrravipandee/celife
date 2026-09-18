@@ -7,12 +7,10 @@ import {
   Plus,
   Edit,
   Trash2,
-  FolderTree,
   CheckCircle2,
   AlertCircle,
   Loader2,
   X,
-  Archive,
 } from "lucide-react";
 import { LoadingState } from "@/components/ui/LoadingState";
 import { ErrorState } from "@/components/ui/ErrorState";

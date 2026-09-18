@@ -36,7 +36,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
       {/* Product Image Stage */}
       <Link
         href={`/products/${product.slug}`}
-        aria-label={`View formulation details for ${product.name}`}
+        aria-label={`${product.category}: View formulation details for ${product.name}`}
         className="relative w-full aspect-[4/3] bg-[var(--bone)] overflow-hidden block cursor-pointer border-b border-[var(--line)]"
       >
         <Image

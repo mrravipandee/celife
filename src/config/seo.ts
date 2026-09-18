@@ -36,8 +36,8 @@ export function constructMetadata({
 
   return {
     title: {
-      default: title,
-      template: `%s | ${siteConfig.name}`,
+      default: metaTitle,
+      absolute: metaTitle,
     },
     description,
     keywords: Array.isArray(keywords) ? keywords : [keywords],

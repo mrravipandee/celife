@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React from "react";
 import Link from "next/link";
 import { Product, ProductImage } from "@/types/product";
 import { getFormulationDetail } from "@/data/product-formulation-details";
@@ -13,7 +12,6 @@ import { StickyMobileActionBar } from "@/components/products/StickyMobileActionB
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { BotanicalMandala } from "@/components/ui/BotanicalMandala";
 import { ArrowLeft } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { ProductImageGallery } from "@/components/products/ProductImageGallery";
 import { ProductNutritionPanel } from "@/components/products/ProductNutritionPanel";
 

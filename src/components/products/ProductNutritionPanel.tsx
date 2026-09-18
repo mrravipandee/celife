@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Product } from "@/types/product";
-import { ShieldAlert, Info, Flame, Sparkles } from "lucide-react";
+import { ShieldAlert, Flame, Sparkles } from "lucide-react";
 
 interface ProductNutritionPanelProps {
   product: Product;
