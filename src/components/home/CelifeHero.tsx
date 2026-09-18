@@ -116,6 +116,12 @@ export function CelifeHero({ content }: CelifeHeroProps) {
   const bottleRefs = useRef<(HTMLDivElement | null)[]>([]);
   const textCardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Subtle botanical negative space parallax elements
+  const herbStemRef = useRef<HTMLDivElement>(null);
+  const leafDriftRef = useRef<HTMLDivElement>(null);
+  const particlesRef = useRef<HTMLDivElement>(null);
+  const curveSilhouetteRef = useRef<HTMLDivElement>(null);
+
   const [activeIdx, setActiveIdx] = useState(0);
   const lenis = useLenis();
 
@@ -149,13 +155,26 @@ export function CelifeHero({ content }: CelifeHeroProps) {
           }
         });
 
-        // Initial setup for text cards
-        textCardRefs.current.forEach((el, i) => {
-          if (!el) return;
+        // Initial setup for text cards & their inner elements
+        textCardRefs.current.forEach((card, i) => {
+          if (!card) return;
+          const title = card.querySelector(".hero-prod-title");
+          const category = card.querySelector(".hero-prod-category");
+          const desc = card.querySelector(".hero-prod-desc");
+          const cta = card.querySelector(".hero-prod-cta");
+
           if (i === 0) {
-            gsap.set(el, { opacity: 1, y: 0, filter: "blur(0px)", pointerEvents: "auto" });
+            gsap.set(card, { opacity: 1, pointerEvents: "auto" });
+            if (title) gsap.set(title, { x: 0, opacity: 1, filter: "blur(0px)" });
+            if (category) gsap.set(category, { x: 0, opacity: 1, filter: "blur(0px)" });
+            if (desc) gsap.set(desc, { y: 0, opacity: 1, filter: "blur(0px)" });
+            if (cta) gsap.set(cta, { y: 0, opacity: 1 });
           } else {
-            gsap.set(el, { opacity: 0, y: 30, filter: "blur(4px)", pointerEvents: "none" });
+            gsap.set(card, { opacity: 0, pointerEvents: "none" });
+            if (title) gsap.set(title, { x: 40, opacity: 0, filter: "blur(6px)" });
+            if (category) gsap.set(category, { x: 25, opacity: 0, filter: "blur(4px)" });
+            if (desc) gsap.set(desc, { y: 20, opacity: 0, filter: "blur(4px)" });
+            if (cta) gsap.set(cta, { y: 12, opacity: 0 });
           }
         });
 
@@ -190,14 +209,27 @@ export function CelifeHero({ content }: CelifeHeroProps) {
             scrub: 1.1,
             anticipatePin: 1,
             onUpdate: (self) => {
-              // Calculate discrete active product index without extra re-renders
-              const rawProgress = self.progress;
-              // Map progress 0 -> 1 across 5 products
-              const step = Math.min(4, Math.floor(rawProgress * 5));
+              // Calculate discrete active product index synchronized at transition midpoints
+              const timelineTime = self.progress * 4.35;
+              const step = Math.min(4, Math.max(0, Math.floor(timelineTime + 0.5)));
               setActiveIdx((prev) => (prev !== step ? step : prev));
             },
           },
         });
+
+        // Subtle botanical scroll parallax across full showcase timeline
+        if (herbStemRef.current) {
+          tl.to(herbStemRef.current, { y: -65, rotation: -6, ease: "none", duration: 4.35 }, 0);
+        }
+        if (leafDriftRef.current) {
+          tl.to(leafDriftRef.current, { x: 35, y: -45, rotation: 22, ease: "none", duration: 4.35 }, 0);
+        }
+        if (particlesRef.current) {
+          tl.to(particlesRef.current, { y: -80, ease: "none", duration: 4.35 }, 0);
+        }
+        if (curveSilhouetteRef.current) {
+          tl.to(curveSilhouetteRef.current, { y: -30, opacity: 0.22, ease: "none", duration: 4.35 }, 0);
+        }
 
         // 4 transitions between the 5 products (each taking 1 unit of timeline)
         for (let i = 0; i < 4; i++) {
@@ -205,6 +237,16 @@ export function CelifeHero({ content }: CelifeHeroProps) {
           const nextBottle = bottleRefs.current[i + 1];
           const currentText = textCardRefs.current[i];
           const nextText = textCardRefs.current[i + 1];
+
+          const currTitle = currentText?.querySelector(".hero-prod-title");
+          const currCategory = currentText?.querySelector(".hero-prod-category");
+          const currDesc = currentText?.querySelector(".hero-prod-desc");
+          const currCta = currentText?.querySelector(".hero-prod-cta");
+
+          const nextTitle = nextText?.querySelector(".hero-prod-title");
+          const nextCategory = nextText?.querySelector(".hero-prod-category");
+          const nextDesc = nextText?.querySelector(".hero-prod-desc");
+          const nextCta = nextText?.querySelector(".hero-prod-cta");
 
           const transitionTime = i * 1.0;
 
@@ -253,45 +295,81 @@ export function CelifeHero({ content }: CelifeHeroProps) {
             );
           }
 
-          // Outgoing text card
-          if (currentText) {
+          // ─── OUTGOING TEXT ELEMENTS (Staggered exit) ───
+          if (currTitle) {
             tl.to(
-              currentText,
-              {
-                y: -28,
-                opacity: 0,
-                filter: "blur(4px)",
-                pointerEvents: "none",
-                duration: 0.55,
-                ease: "power2.in",
-              },
+              currTitle,
+              { x: -40, opacity: 0, filter: "blur(6px)", duration: 0.45, ease: "power2.in" },
               transitionTime
             );
           }
-
-          // Incoming text card
-          if (nextText) {
-            tl.fromTo(
-              nextText,
-              {
-                y: 32,
-                opacity: 0,
-                filter: "blur(4px)",
-                pointerEvents: "none",
-              },
-              {
-                y: 0,
-                opacity: 1,
-                filter: "blur(0px)",
-                pointerEvents: "auto",
-                duration: 0.65,
-                ease: "power2.out",
-              },
-              transitionTime + 0.22
+          if (currCategory) {
+            tl.to(
+              currCategory,
+              { x: -25, opacity: 0, filter: "blur(4px)", duration: 0.4, ease: "power2.in" },
+              transitionTime + 0.04
+            );
+          }
+          if (currDesc) {
+            tl.to(
+              currDesc,
+              { y: -16, opacity: 0, filter: "blur(4px)", duration: 0.4, ease: "power2.in" },
+              transitionTime + 0.06
+            );
+          }
+          if (currCta) {
+            tl.to(
+              currCta,
+              { opacity: 0, y: -10, duration: 0.35, ease: "power2.in" },
+              transitionTime + 0.08
+            );
+          }
+          if (currentText) {
+            tl.to(
+              currentText,
+              { opacity: 0, pointerEvents: "none", duration: 0.45 },
+              transitionTime + 0.1
             );
           }
 
-          // Rotate orbital rings with scroll scrub
+          // ─── INCOMING TEXT ELEMENTS (Staggered entrance: Title -> Category -> Desc -> CTA) ───
+          if (nextText) {
+            tl.set(nextText, { opacity: 1, pointerEvents: "auto" }, transitionTime + 0.12);
+          }
+          if (nextTitle) {
+            tl.fromTo(
+              nextTitle,
+              { x: 40, opacity: 0, filter: "blur(6px)" },
+              { x: 0, opacity: 1, filter: "blur(0px)", duration: 0.55, ease: "power2.out" },
+              transitionTime + 0.12
+            );
+          }
+          if (nextCategory) {
+            tl.fromTo(
+              nextCategory,
+              { x: 25, opacity: 0, filter: "blur(4px)" },
+              { x: 0, opacity: 1, filter: "blur(0px)", duration: 0.5, ease: "power2.out" },
+              transitionTime + 0.16
+            );
+          }
+          if (nextDesc) {
+            tl.fromTo(
+              nextDesc,
+              { y: 20, opacity: 0, filter: "blur(4px)" },
+              { x: 0, y: 0, opacity: 1, filter: "blur(0px)", duration: 0.5, ease: "power2.out" },
+              transitionTime + 0.20
+            );
+          }
+          if (nextCta) {
+            tl.fromTo(
+              nextCta,
+              { y: 12, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.45, ease: "power2.out" },
+              transitionTime + 0.26
+            );
+          }
+
+          // Rotate orbital leaves with scroll scrub
           if (orbitRef.current) {
             tl.to(
               orbitRef.current,
@@ -326,12 +404,25 @@ export function CelifeHero({ content }: CelifeHeroProps) {
           }
         });
 
-        textCardRefs.current.forEach((el, i) => {
-          if (!el) return;
+        textCardRefs.current.forEach((card, i) => {
+          if (!card) return;
+          const title = card.querySelector(".hero-prod-title");
+          const category = card.querySelector(".hero-prod-category");
+          const desc = card.querySelector(".hero-prod-desc");
+          const cta = card.querySelector(".hero-prod-cta");
+
           if (i === 0) {
-            gsap.set(el, { opacity: 1, y: 0, pointerEvents: "auto" });
+            gsap.set(card, { opacity: 1, pointerEvents: "auto" });
+            if (title) gsap.set(title, { x: 0, opacity: 1 });
+            if (category) gsap.set(category, { opacity: 1 });
+            if (desc) gsap.set(desc, { y: 0, opacity: 1 });
+            if (cta) gsap.set(cta, { y: 0, opacity: 1 });
           } else {
-            gsap.set(el, { opacity: 0, y: 20, pointerEvents: "none" });
+            gsap.set(card, { opacity: 0, pointerEvents: "none" });
+            if (title) gsap.set(title, { x: 28, opacity: 0 });
+            if (category) gsap.set(category, { opacity: 0 });
+            if (desc) gsap.set(desc, { y: 14, opacity: 0 });
+            if (cta) gsap.set(cta, { y: 8, opacity: 0 });
           }
         });
 
@@ -345,7 +436,8 @@ export function CelifeHero({ content }: CelifeHeroProps) {
             pinSpacing: true,
             scrub: 0.8,
             onUpdate: (self) => {
-              const step = Math.min(4, Math.floor(self.progress * 5));
+              const timelineTime = self.progress * 4.25;
+              const step = Math.min(4, Math.max(0, Math.floor(timelineTime + 0.5)));
               setActiveIdx((prev) => (prev !== step ? step : prev));
             },
           },
@@ -356,6 +448,16 @@ export function CelifeHero({ content }: CelifeHeroProps) {
           const nextBottle = bottleRefs.current[i + 1];
           const currentText = textCardRefs.current[i];
           const nextText = textCardRefs.current[i + 1];
+
+          const currTitle = currentText?.querySelector(".hero-prod-title");
+          const currCategory = currentText?.querySelector(".hero-prod-category");
+          const currDesc = currentText?.querySelector(".hero-prod-desc");
+          const currCta = currentText?.querySelector(".hero-prod-cta");
+
+          const nextTitle = nextText?.querySelector(".hero-prod-title");
+          const nextCategory = nextText?.querySelector(".hero-prod-category");
+          const nextDesc = nextText?.querySelector(".hero-prod-desc");
+          const nextCta = nextText?.querySelector(".hero-prod-cta");
 
           const tTime = i * 1.0;
 
@@ -374,17 +476,20 @@ export function CelifeHero({ content }: CelifeHeroProps) {
               tTime + 0.1
             );
           }
-          if (currentText) {
-            tlMobile.to(currentText, { opacity: 0, y: -18, duration: 0.5 }, tTime);
-          }
-          if (nextText) {
-            tlMobile.fromTo(
-              nextText,
-              { opacity: 0, y: 18 },
-              { opacity: 1, y: 0, duration: 0.6 },
-              tTime + 0.2
-            );
-          }
+
+          // Outgoing mobile text
+          if (currTitle) tlMobile.to(currTitle, { x: -28, opacity: 0, duration: 0.4, ease: "power2.in" }, tTime);
+          if (currCategory) tlMobile.to(currCategory, { opacity: 0, duration: 0.35 }, tTime + 0.04);
+          if (currDesc) tlMobile.to(currDesc, { y: -12, opacity: 0, duration: 0.35 }, tTime + 0.06);
+          if (currCta) tlMobile.to(currCta, { opacity: 0, y: -8, duration: 0.3 }, tTime + 0.08);
+          if (currentText) tlMobile.to(currentText, { pointerEvents: "none", opacity: 0, duration: 0.4 }, tTime + 0.1);
+
+          // Incoming mobile text
+          if (nextText) tlMobile.set(nextText, { opacity: 1, pointerEvents: "auto" }, tTime + 0.12);
+          if (nextTitle) tlMobile.fromTo(nextTitle, { x: 28, opacity: 0 }, { x: 0, opacity: 1, duration: 0.48, ease: "power2.out" }, tTime + 0.12);
+          if (nextCategory) tlMobile.fromTo(nextCategory, { opacity: 0 }, { opacity: 1, duration: 0.4 }, tTime + 0.16);
+          if (nextDesc) tlMobile.fromTo(nextDesc, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45 }, tTime + 0.20);
+          if (nextCta) tlMobile.fromTo(nextCta, { y: 8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4 }, tTime + 0.24);
         }
 
         tlMobile.to({}, { duration: 0.25 });
@@ -395,7 +500,7 @@ export function CelifeHero({ content }: CelifeHeroProps) {
     { scope: containerRef }
   );
 
-  // const activeProduct = HERO_PRODUCTS[activeIdx] || HERO_PRODUCTS[0];
+  const activeProduct = HERO_PRODUCTS[activeIdx] || HERO_PRODUCTS[0];
   // const progressRatio = ((activeIdx + 1) / HERO_PRODUCTS.length) * 100;
 
   return (
@@ -435,56 +540,94 @@ export function CelifeHero({ content }: CelifeHeroProps) {
         <div className="max-w-[1380px] w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 flex-1 flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-center w-full">
             
-              {/* ─── LEFT COLUMN: Editorial Storytelling (Minimal: Name, Description & Know More Button) ─── */}
-              <div className="lg:col-span-6 xl:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left z-20">
+              {/* ─── LEFT COLUMN: Editorial Storytelling with Subtle Luxury Botanical Details ─── */}
+              <div className="lg:col-span-6 xl:col-span-6 relative flex flex-col items-center lg:items-start text-center lg:text-left z-20">
                 
-                {/* [COMMENTED OUT PER USER REQUEST: Only product name, description, and button]
-                <div className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-[var(--paper)]/85 border border-[var(--line)]/80 shadow-2xs backdrop-blur-xs mb-4 sm:mb-6">
-                  <span className="w-2 h-2 rounded-full bg-[var(--clay)] shrink-0 animate-pulse" />
-                  <span className="text-[11px] sm:text-xs uppercase tracking-[0.16em] font-sans font-semibold text-[var(--forest)]">
-                    {content?.eyebrow || "EVIDENCE-GUIDED SYRUP & TONIC FORMULATIONS"}
-                  </span>
+                {/* ─── BOTANICAL NEGATIVE SPACE COMPOSITION (Desktop Only, Subtle & Luxury) ─── */}
+                <div className="absolute inset-0 -left-6 sm:-left-12 -right-4 pointer-events-none select-none z-0 hidden lg:block overflow-visible">
+                  {/* 1. Faint Ayurvedic Herbal Stem Silhouette (Top-Left Background, drifts upward on scroll) */}
+                  <div
+                    ref={herbStemRef}
+                    className="absolute -top-12 -left-6 opacity-[0.14] text-[var(--forest)] will-change-transform"
+                    style={{ transformOrigin: "bottom center" }}
+                  >
+                    <svg width="180" height="240" viewBox="0 0 180 240" fill="none" stroke="currentColor">
+                      <path d="M40 230 C 50 170, 70 100, 110 20" strokeWidth="1.2" strokeLinecap="round" />
+                      <path d="M52 185 C 30 175, 20 155, 34 145 C 44 152, 48 168, 54 180" strokeWidth="0.9" />
+                      <path d="M62 150 C 85 140, 95 125, 82 115 C 72 122, 66 138, 64 148" strokeWidth="0.9" />
+                      <path d="M72 115 C 50 105, 42 85, 54 75 C 64 82, 68 98, 74 110" strokeWidth="0.9" />
+                      <path d="M88 80 C 110 70, 118 55, 106 45 C 96 52, 92 66, 89 77" strokeWidth="0.9" />
+                      <path d="M104 35 C 100 20, 112 12, 118 16 C 122 24, 114 30, 107 34" strokeWidth="0.9" />
+                    </svg>
+                  </div>
+
+                  {/* 2. Delicate Translucent Leaf drifting diagonally on scroll */}
+                  <div
+                    ref={leafDriftRef}
+                    className="absolute top-1/4 -left-2 opacity-[0.25] text-[var(--forest)] will-change-transform"
+                  >
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                      <path
+                        d="M6 42 C 6 22, 22 6, 42 6 C 42 26, 26 42, 6 42 Z"
+                        fill="currentColor"
+                        fillOpacity="0.4"
+                        stroke="currentColor"
+                        strokeWidth="0.8"
+                      />
+                      <path d="M6 42 Q 22 24 42 6" stroke="rgba(255,255,255,0.6)" strokeWidth="0.8" strokeLinecap="round" />
+                    </svg>
+                  </div>
+
+                  {/* 3. Subtle Botanical Contour Line-Art (Far Left edge curve) */}
+                  <div
+                    ref={curveSilhouetteRef}
+                    className="absolute bottom-16 -left-8 opacity-[0.12] text-[var(--forest)] will-change-transform"
+                  >
+                    <svg width="120" height="160" viewBox="0 0 120 160" fill="none" stroke="currentColor">
+                      <path d="M10 150 C 40 120, 30 70, 80 20" strokeWidth="0.8" strokeDasharray="3 4" />
+                      <path d="M40 100 C 65 95, 75 75, 60 65 C 50 72, 45 88, 42 98" strokeWidth="0.8" />
+                    </svg>
+                  </div>
+
+                  {/* 4. Natural Botanical Floating Particles / Spores */}
+                  <div ref={particlesRef} className="absolute inset-0 pointer-events-none will-change-transform">
+                    <span className="absolute top-10 left-1/3 w-1.5 h-1.5 rounded-full bg-[var(--forest)]/20 blur-[0.5px]" />
+                    <span className="absolute top-2/3 left-8 w-2 h-2 rounded-full bg-[var(--clay)]/15 blur-[0.5px]" />
+                    <span className="absolute bottom-16 left-1/2 w-1 h-1 rounded-full bg-[var(--forest)]/25" />
+                  </div>
                 </div>
-                */}
 
                 {/* Dynamic Synchronized Product Info Cards Stack */}
-                <div className="relative w-full min-h-[220px] sm:min-h-[250px] md:min-h-[280px] flex items-center">
+                <div className="relative w-full min-h-[270px] sm:min-h-[300px] md:min-h-[320px] lg:min-h-[340px] flex items-center z-10">
                   {HERO_PRODUCTS.map((prod, idx) => (
                     <div
                       key={prod.id}
                       ref={(el) => {
                         textCardRefs.current[idx] = el;
                       }}
-                      className="absolute inset-0 flex flex-col justify-center items-center lg:items-start text-center lg:text-left space-y-4 sm:space-y-6"
+                      className="absolute inset-0 flex flex-col justify-center items-center lg:items-start text-center lg:text-left space-y-3 sm:space-y-4"
                     >
-                      {/* [COMMENTED OUT PER USER REQUEST] Category / Sub-badge
-                      <div className="flex items-center gap-2 text-xs uppercase tracking-[0.12em] font-sans text-[var(--sage)]">
+                      {/* Small Category / Product Type */}
+                      <div className="hero-prod-category flex items-center gap-2 text-xs uppercase tracking-[0.14em] font-sans text-[var(--sage)]">
                         <span className="font-semibold text-[var(--forest)]">
                           {prod.badge}
                         </span>
-                        <span>·</span>
-                        <span className="tabular-nums">{prod.volume}</span>
+                        <span className="text-[var(--line)]">·</span>
+                        <span className="tabular-nums font-medium">{prod.volume}</span>
                       </div>
-                      */}
 
                       {/* Bold Editorial Product Title */}
-                      <h1 className="text-5xl sm:text-7xl lg:text-[76px] xl:text-[84px] font-bold text-[var(--ink)] tracking-tight leading-[0.95] drop-shadow-xs font-sans">
+                      <h1 className="hero-prod-title text-5xl sm:text-7xl lg:text-[76px] xl:text-[84px] font-bold text-[var(--ink)] tracking-tight leading-[0.95] drop-shadow-xs font-sans">
                         {prod.name}
                       </h1>
 
-                      {/* [COMMENTED OUT PER USER REQUEST] Subtitle
-                      <p className="text-sm sm:text-base lg:text-lg font-semibold text-[var(--clay)] tracking-tight">
-                        {prod.subtitle}
-                      </p>
-                      */}
-
                       {/* Concise Clinical Description */}
-                      <p className="text-base sm:text-lg lg:text-xl font-sans text-[var(--ink)]/80 leading-relaxed max-w-[48ch] font-normal">
+                      <p className="hero-prod-desc text-base sm:text-lg lg:text-xl font-sans text-[var(--ink)]/80 leading-relaxed max-w-[48ch] font-normal">
                         {prod.description}
                       </p>
 
                       {/* Know More CTA Button */}
-                      <div className="pt-2 sm:pt-4 flex items-center">
+                      <div className="hero-prod-cta pt-2 sm:pt-4 flex items-center">
                         <Link
                           href={`/products/${prod.slug}`}
                           className="inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3.5 sm:py-4 bg-[var(--forest)] hover:bg-[var(--forest-700)] text-white rounded-full text-xs sm:text-sm font-semibold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg group active:scale-[0.98]"
@@ -492,24 +635,15 @@ export function CelifeHero({ content }: CelifeHeroProps) {
                           <span>Know More</span>
                           <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
                         </Link>
-
-                        {/* [COMMENTED OUT PER USER REQUEST] Secondary Formulations link
-                        <Link
-                          href="/products"
-                          className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[var(--ink)]/75 hover:text-[var(--forest)] transition-colors py-3 px-2"
-                        >
-                          <span>All Formulations</span>
-                          <span aria-hidden="true">→</span>
-                        </Link>
-                        */}
                       </div>
                     </div>
                   ))}
                 </div>
 
-                {/* [COMMENTED OUT PER USER REQUEST: Keeping left side clean with only product name, description & button]
-                <div className="pt-4 sm:pt-6 w-full flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-[var(--line)]/70">
-                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                {/* Synchronized Progress Tracker & Product Counter */}
+                <div className="pt-6 sm:pt-8 w-full flex items-center justify-between gap-4 border-t border-[var(--line)]/60 max-w-[520px] z-10">
+                  {/* 5 Segmented Progress Indicator */}
+                  <div className="flex items-center gap-2">
                     {HERO_PRODUCTS.map((prod, i) => (
                       <div
                         key={prod.id}
@@ -517,25 +651,25 @@ export function CelifeHero({ content }: CelifeHeroProps) {
                           i === activeIdx
                             ? "w-8 bg-[var(--clay)] shadow-xs"
                             : i < activeIdx
-                            ? "w-3 bg-[var(--forest)]"
+                            ? "w-3 bg-[var(--forest)]/70"
                             : "w-3 bg-[var(--line)]"
                         }`}
                       />
                     ))}
                   </div>
 
-                  <div className="text-xs font-mono font-semibold tracking-wider text-[var(--sage)]">
+                  {/* Tabular Discrete Counter */}
+                  <div className="text-xs font-mono font-semibold tracking-wider text-[var(--sage)] flex items-center">
                     <span className="text-sm font-bold text-[var(--ink)] tabular-nums">
                       0{activeIdx + 1}
                     </span>
                     <span className="mx-1 text-[var(--line)]">/</span>
                     <span className="tabular-nums">0{HERO_PRODUCTS.length}</span>
-                    <span className="ml-2.5 text-[11px] font-sans font-medium uppercase tracking-wider text-[var(--ink)]/60">
+                    <span className="ml-3 text-[11px] font-sans font-medium uppercase tracking-wider text-[var(--forest)]">
                       {activeProduct.name}
                     </span>
                   </div>
                 </div>
-                */}
               </div>
 
               {/* ─── RIGHT COLUMN: 2.5D Product Stage with Transparent Botanical Leaves & Plinth Grounding ─── */}
