@@ -42,8 +42,15 @@ export const metadata: Metadata = constructMetadata();
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable} ${manrope.variable} ${poppins.variable}`}>
-      <body className="antialiased min-h-screen bg-[var(--bone)] text-[var(--ink)] selection:bg-[var(--forest)] selection:text-white font-sans">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${cormorant.variable} ${inter.variable} ${manrope.variable} ${poppins.variable}`}
+    >
+      <body
+        suppressHydrationWarning
+        className="antialiased min-h-screen bg-[var(--bone)] text-[var(--ink)] selection:bg-[var(--forest)] selection:text-white font-sans"
+      >
         <PageTransition>{children}</PageTransition>
       </body>
     </html>

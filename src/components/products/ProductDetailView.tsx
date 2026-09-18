@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { StickyMobileActionBar } from "@/components/products/StickyMobileActionBar";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { BotanicalMandala } from "@/components/ui/BotanicalMandala";
-import { ArrowLeft, FileText } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ProductImageGallery } from "@/components/products/ProductImageGallery";
 import { ProductNutritionPanel } from "@/components/products/ProductNutritionPanel";
@@ -47,16 +47,16 @@ export function ProductDetailView({
     product.images && product.images.length > 0
       ? product.images
       : [
-          {
-            url: product.image,
-            alt: product.name,
-            altText: product.name,
-            type: "main",
-            order: 1,
-            isPrimary: true,
-            sortOrder: 0,
-          },
-        ];
+        {
+          url: product.image,
+          alt: product.name,
+          altText: product.name,
+          type: "main",
+          order: 1,
+          isPrimary: true,
+          sortOrder: 0,
+        },
+      ];
 
   return (
     <div className="w-full bg-[var(--bone)] text-[var(--ink)]">
@@ -99,16 +99,16 @@ export function ProductDetailView({
 
         {/* 1. Product Hero (6/6 Asymmetric Split) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Left Column (6 cols): Product Image Gallery with Zoom Lens & Lightbox */}
-          <div className="lg:col-span-6">
+          {/* Left Column (6 cols): Sticky Product Image Gallery with Zoom Lens & Lightbox */}
+          <div className="lg:col-span-6 lg:sticky lg:top-28 self-start">
             <ProductImageGallery
               images={galleryImages}
               productName={product.name}
             />
           </div>
 
-          {/* Right Column (6 cols): Sticky Formulation Specs & Primary Conversion */}
-          <div className="lg:col-span-6 lg:sticky lg:top-32 space-y-6">
+          {/* Right Column (6 cols): Formulation Specs & Primary Conversion */}
+          <div className="lg:col-span-6 space-y-6">
             {/* Category Eyebrow with Single Clay Dot */}
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--clay)] shrink-0" />
@@ -133,29 +133,20 @@ export function ProductDetailView({
               rows={effectiveSpecs}
             />
 
-            {/* Primary & Tertiary Conversion Actions */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            {/* Primary Conversion Action */}
+            <div className="pt-4 flex justify-center w-full">
               <Button
                 variant="primary"
                 href={`/enquire?product=${product.slug}`}
                 showArrow
-                className="py-4 px-6 text-center"
+                className="py-4 px-8 text-center"
               >
                 Enquire About This Formulation
               </Button>
-
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--forest)] hover:text-[var(--forest-700)] border-b border-[var(--forest)] py-1 transition-colors cursor-pointer"
-              >
-                <FileText size={14} />
-                <span>Download Specification Sheet →</span>
-              </button>
             </div>
 
             {/* Practitioner Advisory Footnote */}
-            <p className="text-[12px] font-sans text-[var(--sage)] leading-relaxed pt-1">
+            <p className="text-[12px] font-sans text-[var(--sage)] leading-relaxed pt-1 text-center">
               For professional evaluation and use under the guidance of a qualified healthcare practitioner.
             </p>
           </div>

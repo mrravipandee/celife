@@ -47,7 +47,12 @@ export function ProductImageGallery({
 
   // Magnifier State
   const [isHovering, setIsHovering] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0, percentX: 50, percentY: 50 });
+  const [magnifierState, setMagnifierState] = useState({
+    x: 0,
+    y: 0,
+    containerWidth: 0,
+    containerHeight: 0,
+  });
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Lightbox State
@@ -68,15 +73,29 @@ export function ProductImageGallery({
       return;
     }
 
-    const percentX = Math.max(0, Math.min(100, (x / rect.width) * 100));
-    const percentY = Math.max(0, Math.min(100, (y / rect.height) * 100));
-
-    setMousePos({ x, y, percentX, percentY });
+    setIsHovering(true);
+    setMagnifierState({
+      x,
+      y,
+      containerWidth: rect.width,
+      containerHeight: rect.height,
+    });
   }, []);
 
-  const handleMouseEnter = () => {
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     // Only enable magnifier on non-touch desktop devices
     if (typeof window !== "undefined" && window.matchMedia("(pointer: fine)").matches) {
+      if (containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        setMagnifierState({
+          x,
+          y,
+          containerWidth: rect.width,
+          containerHeight: rect.height,
+        });
+      }
       setIsHovering(true);
     }
   };
@@ -134,7 +153,23 @@ export function ProductImageGallery({
     touchStartXRef.current = null;
   };
 
-  const lensSize = 140; // Diameter of circular magnifier lens in pixels
+  // Magnifier Calculations: Large 220px lens with accurate cursor tracking
+  const containerW = magnifierState.containerWidth || 500;
+  const containerH = magnifierState.containerHeight || 500;
+  // Dynamically size between 180px and 220px based on container width
+  const lensSize = Math.min(220, Math.max(180, Math.floor(containerW * 0.42)));
+  const zoomFactor = 2.6; // 2.6x crisp magnification
+
+  const maxX = Math.max(0, containerW - lensSize);
+  const maxY = Math.max(0, containerH - lensSize);
+  const clampedLensX = Math.max(0, Math.min(maxX, magnifierState.x - lensSize / 2));
+  const clampedLensY = Math.max(0, Math.min(maxY, magnifierState.y - lensSize / 2));
+
+  // Pixel-accurate background alignment so the cursor point is directly in lens view
+  const bgWidth = containerW * zoomFactor;
+  const bgHeight = containerH * zoomFactor;
+  const bgX = (magnifierState.x - clampedLensX) - (magnifierState.x * zoomFactor);
+  const bgY = (magnifierState.y - clampedLensY) - (magnifierState.y * zoomFactor);
 
   return (
     <div className={cn("space-y-4 select-none", className)}>
@@ -167,23 +202,28 @@ export function ProductImageGallery({
             className="object-contain object-center transition-opacity duration-300"
           />
 
-          {/* Desktop Circular Magnifier Lens */}
+          {/* Desktop Circular Magnifier Lens (Large 220px with Hardware-Accelerated Tracking) */}
           {isHovering && (
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute rounded-full border-2 border-white shadow-2xl overflow-hidden hidden md:block"
+              className="pointer-events-none absolute top-0 left-0 rounded-full border-[3px] border-white shadow-[0_15px_35px_rgba(0,0,0,0.35),0_0_0_1px_rgba(0,0,0,0.1)] overflow-hidden hidden md:block z-30 will-change-transform"
               style={{
                 width: `${lensSize}px`,
                 height: `${lensSize}px`,
-                left: `${Math.max(0, Math.min(containerRef.current ? containerRef.current.clientWidth - lensSize : 0, mousePos.x - lensSize / 2))}px`,
-                top: `${Math.max(0, Math.min(containerRef.current ? containerRef.current.clientHeight - lensSize : 0, mousePos.y - lensSize / 2))}px`,
-                backgroundImage: `url(${currentImage.url})`,
+                transform: `translate3d(${clampedLensX}px, ${clampedLensY}px, 0)`,
+                backgroundImage: `url("${currentImage.url}")`,
                 backgroundRepeat: "no-repeat",
-                backgroundSize: "260%",
-                backgroundPosition: `${mousePos.percentX}% ${mousePos.percentY}%`,
-                boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(0,0,0,0.15)",
+                backgroundSize: `${bgWidth}px ${bgHeight}px`,
+                backgroundPosition: `${bgX}px ${bgY}px`,
               }}
-            />
+            >
+              {/* Glass Optical Sheen Reflection */}
+              <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_35%_30%,_rgba(255,255,255,0.22)_0%,_transparent_65%)] pointer-events-none shadow-[inset_0_0_15px_rgba(0,0,0,0.15)]" />
+              {/* Subtle Center Focus Target Mark */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+                <div className="w-1.5 h-1.5 rounded-full bg-black/40 border border-white/80" />
+              </div>
+            </div>
           )}
 
           {/* Corner Quick-Action Badges */}
