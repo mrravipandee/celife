@@ -5,6 +5,7 @@ import Enquiry from "@/models/Enquiry";
 import { requireAuth, requireAdmin } from "@/lib/auth/require-auth";
 import { updateEnquirySchema } from "@/lib/validations/enquiry";
 import { handleApiError } from "@/lib/error";
+import { EnquiryStatus } from "@/types/enquiry";
 
 // Helper function to validate MongoDB ObjectId
 function isValidObjectId(id: string): boolean {
@@ -16,13 +17,20 @@ interface LeanEnquiry {
   name: string;
   email: string;
   phone: string;
+  productId?: mongoose.Types.ObjectId;
+  productNameSnapshot?: string;
+  productSlug?: string;
+  productCategory?: string;
+  product?: string;
   company?: string;
-  projectType: string;
+  city?: string;
   location?: string;
+  projectType: string;
   projectStage?: string;
   businessStatus?: string;
   message: string;
-  status: string;
+  status: EnquiryStatus;
+  notes?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -74,13 +82,20 @@ export async function GET(
       name: doc.name,
       email: doc.email,
       phone: doc.phone,
+      productId: doc.productId ? doc.productId.toString() : undefined,
+      productNameSnapshot: doc.productNameSnapshot,
+      productSlug: doc.productSlug,
+      productCategory: doc.productCategory,
+      product: doc.productNameSnapshot || doc.product,
       company: doc.company,
+      city: doc.city || doc.location,
+      location: doc.location || doc.city,
       projectType: doc.projectType,
-      location: doc.location,
       projectStage: doc.projectStage,
       businessStatus: doc.businessStatus,
       message: doc.message,
       status: doc.status,
+      notes: doc.notes || "",
       createdAt: doc.createdAt,
       updatedAt: doc.updatedAt,
     };
@@ -142,7 +157,7 @@ export async function PATCH(
 
     await connectToDatabase();
 
-    // 5. Update enquiry status in database
+    // 5. Update enquiry status / notes in database
     const enquiry = await Enquiry.findById(id);
     if (!enquiry) {
       return NextResponse.json(
@@ -156,7 +171,13 @@ export async function PATCH(
       );
     }
 
-    enquiry.status = parsed.status;
+    if (parsed.status !== undefined) {
+      enquiry.status = parsed.status;
+    }
+    if (parsed.notes !== undefined) {
+      enquiry.notes = parsed.notes;
+    }
+
     await enquiry.save();
 
     return NextResponse.json(
@@ -165,6 +186,7 @@ export async function PATCH(
         data: {
           id: enquiry._id.toString(),
           status: enquiry.status,
+          notes: enquiry.notes || "",
         },
         message: "Enquiry updated successfully",
       },

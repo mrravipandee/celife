@@ -52,8 +52,9 @@ export function InquiryToolbar({
           >
             <option value="all">All Statuses</option>
             <option value="new">New</option>
-            <option value="in-progress">In Progress</option>
             <option value="contacted">Contacted</option>
+            <option value="in-progress">In Progress</option>
+            <option value="resolved">Resolved</option>
             <option value="closed">Closed</option>
           </select>
         </div>

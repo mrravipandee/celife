@@ -1,4 +1,10 @@
-export const ENQUIRY_STATUSES = ["new", "contacted", "in-progress", "closed"] as const;
+export const ENQUIRY_STATUSES = [
+  "new",
+  "contacted",
+  "in-progress",
+  "resolved",
+  "closed",
+] as const;
 export type EnquiryStatus = (typeof ENQUIRY_STATUSES)[number];
 
 export const PROJECT_TYPES = [
@@ -44,15 +50,19 @@ export interface Inquiry {
   phone: string;
   productId?: string;
   productNameSnapshot?: string;
+  productSlug?: string;
+  productCategory?: string;
   product?: string;
   company?: string;
+  city?: string;
+  location?: string;
   projectType: ProjectType;
   type?: string;
-  location?: string;
   projectStage?: ProjectStage;
   businessStatus?: BusinessStatus;
   message: string;
   status: EnquiryStatus;
+  notes?: string;
   date?: string;
   time?: string;
   createdAt: string;

@@ -74,10 +74,14 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
           phone: data.phone,
           product: data.product,
           productId: selectedProduct?._id || selectedProduct?.id || "",
+          productSlug: selectedProduct?.slug || "",
           productNameSnapshot: selectedProduct?.name || data.product,
+          productCategory: selectedProduct?.category || "",
           company: data.company || "",
+          city: data.city || "",
           projectType: "Product Enquiry",
           message: data.message,
+          website_url: data.website_url || "",
         }),
       });
 
@@ -120,7 +124,7 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
             </div>
             <div>
               <span className="text-[10px] uppercase tracking-[0.2em] text-[#C4D5C7] block font-medium">
-                Product Enquiry
+                Product Enquiry Desk
               </span>
               <h2 className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight">
                 {selectedProduct.name}
@@ -143,38 +147,59 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
       {/* Form Content Area */}
       <div className="p-6 md:p-10">
         {submitStatus === "success" ? (
-          <div className="py-12 text-center space-y-5 max-w-lg mx-auto">
-            <div className="w-14 h-14 bg-[#123C2D]/10 text-[#123C2D] rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle2 size={32} className="text-[#123C2D]" />
+          <div className="py-12 text-center space-y-6 max-w-lg mx-auto animate-fade-in">
+            <div className="w-16 h-16 bg-[#123C2D]/10 text-[#123C2D] rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle2 size={36} className="text-[#123C2D]" />
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-2xl font-serif font-bold text-[#171B18]">
+            <div className="space-y-2.5">
+              <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#123C2D] block">
                 Enquiry Received
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#171B18]">
+                Thank you for your enquiry.
               </h3>
               <p className="text-sm font-sans text-[#52635A] leading-relaxed">
-                Thank you for your interest in <strong>{selectedProduct?.name || "our formulation"}</strong>. Our medical and product advisory team will review your specifications and get in touch promptly.
+                Your enquiry regarding <strong>{selectedProduct?.name || "our formulation"}</strong> has been received by our clinical desk. Our team will review your requirements and get in touch shortly.
               </p>
             </div>
 
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              {selectedProduct && (
+                <Link
+                  href={`/products/${selectedProduct.slug}`}
+                  className="w-full sm:w-auto px-6 py-3 text-xs uppercase tracking-wider font-semibold bg-[#123C2D] text-white hover:bg-[#294F3D] rounded-xs transition-colors text-center"
+                >
+                  Back to {selectedProduct.name}
+                </Link>
+              )}
+              <Link
+                href="/products"
+                className="w-full sm:w-auto px-6 py-3 text-xs uppercase tracking-wider font-medium text-[#123C2D] border border-[#123C2D]/20 hover:bg-[#F4F5EF] rounded-xs transition-colors text-center"
+              >
+                Explore Catalogue
+              </Link>
               <button
                 type="button"
                 onClick={() => setSubmitStatus("idle")}
-                className="px-6 py-3 text-xs uppercase tracking-wider font-semibold bg-[#123C2D] text-white hover:bg-[#294F3D] rounded-xs transition-colors cursor-pointer"
+                className="w-full sm:w-auto px-5 py-3 text-xs uppercase tracking-wider font-medium text-[#52635A] hover:text-[#171B18] underline transition-colors cursor-pointer"
               >
-                Send Another Enquiry
+                Send Another
               </button>
-              <Link
-                href="/products"
-                className="px-6 py-3 text-xs uppercase tracking-wider font-medium text-[#123C2D] border border-[#123C2D]/20 hover:bg-[#F4F5EF] rounded-xs transition-colors"
-              >
-                Back to Catalogue
-              </Link>
             </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" noValidate>
+            {/* Anti-bot honeypot field (hidden from real users) */}
+            <div className="hidden" aria-hidden="true">
+              <input
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                {...register("website_url")}
+              />
+            </div>
+
             {/* Error Notification Alert */}
             {submitStatus === "error" && (
               <div className="p-4 bg-red-50 border border-red-200 rounded-xs flex items-start gap-3 text-red-900 text-xs">
@@ -250,7 +275,7 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
               </div>
             </div>
 
-            {/* Grid Row: Email & Organization */}
+            {/* Grid Row: Email & City */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-1.5">
                 <label htmlFor="enquiry-email" className="block text-xs uppercase tracking-wider font-semibold text-[#171B18]">
@@ -274,17 +299,31 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="enquiry-company" className="block text-xs uppercase tracking-wider font-semibold text-[#171B18]">
-                  Organization / Clinic / Pharmacy (Optional)
+                <label htmlFor="enquiry-city" className="block text-xs uppercase tracking-wider font-semibold text-[#171B18]">
+                  City / Location (Optional)
                 </label>
                 <input
-                  id="enquiry-company"
+                  id="enquiry-city"
                   type="text"
-                  placeholder="Clinic, distributor or business name"
-                  {...register("company")}
+                  placeholder="e.g. Mumbai, Delhi, Bengaluru"
+                  {...register("city")}
                   className="w-full px-4 py-3 bg-[#F8FAF6] border border-[#123C2D]/20 rounded-xs text-sm text-[#171B18] placeholder:text-[#52635A]/50 focus:outline-none focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D] transition-colors"
                 />
               </div>
+            </div>
+
+            {/* Organization Field */}
+            <div className="space-y-1.5">
+              <label htmlFor="enquiry-company" className="block text-xs uppercase tracking-wider font-semibold text-[#171B18]">
+                Organization / Clinic / Pharmacy / Hospital (Optional)
+              </label>
+              <input
+                id="enquiry-company"
+                type="text"
+                placeholder="Clinic, distributor or healthcare institution name"
+                {...register("company")}
+                className="w-full px-4 py-3 bg-[#F8FAF6] border border-[#123C2D]/20 rounded-xs text-sm text-[#171B18] placeholder:text-[#52635A]/50 focus:outline-none focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D] transition-colors"
+              />
             </div>
 
             {/* Message Area */}

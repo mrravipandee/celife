@@ -13,7 +13,12 @@ import { LoadingState } from "@/components/ui/LoadingState";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { Inquiry, EnquiryStatus, ProjectType } from "@/types/enquiry";
-import { getEnquiriesClient, updateEnquiryStatusClient, deleteEnquiryClient } from "@/lib/services/enquiries-client";
+import {
+  getEnquiriesClient,
+  updateEnquiryStatusClient,
+  updateEnquiryClient,
+  deleteEnquiryClient,
+} from "@/lib/services/enquiries-client";
 import { useDebounce } from "@/hooks/useDebounce";
 
 // Format helper utilities
@@ -48,11 +53,20 @@ interface BackendInquiry {
   name: string;
   email: string;
   phone: string;
+  productId?: string;
+  productNameSnapshot?: string;
+  productSlug?: string;
+  productCategory?: string;
   product?: string;
   company?: string;
+  city?: string;
+  location?: string;
   projectType: string;
+  projectStage?: string;
+  businessStatus?: string;
   message: string;
   status: EnquiryStatus;
+  notes?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -120,12 +134,19 @@ export default function InquiriesDashboardPage() {
           name: inq.name,
           email: inq.email,
           phone: inq.phone,
-          product: inq.product,
+          productId: inq.productId,
+          productNameSnapshot: inq.productNameSnapshot,
+          productSlug: inq.productSlug,
+          productCategory: inq.productCategory,
+          product: inq.productNameSnapshot || inq.product,
           company: inq.company || "—",
+          city: inq.city || inq.location || "—",
+          location: inq.location || inq.city || "—",
           projectType: inq.projectType as ProjectType,
           type: inq.projectType || "—",
           message: inq.message,
           status: inq.status,
+          notes: inq.notes || "",
           date: formatDateStr(inq.createdAt),
           time: formatTimeStr(inq.createdAt),
           createdAt: inq.createdAt,
@@ -202,6 +223,22 @@ export default function InquiriesDashboardPage() {
     } catch (err) {
       console.error("Failed to update inquiry status:", err);
       alert("Failed to update status. Please try again.");
+    }
+  };
+
+  // Handle live notes updates
+  const handleNotesUpdate = async (id: string, newNotes: string) => {
+    try {
+      await updateEnquiryClient(id, { notes: newNotes });
+      
+      // Update local state item immediately
+      setInquiries((prev) =>
+        prev.map((inq) => (inq.id === id ? { ...inq, notes: newNotes } : inq))
+      );
+    } catch (err) {
+      console.error("Failed to update inquiry notes:", err);
+      alert("Failed to save notes. Please try again.");
+      throw err;
     }
   };
 
@@ -384,6 +421,7 @@ export default function InquiriesDashboardPage() {
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
         onStatusUpdate={handleStatusUpdate}
+        onNotesUpdate={handleNotesUpdate}
         onDelete={handleDeleteInquiry}
       />
     </motion.div>

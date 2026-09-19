@@ -16,14 +16,18 @@ export interface IEnquiry extends Document {
   phone: string;
   productId?: mongoose.Types.ObjectId;
   productNameSnapshot?: string;
+  productSlug?: string;
+  productCategory?: string;
   product?: string;
   company?: string;
-  projectType: ProjectType;
+  city?: string;
   location?: string;
+  projectType: ProjectType;
   projectStage?: ProjectStage;
   businessStatus?: BusinessStatus;
   message: string;
   status: EnquiryStatus;
+  notes?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -52,13 +56,24 @@ const EnquirySchema: Schema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Product",
       required: false,
-      index: true,
     },
     productNameSnapshot: {
       type: String,
       required: false,
       trim: true,
       maxlength: 200,
+    },
+    productSlug: {
+      type: String,
+      required: false,
+      trim: true,
+      maxlength: 200,
+    },
+    productCategory: {
+      type: String,
+      required: false,
+      trim: true,
+      maxlength: 150,
     },
     product: {
       type: String,
@@ -72,18 +87,24 @@ const EnquirySchema: Schema = new Schema(
       trim: true,
       maxlength: 150,
     },
-    projectType: {
+    city: {
       type: String,
-      required: true,
-      enum: PROJECT_TYPES,
-      default: "Product Enquiry",
+      required: false,
       trim: true,
+      maxlength: 150,
     },
     location: {
       type: String,
       required: false,
       trim: true,
       maxlength: 150,
+    },
+    projectType: {
+      type: String,
+      required: true,
+      enum: PROJECT_TYPES,
+      default: "Product Enquiry",
+      trim: true,
     },
     projectStage: {
       type: String,
@@ -101,7 +122,7 @@ const EnquirySchema: Schema = new Schema(
       type: String,
       required: true,
       trim: true,
-      minlength: 10,
+      minlength: 5,
       maxlength: 3000,
     },
     status: {
@@ -111,17 +132,27 @@ const EnquirySchema: Schema = new Schema(
       default: "new",
       trim: true,
     },
+    notes: {
+      type: String,
+      required: false,
+      trim: true,
+      maxlength: 5000,
+      default: "",
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// Optimize sorting by date, filtering by status, and looking up email
+// Optimize sorting by date, filtering by status, productSlug, and looking up email/phone
 EnquirySchema.index({ status: 1 });
 EnquirySchema.index({ createdAt: -1 });
 EnquirySchema.index({ status: 1, createdAt: -1 });
+EnquirySchema.index({ productId: 1 });
+EnquirySchema.index({ productSlug: 1 });
 EnquirySchema.index({ email: 1 });
+EnquirySchema.index({ phone: 1 });
 
 const Enquiry = mongoose.models.Enquiry || mongoose.model<IEnquiry>("Enquiry", EnquirySchema);
 
