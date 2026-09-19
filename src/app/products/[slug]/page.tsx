@@ -29,13 +29,17 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 
   if (!product) {
     return constructMetadata({
-      title: "Product Not Found",
-      description: "The requested Celife product information could not be found.",
+      title: "Product Not Found | Celife Health Solutions",
+      description: "The requested Celife formulation information could not be found.",
     });
   }
 
-  const title = product.seo?.metaTitle || `${product.name} ${product.packSize ? `(${product.packSize})` : ""}`;
-  const description = product.seo?.metaDescription || product.shortDescription || product.description;
+  const title = product.seo?.metaTitle || `${product.name} | Celife Health Solutions`;
+  const description =
+    product.seo?.metaDescription ||
+    product.shortDescription ||
+    product.description ||
+    `Explore ${product.name}, a verified ${product.category} formulation developed by Celife Health Solutions.`;
   const image = product.images?.[0]?.url || product.image;
 
   return constructMetadata({
@@ -50,39 +54,45 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const { slug } = await params;
   const [product, allProducts] = await Promise.all([
     getProductBySlug(slug),
-    getProducts(),
+    getProducts("all"),
   ]);
 
   if (!product) {
     notFound();
   }
 
-  const relatedProducts = allProducts.filter((p) => p.slug !== product.slug).slice(0, 3);
+  // Prioritize same category, excluding current product
+  const relatedProducts = allProducts
+    .filter((p) => p.slug !== product.slug)
+    .sort((a, b) => {
+      const aCat = a.category.toLowerCase() === product.category.toLowerCase() ? 1 : 0;
+      const bCat = b.category.toLowerCase() === product.category.toLowerCase() ? 1 : 0;
+      return bCat - aCat;
+    })
+    .slice(0, 3);
 
   const primaryImageUrl = product.images?.[0]?.url || product.image;
-  const absoluteImageUrl = primaryImageUrl?.startsWith("http")
-    ? primaryImageUrl
-    : `${siteConfig.url}${primaryImageUrl?.startsWith("/") ? "" : "/"}${primaryImageUrl || ""}`;
+  const absoluteImageUrl = primaryImageUrl
+    ? primaryImageUrl.startsWith("http")
+      ? primaryImageUrl
+      : `${siteConfig.url}${primaryImageUrl.startsWith("/") ? "" : "/"}${primaryImageUrl}`
+    : undefined;
 
+  // Clean, conservative non-commercial Schema.org JSON-LD
   const productJsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: product.name,
-    description: product.shortDescription || product.description,
-    image: absoluteImageUrl,
+    description:
+      product.seo?.metaDescription ||
+      product.shortDescription ||
+      product.description ||
+      `Celife Health Solutions ${product.name} formulation.`,
+    ...(absoluteImageUrl && { image: absoluteImageUrl }),
     category: product.category,
     brand: {
       "@type": "Brand",
       name: product.brand || "CELIFE",
-    },
-    offers: {
-      "@type": "Offer",
-      url: `${siteConfig.url}/enquire?product=${product.slug}`,
-      priceCurrency: "INR",
-      price: "0",
-      priceValidUntil: "2027-12-31",
-      availability: "https://schema.org/InStock",
-      itemCondition: "https://schema.org/NewCondition",
     },
   };
 

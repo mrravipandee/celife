@@ -24,9 +24,9 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
 
   // Determine initial product
   const defaultProduct =
-    availableProducts.find((p) => p.slug === initialProductSlug) || availableProducts[0];
+    availableProducts.find((p) => p?.slug === initialProductSlug) || availableProducts[0];
 
-  const [selectedProduct, setSelectedProduct] = useState<Product>(defaultProduct);
+  const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(defaultProduct);
 
   const {
     register,
@@ -40,9 +40,11 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
       name: "",
       phone: "",
       email: "",
-      product: defaultProduct.name,
+      product: defaultProduct?.name || "",
       company: "",
-      message: `I would like more information regarding ${defaultProduct.name}.`,
+      message: defaultProduct?.name
+        ? `I would like more information regarding ${defaultProduct.name}.`
+        : "I would like more information regarding your products.",
     },
   });
 
@@ -71,8 +73,8 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
           email: data.email,
           phone: data.phone,
           product: data.product,
-          productId: selectedProduct._id || selectedProduct.id,
-          productNameSnapshot: selectedProduct.name,
+          productId: selectedProduct?._id || selectedProduct?.id || "",
+          productNameSnapshot: selectedProduct?.name || data.product,
           company: data.company || "",
           projectType: "Product Enquiry",
           message: data.message,
@@ -98,43 +100,45 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
   };
 
   const currentDisplayImage =
-    selectedProduct.images && selectedProduct.images.length > 0
+    selectedProduct?.images && selectedProduct.images.length > 0
       ? selectedProduct.images[0].url
-      : selectedProduct.image;
+      : selectedProduct?.image || "/images/products/vitafiv-syrup.jpg";
 
   return (
     <div className="bg-white border border-[#123C2D]/10 rounded-xs shadow-sm overflow-hidden">
       {/* Active Selected Product Banner */}
-      <div className="bg-[#123C2D] text-white p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-[#123C2D]/20">
-        <div className="flex items-center gap-4">
-          <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-white/10 rounded-xs overflow-hidden border border-white/20 shrink-0">
-            <Image
-              src={currentDisplayImage}
-              alt={selectedProduct.name}
-              fill
-              className="object-cover"
-            />
+      {selectedProduct && (
+        <div className="bg-[#123C2D] text-white p-6 md:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-[#123C2D]/20">
+          <div className="flex items-center gap-4">
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-white/10 rounded-xs overflow-hidden border border-white/20 shrink-0">
+              <Image
+                src={currentDisplayImage}
+                alt={selectedProduct.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div>
+              <span className="text-[10px] uppercase tracking-[0.2em] text-[#C4D5C7] block font-medium">
+                Product Enquiry
+              </span>
+              <h2 className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight">
+                {selectedProduct.name}
+              </h2>
+              <span className="text-xs text-white/70 block mt-0.5">
+                {selectedProduct.category} • {selectedProduct.packSize || (selectedProduct.packaging ? selectedProduct.packaging.split("(")[0].trim() : "Standard Packaging")}
+              </span>
+            </div>
           </div>
-          <div>
-            <span className="text-[10px] uppercase tracking-[0.2em] text-[#C4D5C7] block font-medium">
-              Product Enquiry
-            </span>
-            <h2 className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight">
-              {selectedProduct.name}
-            </h2>
-            <span className="text-xs text-white/70 block mt-0.5">
-              {selectedProduct.category} • {selectedProduct.packSize || (selectedProduct.packaging ? selectedProduct.packaging.split("(")[0].trim() : "Standard Packaging")}
-            </span>
-          </div>
-        </div>
 
-        <Link
-          href={`/products/${selectedProduct.slug}`}
-          className="inline-flex items-center gap-1.5 text-xs text-white/80 hover:text-white uppercase tracking-wider font-sans underline underline-offset-4"
-        >
-          <span>View Spec Sheet</span>
-        </Link>
-      </div>
+          <Link
+            href={`/products/${selectedProduct.slug}`}
+            className="inline-flex items-center gap-1.5 text-xs text-white/80 hover:text-white uppercase tracking-wider font-sans underline underline-offset-4"
+          >
+            <span>View Spec Sheet</span>
+          </Link>
+        </div>
+      )}
 
       {/* Form Content Area */}
       <div className="p-6 md:p-10">
@@ -149,7 +153,7 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
                 Enquiry Received
               </h3>
               <p className="text-sm font-sans text-[#52635A] leading-relaxed">
-                Thank you for your interest in <strong>{selectedProduct.name}</strong>. Our medical and product advisory team will review your specifications and get in touch promptly.
+                Thank you for your interest in <strong>{selectedProduct?.name || "our formulation"}</strong>. Our medical and product advisory team will review your specifications and get in touch promptly.
               </p>
             </div>
 
@@ -189,7 +193,7 @@ export function ProductEnquiryForm({ initialProductSlug, products }: ProductEnqu
               </label>
               <select
                 id="product-select"
-                value={selectedProduct.slug}
+                value={selectedProduct?.slug || ""}
                 onChange={handleProductChange}
                 className="w-full px-4 py-3 bg-[#F8FAF6] border border-[#123C2D]/20 rounded-xs text-sm text-[#171B18] focus:outline-none focus:border-[#123C2D] focus:ring-1 focus:ring-[#123C2D] transition-colors"
               >

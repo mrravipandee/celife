@@ -566,7 +566,7 @@ async function migrate() {
 
   console.log("\n--- STEP 1: CATEGORY SYNCHRONIZATION ---");
   const categoriesCol = db.collection("productcategories");
-  const categoryMap = new Map<string, any>();
+  const categoryMap = new Map<string, Record<string, unknown> | null>();
 
   for (const cat of canonicalCategories) {
     let existing = await categoriesCol.findOne({
@@ -586,7 +586,7 @@ async function migrate() {
     } else {
       console.log(`[EXISTING CATEGORY] ${existing.name} (${existing.slug})`);
     }
-    categoryMap.set(cat.name.toLowerCase(), existing);
+    categoryMap.set(cat.name.toLowerCase(), existing as Record<string, unknown> | null);
   }
 
   console.log("\n--- STEP 2: PRODUCT MIGRATION & UPDATES ---");
@@ -594,14 +594,13 @@ async function migrate() {
 
   let createdCount = 0;
   let updatedCount = 0;
-  let alreadyExistingCount = 0;
 
   for (const prodData of verifiedProducts) {
     const catObj = categoryMap.get(prodData.category.toLowerCase());
-    const categoryId = catObj?._id ? catObj._id.toString() : null;
+    const categoryId = catObj?._id ? String(catObj._id) : null;
 
     // Search by slug or name (or previous aliases like nervify-forte)
-    let existing = await productsCol.findOne({
+    const existing = await productsCol.findOne({
       $or: [
         { slug: prodData.slug },
         { name: new RegExp(`^${prodData.name}$`, "i") },
@@ -611,11 +610,10 @@ async function migrate() {
     });
 
     if (existing) {
-      alreadyExistingCount++;
       console.log(`\n[FOUND EXISTING RECORD] ID: ${existing._id} | Name: "${existing.name}" | Slug: "${existing.slug}"`);
 
       // Prepare updated payload preserving IDs
-      const updateDoc: any = {
+      const updateDoc: Record<string, unknown> = {
         ...prodData,
         categoryId,
         updatedAt: new Date(),
@@ -634,7 +632,7 @@ async function migrate() {
       updatedCount++;
       console.log(`  -> Successfully updated existing record to match Phase 3 specs (Status: draft, Category: ${prodData.category})`);
     } else {
-      const newDoc: any = {
+      const newDoc: Record<string, unknown> = {
         ...prodData,
         categoryId,
         published: false,
@@ -657,13 +655,13 @@ async function migrate() {
   const slugCounts = new Map<string, number>();
 
   for (const p of allProducts) {
-    const normName = p.name.toLowerCase().trim();
+    const normName = String(p.name).toLowerCase().trim();
     nameCounts.set(normName, (nameCounts.get(normName) || 0) + 1);
-    slugCounts.set(p.slug, (slugCounts.get(p.slug) || 0) + 1);
+    slugCounts.set(String(p.slug), (slugCounts.get(String(p.slug)) || 0) + 1);
   }
 
-  const dupNames = Array.from(nameCounts.entries()).filter(([_, count]) => count > 1);
-  const dupSlugs = Array.from(slugCounts.entries()).filter(([_, count]) => count > 1);
+  const dupNames = Array.from(nameCounts.entries()).filter(([, count]) => count > 1);
+  const dupSlugs = Array.from(slugCounts.entries()).filter(([, count]) => count > 1);
 
   console.log(`Duplicate Names found: ${dupNames.length}`);
   if (dupNames.length > 0) console.log("  ->", dupNames);
@@ -677,7 +675,7 @@ async function migrate() {
   for (const p of allProducts) {
     if (p.images && Array.isArray(p.images)) {
       for (const img of p.images) {
-        if (img.url.startsWith("/")) {
+        if (typeof img?.url === "string" && img.url.startsWith("/")) {
           const filePath = path.join(process.cwd(), "public", img.url);
           if (!fs.existsSync(filePath)) {
             console.error(`  [BROKEN IMAGE] Product "${p.name}": ${img.url} does not exist at ${filePath}`);
@@ -697,9 +695,10 @@ async function migrate() {
   console.log("Vitafiv ID:", vitafiv?._id);
   console.log("Status:", vitafiv?.status);
   console.log("Category:", vitafiv?.category);
-  console.log("Composition count:", vitafiv?.composition?.length);
-  const hashItems = vitafiv?.composition?.filter((c: any) => c.rdaDisplay === "#");
-  console.log("Items with '#' RDA display:", hashItems?.map((h: any) => `${h.ingredient}: ${h.amount} ${h.unit}`));
+  console.log("Composition count:", Array.isArray(vitafiv?.composition) ? vitafiv.composition.length : 0);
+  const compArray = Array.isArray(vitafiv?.composition) ? vitafiv.composition : [];
+  const hashItems = compArray.filter((c: Record<string, unknown>) => c.rdaDisplay === "#");
+  console.log("Items with '#' RDA display:", hashItems.map((h: Record<string, unknown>) => `${h.ingredient}: ${h.amount} ${h.unit}`));
 
   console.log("\n==========================================");
   console.log("MIGRATION & QA SUMMARY:");

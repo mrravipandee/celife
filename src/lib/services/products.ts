@@ -368,7 +368,7 @@ export const getProducts = cache(async (category?: string): Promise<ProductType[
     await ensureDefaultProductsSeeded();
 
     const query: Record<string, unknown> = {
-      $or: [{ status: "published" }, { published: true }],
+      $or: [{ status: "published" }, { published: true, status: { $ne: "draft" } }],
     };
     if (category && category !== "all") {
       query.category = new RegExp(`^${category}$`, "i");
@@ -381,16 +381,16 @@ export const getProducts = cache(async (category?: string): Promise<ProductType[
     if (products.length > 0) {
       return products.map(transformProduct);
     }
+    return [];
   } catch (error) {
     console.warn("getProducts notice, using fallback:", (error as Error)?.message || error);
   }
 
-  // Fallback to static data
-  const staticCombined = [VITAFIV_PRODUCT, ...productsData];
+  // Fallback to static data only if database is unreachable
   if (!category || category === "all") {
-    return staticCombined;
+    return productsData;
   }
-  return staticCombined.filter(
+  return productsData.filter(
     (p) => p.category.toLowerCase() === category.toLowerCase()
   );
 });
@@ -402,18 +402,18 @@ export const getProductBySlug = cache(async (slug: string): Promise<ProductType 
 
     const product = await Product.findOne({
       slug,
-      $or: [{ status: "published" }, { published: true }],
+      $or: [{ status: "published" }, { published: true, status: { $ne: "draft" } }],
     }).lean<IProduct>();
 
     if (product) {
       return transformProduct(product);
     }
+    return null;
   } catch (error) {
     console.warn("getProductBySlug notice, using fallback:", (error as Error)?.message || error);
   }
 
-  // Fallback to static data
-  if (slug === "vitafiv-syrup") return VITAFIV_PRODUCT;
+  // Fallback to static data only if database is unreachable
   const fallback = productsData.find((p) => p.slug === slug);
   return fallback || null;
 });
@@ -424,7 +424,7 @@ export const getFeaturedProducts = cache(async (): Promise<ProductType[]> => {
     await ensureDefaultProductsSeeded();
 
     const products = await Product.find({
-      $or: [{ status: "published" }, { published: true }],
+      $or: [{ status: "published" }, { published: true, status: { $ne: "draft" } }],
       $and: [{ $or: [{ featured: true }, { isFeatured: true }] }],
     })
       .sort({ displayOrder: 1, order: 1, createdAt: -1 })
@@ -433,12 +433,12 @@ export const getFeaturedProducts = cache(async (): Promise<ProductType[]> => {
     if (products.length > 0) {
       return products.map(transformProduct);
     }
+    return [];
   } catch (error) {
     console.warn("getFeaturedProducts notice, using fallback:", (error as Error)?.message || error);
   }
 
-  const staticCombined = [VITAFIV_PRODUCT, ...productsData];
-  return staticCombined.filter((p) => p.featured || p.isFeatured);
+  return productsData.filter((p) => p.featured || p.isFeatured);
 });
 
 export const getProductCategories = cache(async (): Promise<string[]> => {
@@ -446,25 +446,36 @@ export const getProductCategories = cache(async (): Promise<string[]> => {
     await connectToDatabase();
     await ensureDefaultProductsSeeded();
 
-    const categories = await ProductCategory.find({ archived: { $ne: true } })
-      .sort({ order: 1, name: 1 })
-      .lean();
-
-    if (categories.length > 0) {
-      return (categories as unknown as IProductCategory[]).map((c) => c.name);
-    }
-
-    const distinct = await Product.distinct("category", {
-      $or: [{ status: "published" }, { published: true }],
+    // Query categories that actually contain published products
+    const distinctCategories = await Product.distinct("category", {
+      $or: [{ status: "published" }, { published: true, status: { $ne: "draft" } }],
     });
-    if (distinct.length > 0) {
-      return distinct;
+
+    if (distinctCategories.length > 0) {
+      const catRecords = await ProductCategory.find({
+        name: { $in: distinctCategories },
+        archived: { $ne: true },
+      })
+        .sort({ order: 1, name: 1 })
+        .lean();
+
+      if (catRecords.length > 0) {
+        const orderMap = new Map((catRecords as unknown as IProductCategory[]).map((c, i) => [c.name.toLowerCase(), c.order ?? i]));
+        return distinctCategories.sort((a, b) => {
+          const orderA = orderMap.get(a.toLowerCase()) ?? 999;
+          const orderB = orderMap.get(b.toLowerCase()) ?? 999;
+          return orderA - orderB;
+        });
+      }
+
+      return distinctCategories.sort();
     }
+    return [];
   } catch (error) {
     console.warn("getProductCategories notice, using fallback:", (error as Error)?.message || error);
   }
 
-  const set = new Set(["Health Supplement", ...productsData.map((p) => p.category)]);
+  const set = new Set(productsData.map((p) => p.category));
   return Array.from(set);
 });
 
