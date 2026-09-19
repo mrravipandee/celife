@@ -67,12 +67,18 @@ export async function GET(req: Request) {
       slug: p.slug,
       brand: p.brand || "CELIFE",
       productType: p.productType || "Health Supplement",
+      format: p.format || "",
+      dosageForm: p.dosageForm || "",
+      therapeuticDomain: p.therapeuticDomain || "",
       subtitle: p.subtitle || "",
       category: p.category,
       categoryId: p.categoryId ? p.categoryId.toString() : null,
       shortDescription: p.shortDescription,
       description: p.description,
       fullDescription: p.fullDescription || p.description || "",
+      aboutFormulation: p.aboutFormulation || "",
+      scientificBackground: p.scientificBackground || "",
+      coreRationale: p.coreRationale || "",
       packSize: p.packSize || "",
       flavour: p.flavour || "",
       netVolume: p.netVolume || "",
@@ -84,15 +90,23 @@ export async function GET(req: Request) {
       packaging: p.packaging || "",
       wellnessFocus: p.wellnessFocus || "",
       usageAdvice: p.usageAdvice || "",
+      recommendedUse: p.recommendedUse || p.recommendedUsage || p.usageAdvice || "",
+      recommendedUsage: p.recommendedUsage || p.recommendedUse || p.usageAdvice || "",
+      usageInstructions: p.usageInstructions || "",
+      administrationNotes: p.administrationNotes || "",
+      usageRules: p.usageRules || [],
       keyFocus: p.keyFocus || [],
       highlights: p.highlights || [],
       productTags: p.productTags || [],
       composition: p.composition || [],
+      components: p.components || [],
       nutrition: p.nutrition || {},
       otherIngredients: p.otherIngredients || [],
-      recommendedUsage: p.recommendedUsage || p.usageAdvice || "",
       storageInstructions: p.storageInstructions || [],
       warnings: p.warnings || [],
+      professionalCaution: p.professionalCaution || "",
+      notes: p.notes || "",
+      excipientStandard: p.excipientStandard || "",
       image: p.image,
       images: Array.isArray(p.images) && p.images.length > 0
         ? p.images
@@ -104,6 +118,12 @@ export async function GET(req: Request) {
       published: p.published ?? (p.status === "published"),
       order: p.order ?? p.displayOrder ?? 0,
       displayOrder: p.displayOrder ?? p.order ?? 0,
+      source: p.source || {
+        sourceType: p.sourceType || "Product packaging",
+        sourceReference: p.sourceNotes || "",
+        verified: p.contentVerified ?? true,
+        verifiedAt: null,
+      },
       sourceType: p.sourceType || "Product packaging",
       sourceNotes: p.sourceNotes || "",
       contentVerified: p.contentVerified ?? true,
@@ -159,7 +179,25 @@ export async function POST(req: Request) {
       );
     }
 
-    const product = await Product.create(parsed);
+    // Bidirectional sync for recommendedUse <-> recommendedUsage
+    const createData = { ...parsed };
+    if (createData.recommendedUse && !createData.recommendedUsage) {
+      createData.recommendedUsage = createData.recommendedUse;
+    } else if (createData.recommendedUsage && !createData.recommendedUse) {
+      createData.recommendedUse = createData.recommendedUsage;
+    }
+
+    // Sync source with legacy sourceType and contentVerified
+    if (createData.source) {
+      if (createData.source.sourceType && !createData.sourceType) {
+        createData.sourceType = createData.source.sourceType;
+      }
+      if (createData.source.verified !== undefined && createData.contentVerified === undefined) {
+        createData.contentVerified = Boolean(createData.source.verified);
+      }
+    }
+
+    const product = await Product.create(createData);
 
     try {
       revalidatePath("/");

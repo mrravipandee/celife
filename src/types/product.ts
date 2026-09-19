@@ -3,7 +3,15 @@ export interface ProductHighlight {
   value: string;
 }
 
-export type ProductImageType = "main" | "front" | "back" | "bottle" | "graphic";
+export type ProductImageType =
+  | "hero"
+  | "front"
+  | "back"
+  | "detail"
+  | "lifestyle"
+  | "main"
+  | "bottle"
+  | "graphic";
 
 export interface ProductImage {
   url: string;
@@ -17,13 +25,30 @@ export interface ProductImage {
 
 export interface CompositionItem {
   ingredient: string;
-  amount?: number | null;
+  quantity?: string; // string quantity representation (e.g. "50 million spores", "100", "eq. to elemental...")
+  amount?: number | null; // legacy numeric value
   unit?: string | null;
+  group?: string; // e.g. "Active Ingredients", "Vitamins & Minerals"
+  note?: string;
+  order?: number;
   rdaPercentage?: number | null;
-  rdaDisplay: string; // Supports "100%", "#", etc.
-  quantity?: string;
+  rdaDisplay?: string; // Supports "100%", "#", etc.
   standardisedTo?: string;
   category?: string;
+}
+
+export interface ProductComponent {
+  name: string;
+  description?: string;
+  packSize?: string;
+  composition?: CompositionItem[];
+}
+
+export interface UsageRule {
+  ageGroup?: string;
+  dosage?: string;
+  frequency?: string;
+  instructions?: string;
 }
 
 export interface ProductNutrition {
@@ -39,11 +64,19 @@ export interface ProductNutrition {
   servingsPerContainer?: string | null;
 }
 
+export interface ProductSource {
+  sourceType?: string;
+  sourceReference?: string;
+  verified?: boolean;
+  verifiedAt?: string | Date | null;
+}
+
 export interface ProductSEO {
   metaTitle?: string | null;
   metaDescription?: string | null;
-  ogImage?: string | null;
+  canonicalUrl?: string | null;
   keywords?: string[];
+  ogImage?: string | null;
 }
 
 export type ProductStatus = "draft" | "published" | "archived";
@@ -55,12 +88,20 @@ export interface Product {
   name: string;
   brand?: string;
   productType?: string;
+  format?: string;
+  dosageForm?: string;
+  therapeuticDomain?: string;
   subtitle?: string;
   category: string;
   categoryId?: string | null;
   shortDescription: string;
   description: string;
   fullDescription?: string;
+
+  // Formulation Information
+  aboutFormulation?: string;
+  scientificBackground?: string;
+  coreRationale?: string;
 
   // Packaging & Attributes
   packSize?: string;
@@ -86,10 +127,24 @@ export interface Product {
   nutrition?: ProductNutrition;
   otherIngredients?: string[];
 
+  // Multi-component Support (e.g. Bonigo Combo)
+  components?: ProductComponent[];
+
   // Directions & Compliance
+  recommendedUse?: string;
   recommendedUsage?: string;
+  usageInstructions?: string;
+  administrationNotes?: string;
+  usageRules?: UsageRule[];
   storageInstructions?: string[];
+
+  // Professional Caution & Warnings
+  professionalCaution?: string;
   warnings?: string[];
+  notes?: string;
+
+  // Excipients
+  excipientStandard?: string;
 
   // Gallery (Up to 5 images)
   image: string;
@@ -105,6 +160,7 @@ export interface Product {
   displayOrder?: number;
 
   // Source & Verification Quality
+  source?: ProductSource;
   sourceType?: string;
   sourceNotes?: string;
   contentVerified?: boolean;
@@ -115,4 +171,5 @@ export interface Product {
   createdAt?: string | Date;
   updatedAt?: string | Date;
 }
+
 

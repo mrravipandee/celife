@@ -50,12 +50,18 @@ export async function GET(
           slug: product.slug,
           brand: product.brand || "CELIFE",
           productType: product.productType || "Health Supplement",
+          format: product.format || "",
+          dosageForm: product.dosageForm || "",
+          therapeuticDomain: product.therapeuticDomain || "",
           subtitle: product.subtitle || "",
           category: product.category,
           categoryId: product.categoryId ? product.categoryId.toString() : null,
           shortDescription: product.shortDescription,
           description: product.description,
           fullDescription: product.fullDescription || product.description || "",
+          aboutFormulation: product.aboutFormulation || "",
+          scientificBackground: product.scientificBackground || "",
+          coreRationale: product.coreRationale || "",
           packSize: product.packSize || "",
           flavour: product.flavour || "",
           netVolume: product.netVolume || "",
@@ -67,15 +73,23 @@ export async function GET(
           packaging: product.packaging || "",
           wellnessFocus: product.wellnessFocus || "",
           usageAdvice: product.usageAdvice || "",
+          recommendedUse: product.recommendedUse || product.recommendedUsage || product.usageAdvice || "",
+          recommendedUsage: product.recommendedUsage || product.recommendedUse || product.usageAdvice || "",
+          usageInstructions: product.usageInstructions || "",
+          administrationNotes: product.administrationNotes || "",
+          usageRules: product.usageRules || [],
           keyFocus: product.keyFocus || [],
           highlights: product.highlights || [],
           productTags: product.productTags || [],
           composition: product.composition || [],
+          components: product.components || [],
           nutrition: product.nutrition || {},
           otherIngredients: product.otherIngredients || [],
-          recommendedUsage: product.recommendedUsage || product.usageAdvice || "",
           storageInstructions: product.storageInstructions || [],
           warnings: product.warnings || [],
+          professionalCaution: product.professionalCaution || "",
+          notes: product.notes || "",
+          excipientStandard: product.excipientStandard || "",
           image: product.image,
           images: Array.isArray(product.images) && product.images.length > 0
             ? product.images
@@ -87,6 +101,12 @@ export async function GET(
           published: product.published ?? (product.status === "published"),
           order: product.order ?? product.displayOrder ?? 0,
           displayOrder: product.displayOrder ?? product.order ?? 0,
+          source: product.source || {
+            sourceType: product.sourceType || "Product packaging",
+            sourceReference: product.sourceNotes || "",
+            verified: product.contentVerified ?? true,
+            verifiedAt: null,
+          },
           sourceType: product.sourceType || "Product packaging",
           sourceNotes: product.sourceNotes || "",
           contentVerified: product.contentVerified ?? true,
@@ -156,6 +176,21 @@ export async function PATCH(
       updateData.order = parsed.displayOrder;
     } else if (parsed.order !== undefined && parsed.displayOrder === undefined) {
       updateData.displayOrder = parsed.order;
+    }
+
+    if (parsed.recommendedUse !== undefined && parsed.recommendedUsage === undefined) {
+      updateData.recommendedUsage = parsed.recommendedUse;
+    } else if (parsed.recommendedUsage !== undefined && parsed.recommendedUse === undefined) {
+      updateData.recommendedUse = parsed.recommendedUsage;
+    }
+
+    if (parsed.source) {
+      if (parsed.source.sourceType && parsed.sourceType === undefined) {
+        updateData.sourceType = parsed.source.sourceType;
+      }
+      if (parsed.source.verified !== undefined && parsed.contentVerified === undefined) {
+        updateData.contentVerified = Boolean(parsed.source.verified);
+      }
     }
 
     const updated = await Product.findByIdAndUpdate(
