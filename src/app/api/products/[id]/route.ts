@@ -227,6 +227,7 @@ export async function PATCH(
       { status: 200 }
     );
   } catch (error) {
+    console.error("PATCH /api/products/[id] error caught:", error);
     return handleApiError(error);
   }
 }
@@ -292,4 +293,6 @@ export async function DELETE(
     return handleApiError(error);
   }
 }
+
+export { PATCH as PUT };
 

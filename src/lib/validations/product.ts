@@ -87,8 +87,8 @@ export const productCreateSchema = z.object({
   subtitle: z.string().trim().max(150).optional().default(""),
   category: z.string().trim().min(1, "Category is required"),
   categoryId: z.string().trim().nullable().optional(),
-  shortDescription: z.string().trim().min(10, "Short description must be at least 10 characters").max(500),
-  description: z.string().trim().min(20, "Full description must be at least 20 characters"),
+  shortDescription: z.string().trim().max(500).optional().default(""),
+  description: z.string().trim().optional().default(""),
   fullDescription: z.string().trim().optional().default(""),
 
   // Formulation Information
@@ -141,7 +141,7 @@ export const productCreateSchema = z.object({
   excipientStandard: z.string().trim().max(200).optional().default(""),
 
   // Images (Max 5)
-  image: z.string().trim().min(1, "Product image is required"),
+  image: z.string().trim().optional().default(""),
   images: z.array(productImageSchema).max(5, "Maximum 5 gallery images allowed").default([]),
   gallery: z.array(z.string().trim()).default([]),
 

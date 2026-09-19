@@ -210,75 +210,74 @@ export async function ensureDefaultProductsSeeded() {
       await Product.insertMany(docsToInsert);
     }
 
-    // Idempotently upsert VITAFIV Syrup with full production specifications
-    await Product.findOneAndUpdate(
-      { slug: "vitafiv-syrup" },
-      {
-        $set: {
-          name: VITAFIV_PRODUCT.name,
-          slug: VITAFIV_PRODUCT.slug,
-          brand: VITAFIV_PRODUCT.brand,
-          productType: VITAFIV_PRODUCT.productType,
-          subtitle: VITAFIV_PRODUCT.subtitle,
-          category: VITAFIV_PRODUCT.category,
-          shortDescription: VITAFIV_PRODUCT.shortDescription,
-          description: VITAFIV_PRODUCT.description,
-          fullDescription: VITAFIV_PRODUCT.fullDescription,
-          packSize: VITAFIV_PRODUCT.packSize,
-          flavour: VITAFIV_PRODUCT.flavour,
-          netVolume: VITAFIV_PRODUCT.netVolume,
-          sugarStatement: VITAFIV_PRODUCT.sugarStatement,
-          ageStatement: VITAFIV_PRODUCT.ageStatement,
-          productClassification: VITAFIV_PRODUCT.productClassification,
-          form: VITAFIV_PRODUCT.form,
-          packaging: VITAFIV_PRODUCT.packaging,
-          wellnessFocus: VITAFIV_PRODUCT.wellnessFocus,
-          usageAdvice: VITAFIV_PRODUCT.usageAdvice,
-          recommendedUsage: VITAFIV_PRODUCT.recommendedUsage,
-          keyFocus: VITAFIV_PRODUCT.keyFocus,
-          highlights: VITAFIV_PRODUCT.highlights,
-          composition: VITAFIV_PRODUCT.composition,
-          nutrition: VITAFIV_PRODUCT.nutrition,
-          otherIngredients: VITAFIV_PRODUCT.otherIngredients,
-          storageInstructions: VITAFIV_PRODUCT.storageInstructions,
-          warnings: VITAFIV_PRODUCT.warnings,
-          image: VITAFIV_PRODUCT.image,
-          images: VITAFIV_PRODUCT.images,
-          gallery: VITAFIV_PRODUCT.gallery,
-          status: "published",
-          published: true,
-          featured: true,
-          isFeatured: true,
-          order: 0,
-          displayOrder: 0,
-          sourceType: VITAFIV_PRODUCT.sourceType,
-          sourceNotes: VITAFIV_PRODUCT.sourceNotes,
-          contentVerified: true,
-          seo: VITAFIV_PRODUCT.seo,
-        },
-      },
-      { upsert: true, new: true, runValidators: false }
-    );
+    // Check if VITAFIV Syrup already exists; only seed initial draft if not present
+    const existingVitafiv = await Product.findOne({ slug: "vitafiv-syrup" });
+    if (!existingVitafiv) {
+      await Product.create({
+        name: VITAFIV_PRODUCT.name,
+        slug: VITAFIV_PRODUCT.slug,
+        brand: VITAFIV_PRODUCT.brand,
+        productType: VITAFIV_PRODUCT.productType,
+        subtitle: VITAFIV_PRODUCT.subtitle,
+        category: "Multivitamin Supplement",
+        packSize: VITAFIV_PRODUCT.packSize,
+        flavour: VITAFIV_PRODUCT.flavour,
+        netVolume: VITAFIV_PRODUCT.netVolume,
+        sugarStatement: VITAFIV_PRODUCT.sugarStatement,
+        ageStatement: VITAFIV_PRODUCT.ageStatement,
+        productClassification: VITAFIV_PRODUCT.productClassification,
+        form: VITAFIV_PRODUCT.form,
+        packaging: VITAFIV_PRODUCT.packaging,
+        wellnessFocus: VITAFIV_PRODUCT.wellnessFocus,
+        usageAdvice: VITAFIV_PRODUCT.usageAdvice,
+        recommendedUsage: VITAFIV_PRODUCT.recommendedUsage,
+        keyFocus: VITAFIV_PRODUCT.keyFocus,
+        highlights: VITAFIV_PRODUCT.highlights,
+        composition: VITAFIV_PRODUCT.composition,
+        nutrition: VITAFIV_PRODUCT.nutrition,
+        otherIngredients: VITAFIV_PRODUCT.otherIngredients,
+        storageInstructions: VITAFIV_PRODUCT.storageInstructions,
+        warnings: VITAFIV_PRODUCT.warnings,
+        image: VITAFIV_PRODUCT.image,
+        images: VITAFIV_PRODUCT.images,
+        gallery: VITAFIV_PRODUCT.gallery,
+        status: "draft",
+        published: false,
+        featured: false,
+        isFeatured: false,
+        order: 0,
+        displayOrder: 0,
+        sourceType: VITAFIV_PRODUCT.sourceType,
+        sourceNotes: VITAFIV_PRODUCT.sourceNotes,
+        contentVerified: true,
+        seo: VITAFIV_PRODUCT.seo,
+      });
+    }
 
-    const catCount = await ProductCategory.countDocuments();
-    if (catCount === 0) {
-      const categories = [
-        { name: "Health Supplement", slug: "health-supplement", order: 0 },
-        { name: "Neurological Wellness", slug: "neurological-wellness", order: 1 },
-        { name: "Joint & Mobility", slug: "joint-mobility", order: 2 },
-        { name: "Hepatic Wellness", slug: "hepatic-wellness", order: 3 },
-        { name: "Immune & Cellular", slug: "immune-cellular", order: 4 },
-      ];
-      await ProductCategory.insertMany(categories);
-    } else {
-      // Ensure "Health Supplement" category exists
-      const hasHealthSupplement = await ProductCategory.findOne({ slug: "health-supplement" });
-      if (!hasHealthSupplement) {
-        await ProductCategory.create({
-          name: "Health Supplement",
-          slug: "health-supplement",
-          order: 0,
-        });
+    // Ensure all canonical Celife categories exist idempotently
+    const canonicalCategories = [
+      { name: "Multivitamin Supplement", slug: "multivitamin-supplement", order: 0 },
+      { name: "Oral Health", slug: "oral-health", order: 1 },
+      { name: "Nerve Nutrition", slug: "nerve-nutrition", order: 2 },
+      { name: "Bone Health", slug: "bone-health", order: 3 },
+      { name: "Iron Supplement", slug: "iron-supplement", order: 4 },
+      { name: "Protein & Wellness", slug: "protein-wellness", order: 5 },
+      { name: "Digestive Health", slug: "digestive-health", order: 6 },
+      { name: "Liver Protection", slug: "liver-protection", order: 7 },
+      { name: "Calmness + Stress Support", slug: "calmness-stress-support", order: 8 },
+      { name: "Health Supplement", slug: "health-supplement", order: 9 },
+      { name: "Neurological Wellness", slug: "neurological-wellness", order: 10 },
+      { name: "Joint & Mobility", slug: "joint-mobility", order: 11 },
+      { name: "Hepatic Wellness", slug: "hepatic-wellness", order: 12 },
+      { name: "Immune & Cellular", slug: "immune-cellular", order: 13 },
+    ];
+
+    for (const cat of canonicalCategories) {
+      const exists = await ProductCategory.findOne({
+        $or: [{ slug: cat.slug }, { name: cat.name }],
+      });
+      if (!exists) {
+        await ProductCategory.create(cat);
       }
     }
 

@@ -255,8 +255,8 @@ const ProductSchema = new Schema<IProduct>(
     subtitle: { type: String, trim: true, default: "" },
     category: { type: String, required: true, trim: true, index: true },
     categoryId: { type: Schema.Types.ObjectId, ref: "ProductCategory", default: null, index: true },
-    shortDescription: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true },
+    shortDescription: { type: String, trim: true, default: "" },
+    description: { type: String, trim: true, default: "" },
     fullDescription: { type: String, trim: true, default: "" },
 
     // Formulation Information
@@ -307,7 +307,7 @@ const ProductSchema = new Schema<IProduct>(
     excipientStandard: { type: String, trim: true, default: "" },
 
     // Gallery (Max 5 images)
-    image: { type: String, required: true, trim: true },
+    image: { type: String, trim: true, default: "" },
     images: {
       type: [ProductImageSchema],
       default: [],
@@ -399,7 +399,8 @@ ProductSchema.index({ categoryId: 1, status: 1 });
 if (mongoose.models && mongoose.models.Product) {
   if (
     !mongoose.models.Product.schema.paths["composition"] ||
-    !mongoose.models.Product.schema.paths["components"]
+    !mongoose.models.Product.schema.paths["components"] ||
+    mongoose.models.Product.schema.paths["shortDescription"]?.isRequired
   ) {
     delete (mongoose.models as Record<string, unknown>).Product;
   }

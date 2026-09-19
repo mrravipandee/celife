@@ -69,6 +69,10 @@ export function handleApiError(error: unknown) {
       success: false,
       error: {
         message: "Something went wrong",
+        ...(process.env.NODE_ENV !== "production" && {
+          debugMessage: (error as Error)?.message || String(error),
+          stack: (error as Error)?.stack,
+        }),
       },
     },
     { status: 500 }
